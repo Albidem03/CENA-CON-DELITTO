@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Il Dossier Scomparso — Demo</title>
+<style>
+body{
+  margin:0;background:#0d0e10;color:#eee9df;
+  font-family:Georgia,serif;min-height:100vh
+}
+main{max-width:700px;margin:auto;padding:25px 18px}
+.card{
+  background:#17191d;border:1px solid #34373d;
+  border-radius:18px;padding:24px
+}
+h1{font-size:36px;margin:8px 0}
+h2{font-size:25px}
+.gold{color:#b59a67;letter-spacing:2px}
+.muted{color:#aaa49a;line-height:1.5}
+input{
+  width:100%;box-sizing:border-box;padding:15px;
+  border-radius:10px;border:1px solid #444;
+  background:#0f1114;color:white;font-size:18px
+}
+button{
+  width:100%;margin-top:12px;padding:15px;border:0;
+  border-radius:10px;background:#b59a67;color:#111;
+  font-weight:bold;font-size:16px
+}
+.hidden{display:none}
+.role{border-left:4px solid #b59a67;padding-left:15px;margin:20px 0}
+.box{
+  background:#111317;border:1px solid #444;
+  border-radius:12px;padding:14px;margin:12px 0
+}
+.secret{background:#261718;border-color:#633}
+</style>
+</head>
+
+<body>
+<main>
+
+<section class="card" id="login">
+  <div class="gold">CENA CON DELITTO · DEMO</div>
+  <h1>Il Dossier Scomparso</h1>
+  <p class="muted">
+    Inserisci il tuo codice personale per scoprire il personaggio
+    che ti è stato assegnato.
+  </p>
+
+  <input id="code" inputmode="numeric" placeholder="Inserisci il tuo codice">
+  <button id="enter">Scopri il tuo personaggio</button>
+
+  <p class="muted">
+    Per questa prova usa il codice <b>321023</b>.
+  </p>
+</section>
+
+<section class="card hidden" id="profile">
+  <div class="gold" id="number"></div>
+
+  <div class="role">
+    <h2 id="role"></h2>
+    <p id="description"></p>
+  </div>
+
+  <div class="box secret">
+    <b>INFORMAZIONE RISERVATA</b>
+    <p id="secret"></p>
+  </div>
+
+  <h2>Indizi</h2>
+
+  <div class="box">
+    <b>Indizio comune</b>
+    <p>
+      Il dossier che Angelina aveva con sé prima della sua morte
+      è scomparso.
+    </p>
+  </div>
+
+  <div class="box">
+    <b>Il tuo indizio personale</b>
+    <p id="clue"></p>
+  </div>
+
+  <button id="exit">Esci e prova il prossimo ingresso</button>
+</section>
+
+</main>
+
+<script>
+const characters = [
+{
+  role:"Il Maggiordomo",
+  description:
+  "Conosci la villa meglio di chiunque altro. Sai chi è entrato, chi è uscito e quali stanze avrebbero dovuto restare chiuse.",
+  secret:
+  "Poco prima della cena hai visto Angelina nascondere qualcosa, ma non sai se si trattasse del dossier.",
+  clue:
+  "Hai notato che una porta normalmente chiusa era socchiusa poco prima della scomparsa di Angelina."
+},
+{
+  role:"Il Parente di Angelina",
+  description:
+  "Sei legato ad Angelina da una storia familiare complessa. Dietro l'apparente cordialità esistono questioni mai chiarite.",
+  secret:
+  "Angelina ti aveva anticipato che durante la serata avrebbe rivelato qualcosa riguardante la famiglia.",
+  clue:
+  "Hai ricevuto da Angelina un messaggio ambiguo poche ore prima della cena."
+},
+{
+  role:"L'Amico di Famiglia",
+  description:
+  "Per gli altri sei una presenza fidata e di vecchia data. Conosci molti dei presenti e sai più cose di quanto lasci intendere.",
+  secret:
+  "SEI L'ASSASSINO. Questa informazione è esclusivamente tua. Nessun altro partecipante deve conoscerla.",
+  clue:
+  "Sai esattamente perché il dossier di Angelina rappresentava un pericolo per te."
+}
+];
+
+function showCharacter(){
+  const code=document.getElementById("code").value.trim();
+
+  if(code!=="321023"){
+    alert("Codice non valido. Per la demo usa 321023.");
+    return;
+  }
+
+  let n=parseInt(localStorage.getItem("demoIngresso") || "0");
+  const index=Math.min(n,2);
+  const c=characters[index];
+
+  document.getElementById("number").textContent=
+    "INGRESSO DI PROVA " + (index+1) + " DI 3";
+
+  document.getElementById("role").textContent=c.role;
+  document.getElementById("description").textContent=c.description;
+  document.getElementById("secret").textContent=c.secret;
+  document.getElementById("clue").textContent=c.clue;
+
+  localStorage.setItem("demoIngresso",String(n+1));
+
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("profile").classList.remove("hidden");
+}
+
+function exitDemo(){
+  document.getElementById("profile").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("code").value="";
+}
+
+document.getElementById("enter").addEventListener("click",showCharacter);
+document.getElementById("exit").addEventListener("click",exitDemo);
+</script>
+
+</body>
+</html>
