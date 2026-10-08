@@ -3,158 +3,1074 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Il Dossier Scomparso — Demo</title>
+<title>Il Dossier Scomparso</title>
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#090b0e;
+  --panel:rgba(19,21,25,.90);
+  --panel2:rgba(10,12,15,.82);
+  --gold:#c5a66b;
+  --gold2:#e2c78f;
+  --text:#f2eee6;
+  --muted:#b9b2a8;
+  --line:rgba(197,166,107,.26);
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+}
+
 body{
-  margin:0;background:#0d0e10;color:#eee9df;
-  font-family:Georgia,serif;min-height:100vh
+  font-family:Inter,system-ui,sans-serif;
+  background:
+    radial-gradient(circle at 50% 15%,rgba(104,79,42,.18),transparent 35%),
+    linear-gradient(rgba(3,4,6,.76),rgba(3,4,6,.92)),
+    url('https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1600&q=80') center/cover fixed;
 }
-main{max-width:700px;margin:auto;padding:25px 18px}
+
+main{
+  max-width:860px;
+  margin:auto;
+  padding:28px 16px 50px;
+}
+
 .card{
-  background:#17191d;border:1px solid #34373d;
-  border-radius:18px;padding:24px
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+  box-shadow:0 18px 60px rgba(0,0,0,.48);
+  backdrop-filter:blur(8px);
 }
-h1{font-size:36px;margin:8px 0}
-h2{font-size:25px}
-.gold{color:#b59a67;letter-spacing:2px}
-.muted{color:#aaa49a;line-height:1.5}
+
+.hero{text-align:center}
+
+.brand{
+  font-family:Cinzel,serif;
+  letter-spacing:4px;
+  color:var(--gold);
+  font-size:12px;
+  text-transform:uppercase;
+}
+
+h1,h2,h3{
+  font-family:Cinzel,serif;
+}
+
+h1{
+  font-size:clamp(34px,8vw,58px);
+  margin:10px 0;
+}
+
+.subtitle{
+  color:var(--muted);
+  line-height:1.55;
+}
+
 input{
-  width:100%;box-sizing:border-box;padding:15px;
-  border-radius:10px;border:1px solid #444;
-  background:#0f1114;color:white;font-size:18px
+  width:100%;
+  padding:16px;
+  margin-top:12px;
+  border-radius:12px;
+  border:1px solid #48423a;
+  background:#0b0d10;
+  color:white;
+  font-size:18px;
 }
+
 button{
-  width:100%;margin-top:12px;padding:15px;border:0;
-  border-radius:10px;background:#b59a67;color:#111;
-  font-weight:bold;font-size:16px
+  width:100%;
+  margin-top:12px;
+  padding:15px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#16120d;
+  font-weight:800;
+  font-size:16px;
 }
+
 .hidden{display:none}
-.role{border-left:4px solid #b59a67;padding-left:15px;margin:20px 0}
-.box{
-  background:#111317;border:1px solid #444;
-  border-radius:12px;padding:14px;margin:12px 0
+
+.profile-top{
+  display:grid;
+  grid-template-columns:100px 1fr;
+  gap:18px;
+  align-items:center;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--line);
 }
-.secret{background:#261718;border-color:#633}
+
+.avatar{
+  width:100px;
+  height:100px;
+  border-radius:18px;
+  display:grid;
+  place-items:center;
+  background:#17191d;
+  border:1px solid var(--line);
+  font-family:Cinzel,serif;
+  font-size:34px;
+  color:var(--gold2);
+}
+
+.kicker{
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--gold);
+  text-transform:uppercase;
+}
+
+#role{
+  margin:5px 0;
+}
+
+#name{
+  color:var(--muted);
+  margin:0;
+}
+
+.section{
+  margin-top:18px;
+}
+
+.box{
+  background:var(--panel2);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:16px;
+  margin-top:10px;
+  line-height:1.6;
+}
+
+.box strong{
+  font-family:Cinzel,serif;
+  color:var(--gold2);
+  font-size:13px;
+}
+
+.secret{
+  border-color:#633;
+  background:rgba(48,20,22,.72);
+}
+
+.voice{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(197,166,107,.07);
+}
+
+.voice-title{
+  font-family:Cinzel,serif;
+  color:var(--gold2);
+}
+
+#voiceStatus{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:6px;
+}
+
+.voice-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:12px;
+}
+
+.voice-grid button{
+  margin:0;
+  font-size:14px;
+}
+
+.secondary{
+  background:rgba(255,255,255,.08);
+  color:white;
+  border:1px solid rgba(255,255,255,.12);
+}
+
+.stop{
+  background:#5d272b;
+  color:white;
+}
+
+.footer{
+  text-align:center;
+  color:#847d72;
+  font-size:12px;
+  margin-top:18px;
+}
+
+@media(max-width:560px){
+  .profile-top{
+    grid-template-columns:82px 1fr;
+  }
+
+  .avatar{
+    width:82px;
+    height:82px;
+  }
+
+  .voice-grid{
+    grid-template-columns:1fr;
+  }
+
+  .card{
+    padding:18px;
+  }
+}
 </style>
 </head>
 
 <body>
+
 <main>
 
 <section class="card" id="login">
-  <div class="gold">CENA CON DELITTO · DEMO</div>
-  <h1>Il Dossier Scomparso</h1>
-  <p class="muted">
-    Inserisci il tuo codice personale per scoprire il personaggio
-    che ti è stato assegnato.
-  </p>
 
-  <input id="code" inputmode="numeric" placeholder="Inserisci il tuo codice">
-  <button id="enter">Scopri il tuo personaggio</button>
+  <div class="hero">
+    <div class="brand">Cena con delitto · Sistema della villa</div>
+    <h1>Il Dossier Scomparso</h1>
 
-  <p class="muted">
-    Per questa prova usa il codice <b>321023</b>.
-  </p>
-</section>
-
-<section class="card hidden" id="profile">
-  <div class="gold" id="number"></div>
-
-  <div class="role">
-    <h2 id="role"></h2>
-    <p id="description"></p>
-  </div>
-
-  <div class="box secret">
-    <b>INFORMAZIONE RISERVATA</b>
-    <p id="secret"></p>
-  </div>
-
-  <h2>Indizi</h2>
-
-  <div class="box">
-    <b>Indizio comune</b>
-    <p>
-      Il dossier che Angelina aveva con sé prima della sua morte
-      è scomparso.
+    <p class="subtitle">
+      Inserisci il tuo codice personale per aprire il dossier del tuo personaggio.
     </p>
   </div>
 
-  <div class="box">
-    <b>Il tuo indizio personale</b>
-    <p id="clue"></p>
+  <input
+    id="code"
+    inputmode="numeric"
+    maxlength="6"
+    placeholder="Codice personale a 6 cifre"
+  >
+
+  <button id="enter">
+    Apri il mio dossier
+  </button>
+
+</section>
+
+
+<section class="card hidden" id="profile">
+
+  <div class="profile-top">
+
+    <div class="avatar" id="avatar">?</div>
+
+    <div>
+      <div class="kicker">Dossier personale</div>
+      <h2 id="role"></h2>
+      <p id="name"></p>
+    </div>
+
   </div>
 
-  <button id="exit">Esci e prova il prossimo ingresso</button>
+
+  <div class="section">
+
+    <div class="box">
+      <strong>IL TUO PERSONAGGIO</strong>
+      <p id="description"></p>
+    </div>
+
+    <div class="box secret">
+      <strong>INFORMAZIONE RISERVATA</strong>
+      <p id="secret"></p>
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <h3>Indizi</h3>
+
+    <div class="box">
+      <strong>INDIZIO COMUNE</strong>
+      <p>
+        Il dossier che Angelina aveva con sé prima della sua morte è scomparso.
+      </p>
+    </div>
+
+    <div class="box">
+      <strong>IL TUO INDIZIO PERSONALE</strong>
+      <p id="clue"></p>
+    </div>
+
+  </div>
+
+
+  <div class="section">
+
+    <div class="box">
+      <strong>RISPOSTA DI HAVILAND</strong>
+      <p id="aiAnswer">
+        Haviland è pronto.
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="voice">
+
+    <div class="voice-title">
+      Haviland · Assistente della Villa
+    </div>
+
+    <div id="voiceStatus">
+      Premi “Attiva Haviland” e pronuncia il suo nome prima del comando.
+    </div>
+
+    <div class="voice-grid">
+
+      <button id="voiceListen">
+        🎙️ Attiva Haviland
+      </button>
+
+      <button id="voiceSummary" class="secondary">
+        Leggi personaggio
+      </button>
+
+      <button id="voiceSecret" class="secondary">
+        Leggi segreto
+      </button>
+
+      <button id="voiceFull" class="secondary">
+        Leggi tutto
+      </button>
+
+      <button id="voiceStop" class="stop">
+        Ferma la voce
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <button id="exit">
+    Chiudi il dossier
+  </button>
+
+  <div class="footer">
+    Cena con delitto · Accesso riservato
+  </div>
+
 </section>
 
 </main>
 
+
 <script>
-const characters = [
-{
-  role:"Il Maggiordomo",
-  description:
-  "Conosci la villa meglio di chiunque altro. Sai chi è entrato, chi è uscito e quali stanze avrebbero dovuto restare chiuse.",
-  secret:
-  "Poco prima della cena hai visto Angelina nascondere qualcosa, ma non sai se si trattasse del dossier.",
-  clue:
-  "Hai notato che una porta normalmente chiusa era socchiusa poco prima della scomparsa di Angelina."
-},
-{
-  role:"Il Parente di Angelina",
-  description:
-  "Sei legato ad Angelina da una storia familiare complessa. Dietro l'apparente cordialità esistono questioni mai chiarite.",
-  secret:
-  "Angelina ti aveva anticipato che durante la serata avrebbe rivelato qualcosa riguardante la famiglia.",
-  clue:
-  "Hai ricevuto da Angelina un messaggio ambiguo poche ore prima della cena."
-},
-{
-  role:"L'Amico di Famiglia",
-  description:
-  "Per gli altri sei una presenza fidata e di vecchia data. Conosci molti dei presenti e sai più cose di quanto lasci intendere.",
-  secret:
-  "SEI L'ASSASSINO. Questa informazione è esclusivamente tua. Nessun altro partecipante deve conoscerla.",
-  clue:
-  "Sai esattamente perché il dossier di Angelina rappresentava un pericolo per te."
+
+/*
+Quando collegheremo il backend AI,
+qui metteremo il suo indirizzo.
+*/
+
+const HAVILAND_AI_ENDPOINT =
+  "INSERISCI_URL_WORKER_QUI";
+
+
+const people = {
+
+  "321023":{
+    name:"Alberto",
+    role:"L'Amico di Famiglia",
+    description:
+      "Per gli altri sei una presenza fidata e di vecchia data. Conosci molti dei presenti e sai più cose di quanto lasci intendere.",
+    secret:
+      "SEI L'ASSASSINO. Questa informazione è esclusivamente tua. Nessun altro partecipante deve conoscerla.",
+    clue:
+      "Sai esattamente perché il dossier di Angelina rappresentava un pericolo per te.",
+    avatar:"A"
+  },
+
+  "290604":{
+    name:"Giulia Tesini (Vigasio)",
+    role:"Il Maggiordomo",
+    description:
+      "Conosci la villa meglio di chiunque altro. Sai chi è entrato, chi è uscito e quali stanze avrebbero dovuto restare chiuse.",
+    secret:
+      "Poco prima della cena hai visto Angelina nascondere qualcosa, ma non sai se si trattasse del dossier.",
+    clue:
+      "Hai notato che una porta normalmente chiusa era socchiusa poco prima della scomparsa di Angelina.",
+    avatar:"G"
+  },
+
+  "240383":{
+    name:"Angela Viviani",
+    role:"Il Parente di Angelina",
+    description:
+      "Sei legato ad Angelina da una storia familiare complessa. Dietro l'apparente cordialità esistono questioni mai chiarite.",
+    secret:
+      "Angelina ti aveva anticipato che durante la serata avrebbe rivelato qualcosa riguardante la famiglia.",
+    clue:
+      "Hai ricevuto da Angelina un messaggio ambiguo poche ore prima della cena.",
+    avatar:"A"
+  },
+
+  "141019":{
+    name:"Eleonora Pinto",
+    role:"Personaggio da assegnare",
+    description:
+      "Il personaggio definitivo verrà assegnato quando completeremo il cast.",
+    secret:
+      "Informazione riservata ancora da definire.",
+    clue:
+      "Indizio personale ancora da definire.",
+    avatar:"E"
+  },
+
+  "190797":{
+    name:"Rocco Monaco",
+    role:"Personaggio da assegnare",
+    description:
+      "Il personaggio definitivo verrà assegnato quando completeremo il cast.",
+    secret:
+      "Informazione riservata ancora da definire.",
+    clue:
+      "Indizio personale ancora da definire.",
+    avatar:"R"
+  },
+
+  "949699":{
+    name:"Alessia Remelli",
+    role:"Personaggio da assegnare",
+    description:
+      "Il personaggio definitivo verrà assegnato quando completeremo il cast.",
+    secret:
+      "Informazione riservata ancora da definire.",
+    clue:
+      "Indizio personale ancora da definire.",
+    avatar:"A"
+  },
+
+  "140918":{
+    name:"Andrea Filippi",
+    role:"Personaggio da assegnare",
+    description:
+      "Il personaggio definitivo verrà assegnato quando completeremo il cast.",
+    secret:
+      "Informazione riservata ancora da definire.",
+    clue:
+      "Indizio personale ancora da definire.",
+    avatar:"A"
+  }
+
+};
+
+
+let currentCode = "";
+
+
+function currentPerson(){
+  return people[currentCode];
 }
-];
 
-function showCharacter(){
-  const code=document.getElementById("code").value.trim();
 
-  if(code!=="321023"){
-    alert("Codice non valido. Per la demo usa 321023.");
+function openDossier(){
+
+  const code =
+    document
+      .getElementById("code")
+      .value
+      .trim();
+
+  const p =
+    people[code];
+
+  if(!p){
+    alert("Codice non valido oppure non ancora assegnato.");
     return;
   }
 
-  let n=parseInt(localStorage.getItem("demoIngresso") || "0");
-  const index=Math.min(n,2);
-  const c=characters[index];
+  currentCode =
+    code;
 
-  document.getElementById("number").textContent=
-    "INGRESSO DI PROVA " + (index+1) + " DI 3";
+  document.getElementById("role").textContent =
+    p.role;
 
-  document.getElementById("role").textContent=c.role;
-  document.getElementById("description").textContent=c.description;
-  document.getElementById("secret").textContent=c.secret;
-  document.getElementById("clue").textContent=c.clue;
+  document.getElementById("name").textContent =
+    p.name;
 
-  localStorage.setItem("demoIngresso",String(n+1));
+  document.getElementById("description").textContent =
+    p.description;
+
+  document.getElementById("secret").textContent =
+    p.secret;
+
+  document.getElementById("clue").textContent =
+    p.clue;
+
+  document.getElementById("avatar").textContent =
+    p.avatar;
 
   document.getElementById("login").classList.add("hidden");
   document.getElementById("profile").classList.remove("hidden");
+
 }
 
-function exitDemo(){
+
+function closeDossier(){
+
+  stopVoice();
+
+  currentCode =
+    "";
+
   document.getElementById("profile").classList.add("hidden");
   document.getElementById("login").classList.remove("hidden");
-  document.getElementById("code").value="";
+  document.getElementById("code").value = "";
+
 }
 
-document.getElementById("enter").addEventListener("click",showCharacter);
-document.getElementById("exit").addEventListener("click",exitDemo);
+
+document.getElementById("enter").onclick =
+  openDossier;
+
+document.getElementById("exit").onclick =
+  closeDossier;
+
+
+function speak(text){
+
+  if(!("speechSynthesis" in window)){
+
+    document.getElementById("voiceStatus").textContent =
+      "La voce non è supportata da questo browser.";
+
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+
+  const voice =
+    new SpeechSynthesisUtterance(text);
+
+  voice.lang =
+    "it-IT";
+
+  voice.rate =
+    0.92;
+
+  voice.pitch =
+    0.95;
+
+  voice.onstart =
+    () => {
+
+      document.getElementById("voiceStatus").textContent =
+        "Haviland sta parlando…";
+
+    };
+
+  voice.onend =
+    () => {
+
+      document.getElementById("voiceStatus").textContent =
+        "Haviland è pronto.";
+
+    };
+
+  window.speechSynthesis.speak(voice);
+
+}
+
+
+function readSummary(){
+
+  const p =
+    currentPerson();
+
+  if(!p){
+    return;
+  }
+
+  speak(
+    `Benvenuto ${p.name}. ` +
+    `Il tuo personaggio è ${p.role}. ` +
+    `${p.description}`
+  );
+
+}
+
+
+function readSecret(){
+
+  const p =
+    currentPerson();
+
+  if(!p){
+    return;
+  }
+
+  speak(
+    `Informazione riservata. ${p.secret}`
+  );
+
+}
+
+
+function readClue1(){
+
+  speak(
+    "Indizio uno. " +
+    "Il dossier che Angelina aveva con sé prima della sua morte è scomparso."
+  );
+
+}
+
+
+function readClue2(){
+
+  const p =
+    currentPerson();
+
+  if(!p){
+    return;
+  }
+
+  speak(
+    `Indizio personale. ${p.clue}`
+  );
+
+}
+
+
+function readFull(){
+
+  const p =
+    currentPerson();
+
+  if(!p){
+    return;
+  }
+
+  speak(
+    `Dossier personale di ${p.name}. ` +
+    `Personaggio: ${p.role}. ` +
+    `${p.description}. ` +
+    `Informazione riservata: ${p.secret}. ` +
+    `Indizio comune: il dossier che Angelina aveva con sé prima della sua morte è scomparso. ` +
+    `Indizio personale: ${p.clue}`
+  );
+
+}
+
+
+function stopVoice(){
+
+  if("speechSynthesis" in window){
+    window.speechSynthesis.cancel();
+  }
+
+}
+
+
+document.getElementById("voiceSummary").onclick =
+  readSummary;
+
+document.getElementById("voiceSecret").onclick =
+  readSecret;
+
+document.getElementById("voiceFull").onclick =
+  readFull;
+
+document.getElementById("voiceStop").onclick =
+  () => {
+
+    stopVoice();
+
+    document.getElementById("voiceStatus").textContent =
+      "Voce fermata.";
+
+  };
+
+
+const SpeechRecognition =
+  window.SpeechRecognition ||
+  window.webkitSpeechRecognition;
+
+
+let recognition =
+  null;
+
+let listening =
+  false;
+
+
+function normalize(text){
+
+  return (text || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[.,!?;:]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+
+function handleCommand(original){
+
+  const text =
+    normalize(original);
+
+  const status =
+    document.getElementById("voiceStatus");
+
+
+  if(!text.includes("haviland")){
+
+    status.textContent =
+      'Ho sentito: "' +
+      original +
+      '". Devi iniziare dicendo Haviland.';
+
+    return;
+  }
+
+
+  if(
+    text.includes("indizio uno") ||
+    text.includes("indizio 1") ||
+    text.includes("primo indizio")
+  ){
+
+    readClue1();
+    return;
+
+  }
+
+
+  if(
+    text.includes("indizio due") ||
+    text.includes("indizio 2") ||
+    text.includes("secondo indizio") ||
+    text.includes("indizio personale")
+  ){
+
+    readClue2();
+    return;
+
+  }
+
+
+  if(
+    text.includes("segreto") ||
+    text.includes("informazione riservata")
+  ){
+
+    readSecret();
+    return;
+
+  }
+
+
+  if(
+    text.includes("personaggio") ||
+    text.includes("chi sono")
+  ){
+
+    readSummary();
+    return;
+
+  }
+
+
+  if(
+    text.includes("leggi tutto") ||
+    text.includes("dossier completo")
+  ){
+
+    readFull();
+    return;
+
+  }
+
+
+  if(
+    text.includes("ferma") ||
+    text.includes("stop") ||
+    text.includes("silenzio")
+  ){
+
+    stopVoice();
+
+    status.textContent =
+      "Voce fermata.";
+
+    return;
+
+  }
+
+
+  const question =
+    original
+      .replace(/haviland/ig,"")
+      .trim();
+
+  askAI(question);
+
+}
+
+
+function startListening(){
+
+  const status =
+    document.getElementById("voiceStatus");
+
+  if(!SpeechRecognition){
+
+    status.textContent =
+      "Il riconoscimento vocale non è disponibile su questo browser.";
+
+    return;
+  }
+
+
+  if(!recognition){
+
+    recognition =
+      new SpeechRecognition();
+
+    recognition.lang =
+      "it-IT";
+
+    recognition.continuous =
+      true;
+
+    recognition.interimResults =
+      false;
+
+
+    recognition.onstart =
+      () => {
+
+        listening =
+          true;
+
+        status.textContent =
+          'Haviland è in ascolto. Prova a dire: “Haviland, indizio uno”.';
+
+        document.getElementById("voiceListen").textContent =
+          "🎙️ Haviland in ascolto";
+
+      };
+
+
+    recognition.onresult =
+      event => {
+
+        const result =
+          event.results[
+            event.results.length - 1
+          ];
+
+        if(result && result[0]){
+
+          const heard =
+            result[0].transcript;
+
+          status.textContent =
+            'Ho sentito: "' +
+            heard +
+            '"';
+
+          handleCommand(
+            heard
+          );
+
+        }
+
+      };
+
+
+    recognition.onerror =
+      event => {
+
+        status.textContent =
+          "Errore microfono: " +
+          event.error;
+
+      };
+
+
+    recognition.onend =
+      () => {
+
+        listening =
+          false;
+
+        document.getElementById("voiceListen").textContent =
+          "🎙️ Attiva Haviland";
+
+      };
+
+  }
+
+
+  if(listening){
+
+    recognition.stop();
+
+    return;
+
+  }
+
+
+  try{
+
+    recognition.start();
+
+  }
+
+  catch(error){
+
+    status.textContent =
+      "Il microfono risulta già attivo.";
+
+  }
+
+}
+
+
+document.getElementById("voiceListen").onclick =
+  startListening;
+
+
+async function askAI(question){
+
+  const answerBox =
+    document.getElementById("aiAnswer");
+
+  const status =
+    document.getElementById("voiceStatus");
+
+
+  if(!question){
+    return;
+  }
+
+
+  if(
+    HAVILAND_AI_ENDPOINT ===
+    "INSERISCI_URL_WORKER_QUI"
+  ){
+
+    const message =
+      "La modalità intelligenza artificiale è predisposta, ma dobbiamo ancora collegare il backend di Haviland.";
+
+    answerBox.textContent =
+      message;
+
+    status.textContent =
+      message;
+
+    speak(message);
+
+    return;
+
+  }
+
+
+  status.textContent =
+    "Haviland sta pensando…";
+
+  answerBox.textContent =
+    "Sto cercando la risposta…";
+
+
+  try{
+
+    const response =
+      await fetch(
+        HAVILAND_AI_ENDPOINT,
+        {
+
+          method:"POST",
+
+          headers:{
+            "Content-Type":"application/json"
+          },
+
+          body:JSON.stringify({
+
+            question:question,
+
+            context:{
+
+              event:
+                "Cena con delitto - Il Dossier Scomparso",
+
+              participant:
+                currentPerson()?.name || null,
+
+              character:
+                currentPerson()?.role || null
+
+            }
+
+          })
+
+        }
+      );
+
+
+    if(!response.ok){
+      throw new Error();
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const answer =
+      data.answer ||
+      "Non ho trovato una risposta.";
+
+
+    answerBox.textContent =
+      answer;
+
+    status.textContent =
+      "Haviland ha risposto.";
+
+    speak(answer);
+
+  }
+
+  catch(error){
+
+    const message =
+      "Non riesco a contattare il servizio AI in questo momento.";
+
+    answerBox.textContent =
+      message;
+
+    status.textContent =
+      message;
+
+    speak(message);
+
+  }
+
+}
+
 </script>
 
 </body>
