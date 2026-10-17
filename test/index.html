@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#120d09">
+<title>Villa Valenti — Test Giocatori</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0907}#baseApp{position:fixed;inset:0;width:100%;height:100%;border:0;background:#0b0907}</style>
+</head>
+<body>
+<iframe id="baseApp" src="https://albidem03.github.io/CENA-CON-DELITTO/" title="Villa Valenti — Test"></iframe>
+<script>
+const PIETRO_ACCESS_KEY="villa_valenti_test_20261017_1713_pietro_900750_v1";
+const COUNT_API="https://countapi.mileshilliard.com/api/v1";
+let playersPoll=null;
+
+function markPietroEntered(){
+  fetch(`${COUNT_API}/hit/${PIETRO_ACCESS_KEY}`,{cache:"no-store"}).catch(()=>{});
+}
+
+async function pietroHasEntered(){
+  try{
+    const r=await fetch(`${COUNT_API}/get/${PIETRO_ACCESS_KEY}`,{cache:"no-store"});
+    if(!r.ok)return false;
+    const d=await r.json();
+    return Number(d.value||0)>0;
+  }catch(e){
+    return false;
+  }
+}
+
+function forcePietroDossier(d){
+  const map={
+    characterName:"Cesare Valli",
+    characterRole:"Maggiordomo di Villa Valenti",
+    characterDescription:"Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",
+    characterAdvice:"Sii discreto. Osserva molto e parla soltanto quando ritieni necessario.",
+    characterMonogram:"CV",
+    greeting:"Salve, Cesare Valli."
+  };
+
+  for(const [id,text] of Object.entries(map)){
+    const el=d.getElementById(id);
+    if(el)el.textContent=text;
+  }
+
+  d.getElementById("secretRoleBox")?.classList.add("hidden");
+}
+
+function addPlayersArea(w,d){
+  if(d.getElementById("playersNavBtn"))return;
+
+  const style=d.createElement("style");
+  style.textContent=`
+    .mobile-nav.four-items{grid-template-columns:repeat(4,1fr)!important}
+    .players-board{display:grid;gap:14px}
+    .players-empty{
+      color:#8f806b;
+      font-family:"Courier New",monospace;
+      font-size:13px
+    }
+    .player-card{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:18px;
+      align-items:center;
+      background:linear-gradient(rgba(228,214,187,.97),rgba(207,187,151,.98));
+      color:#221a13;
+      border:1px solid rgba(90,67,36,.38);
+      padding:18px 20px;
+      box-shadow:0 12px 26px rgba(0,0,0,.22)
+    }
+    .player-real{
+      font-family:"Courier New",monospace;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:1.4px;
+      color:#665035;
+      margin-bottom:6px
+    }
+    .player-character{
+      font-size:24px;
+      color:#34281d
+    }
+    .player-role{
+      font-family:"Courier New",monospace;
+      font-size:11px;
+      color:#6d1717;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:1.2px;
+      text-align:right
+    }
+    @media(max-width:560px){
+      .player-card{grid-template-columns:1fr}
+      .player-role{text-align:left}
+    }
+  `;
+  d.head.appendChild(style);
+
+  const sidebar=d.querySelector('.sidebar');
+  const status=sidebar?.querySelector('.status-card');
+
+  if(sidebar){
+    const b=d.createElement('button');
+    b.id='playersNavBtn';
+    b.className='nav-btn';
+    b.dataset.tab='giocatori';
+    b.innerHTML='<span class="nav-icon">♟</span>Giocatori';
+    b.onclick=()=>{
+      w.openTab('giocatori');
+      refreshPlayers();
+      startPlayersPolling();
+    };
+    sidebar.insertBefore(b,status||null);
+  }
+
+  const main=d.querySelector('main.main');
+
+  if(main){
+    const s=d.createElement('section');
+    s.id='tab-giocatori';
+    s.className='tab-page hidden';
+    s.innerHTML=`
+      <div class="paper-sheet">
+        <div class="section-title">Giocatori</div>
+        <div class="paper-text" style="margin-bottom:16px">
+          Qui compaiono i giocatori che hanno già aperto il proprio dossier,
+          con il personaggio assegnato.
+        </div>
+        <div id="playersBoard" class="players-board">
+          <div class="players-empty">
+            Nessun giocatore ancora registrato nel test.
+          </div>
+        </div>
+      </div>
+    `;
+    main.appendChild(s);
+  }
+
+  const m=d.getElementById('mobileNav');
+
+  if(m){
+    const b=d.createElement('button');
+    b.id='playersMobileBtn';
+    b.dataset.mobileTab='giocatori';
+    b.textContent='GIOCATORI';
+    b.onclick=()=>{
+      w.openTab('giocatori');
+      refreshPlayers();
+      startPlayersPolling();
+    };
+
+    m.appendChild(b);
+    m.classList.remove('two-items','three-items');
+    m.classList.add('four-items');
+  }
+}
+
+async function refreshPlayers(){
+  const f=document.getElementById('baseApp');
+  const d=f.contentDocument;
+  const b=d?.getElementById('playersBoard');
+
+  if(!b)return;
+
+  const entered=await pietroHasEntered();
+
+  b.innerHTML=entered
+    ? `
+      <div class="player-card">
+        <div>
+          <div class="player-real">Pietro Scolari</div>
+          <div class="player-character">Cesare Valli</div>
+        </div>
+        <div class="player-role">Maggiordomo</div>
+      </div>
+      `
+    : `
+      <div class="players-empty">
+        Nessun giocatore ancora registrato nel test.
+      </div>
+      `;
+}
+
+function startPlayersPolling(){
+  if(playersPoll)return;
+  refreshPlayers();
+  playersPoll=setInterval(refreshPlayers,2500);
+}
+
+function install(){
+  const f=document.getElementById('baseApp');
+  let w,d;
+
+  try{
+    w=f.contentWindow;
+    d=f.contentDocument;
+
+    if(!w||!d||typeof w.login!=='function')return;
+  }catch(e){
+    return;
+  }
+
+  const originalLogin=w.login;
+  const originalOpen=w.openCharacter;
+  const originalLogout=w.logout;
+
+  w.openCharacter=function(p){
+    originalOpen.call(w,p);
+
+    if(p&&p.id==='pietro_scolari'){
+      forcePietroDossier(d);
+    }
+  };
+
+  w.login=function(){
+    const code=(d.getElementById('codeInput')?.value||'').trim();
+
+    originalLogin.call(w);
+
+    setTimeout(()=>{
+      const visible=
+        !d.getElementById('appSection')?.classList.contains('hidden');
+
+      if(!visible)return;
+
+      if(code==='900750'){
+        forcePietroDossier(d);
+        markPietroEntered();
+      }
+
+      if(code==='321023'){
+        addPlayersArea(w,d);
+        startPlayersPolling();
+      }
+    },80);
+  };
+
+  w.logout=function(){
+    if(playersPoll){
+      clearInterval(playersPoll);
+      playersPoll=null;
+    }
+
+    originalLogout.call(w);
+  };
+}
+
+document
+  .getElementById('baseApp')
+  .addEventListener(
+    'load',
+    ()=>setTimeout(install,100)
+  );
+</script>
+</body>
+</html>
