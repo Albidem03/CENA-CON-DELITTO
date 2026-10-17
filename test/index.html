@@ -4,255 +4,1647 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="theme-color" content="#120d09">
-<title>Villa Valenti — Test Giocatori</title>
-<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0907}#baseApp{position:fixed;inset:0;width:100%;height:100%;border:0;background:#0b0907}</style>
+<title>Villa Valenti — Test Completo</title>
+
+<style>
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#0b0907;
+}
+
+#baseApp{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+  background:#0b0907;
+}
+
+#resolver{
+  position:fixed;
+  width:1px;
+  height:1px;
+  left:-9999px;
+  top:-9999px;
+  opacity:0;
+  pointer-events:none;
+}
+</style>
 </head>
+
 <body>
-<iframe id="baseApp" src="https://albidem03.github.io/CENA-CON-DELITTO/" title="Villa Valenti — Test"></iframe>
+
+<iframe
+  id="baseApp"
+  src="https://albidem03.github.io/CENA-CON-DELITTO/"
+  title="Villa Valenti — Test">
+</iframe>
+
+<iframe
+  id="resolver"
+  src="https://albidem03.github.io/CENA-CON-DELITTO/"
+  aria-hidden="true">
+</iframe>
+
 <script>
-const PIETRO_ACCESS_KEY="villa_valenti_test_20261017_1713_pietro_900750_v1";
-const COUNT_API="https://countapi.mileshilliard.com/api/v1";
-let playersPoll=null;
 
-function markPietroEntered(){
-  fetch(`${COUNT_API}/hit/${PIETRO_ACCESS_KEY}`,{cache:"no-store"}).catch(()=>{});
-}
+/* =========================================================
+   VILLA VALENTI — SISTEMA TEST
+   ========================================================= */
 
-async function pietroHasEntered(){
-  try{
-    const r=await fetch(`${COUNT_API}/get/${PIETRO_ACCESS_KEY}`,{cache:"no-store"});
-    if(!r.ok)return false;
-    const d=await r.json();
-    return Number(d.value||0)>0;
-  }catch(e){
-    return false;
+const COUNT_API =
+  "https://countapi.mileshilliard.com/api/v1";
+
+const TEST_NAMESPACE =
+  "villa_valenti_test_completo_20261017_v3";
+
+const RESET_KEY =
+  TEST_NAMESPACE + "_session";
+
+/*
+  Tutti i partecipanti per i quali abbiamo già un codice.
+
+  Andrea Volpato verrà aggiunto quando avremo il suo codice.
+*/
+
+const TEST_PLAYERS = [
+
+  {
+    id:"alberto",
+    name:"Alberto D'Amico",
+    code:"321023",
+    admin:true
+  },
+
+  {
+    id:"giulia_vigasio",
+    name:"Giulia Tesini di Vigasio",
+    code:"290604"
+  },
+
+  {
+    id:"angela",
+    name:"Angela Viviani",
+    code:"240383"
+  },
+
+  {
+    id:"eleonora",
+    name:"Eleonora Pinto",
+    code:"141019"
+  },
+
+  {
+    id:"rocco",
+    name:"Rocco Monaco",
+    code:"190797"
+  },
+
+  {
+    id:"alessia",
+    name:"Alessia Remelli",
+    code:"949699"
+  },
+
+  {
+    id:"andrea_filippi",
+    name:"Andrea Filippi",
+    code:"140918"
+  },
+
+  {
+    id:"pietro",
+    name:"Pietro Scolari",
+    code:"900750"
+  },
+
+  {
+    id:"julian",
+    name:"Julian Remelli",
+    code:"170504"
+  },
+
+  {
+    id:"elena",
+    name:"Elena Pelizzaro",
+    code:"122906"
+  },
+
+  {
+    id:"beatrice",
+    name:"Beatrice Remelli",
+    code:"347106"
+  },
+
+  {
+    id:"gabriele_dicristo",
+    name:"Gabriele Di Cristo",
+    code:"319903"
+  },
+
+  {
+    id:"gabriele_battini",
+    name:"Gabriele Battini",
+    code:"248842"
+  },
+
+  {
+    id:"cristian",
+    name:"Cristian Campesi",
+    code:"265069"
+  },
+
+  {
+    id:"vivald",
+    name:"Vivald Kerry",
+    code:"111111"
+  },
+
+  {
+    id:"giulia_povegliano",
+    name:"Giulia Tesini di Povegliano",
+    code:"220226"
+  },
+
+  {
+    id:"sonia",
+    name:"Sonia Vanoni",
+    code:"150704"
+  },
+
+  {
+    id:"andrea_raffi",
+    name:"Andrea Raffi",
+    code:"535506"
+  },
+
+  {
+    id:"emma",
+    name:"Emma Biasi",
+    code:"230704"
   }
+
+];
+
+
+/* =========================================================
+   STATO TEST CONDIVISO
+   ========================================================= */
+
+async function apiGet(key){
+
+  try{
+
+    const r = await fetch(
+      `${COUNT_API}/get/${key}`,
+      {cache:"no-store"}
+    );
+
+    if(!r.ok) return 0;
+
+    const d = await r.json();
+
+    return Number(d.value || 0);
+
+  }catch(e){
+
+    return 0;
+
+  }
+
 }
+
+
+async function apiHit(key){
+
+  try{
+
+    const r = await fetch(
+      `${COUNT_API}/hit/${key}`,
+      {cache:"no-store"}
+    );
+
+    if(!r.ok) return 0;
+
+    const d = await r.json();
+
+    return Number(d.value || 0);
+
+  }catch(e){
+
+    return 0;
+
+  }
+
+}
+
+
+/*
+  Numero della sessione test.
+
+  Ogni volta che Alberto preme AZZERA TEST,
+  questo numero aumenta.
+
+  In questo modo gli accessi della sessione
+  precedente non vengono più visualizzati.
+*/
+
+async function getTestSession(){
+
+  return await apiGet(RESET_KEY);
+
+}
+
+
+async function resetTestSession(){
+
+  return await apiHit(RESET_KEY);
+
+}
+
+
+/* =========================================================
+   REGISTRAZIONE ACCESSO
+   ========================================================= */
+
+function playerKey(player,session){
+
+  return (
+    TEST_NAMESPACE +
+    "_player_" +
+    player.id +
+    "_session_" +
+    session
+  );
+
+}
+
+
+async function registerPlayer(player){
+
+  if(!player) return;
+
+  const session =
+    await getTestSession();
+
+  await apiHit(
+    playerKey(player,session)
+  );
+
+}
+
+
+async function hasPlayerEntered(player,session){
+
+  const value =
+    await apiGet(
+      playerKey(player,session)
+    );
+
+  return value > 0;
+
+}
+
+
+/* =========================================================
+   PIETRO — PERSONAGGIO FORZATO SOLO NEL TEST
+   ========================================================= */
 
 function forcePietroDossier(d){
-  const map={
-    characterName:"Cesare Valli",
-    characterRole:"Maggiordomo di Villa Valenti",
-    characterDescription:"Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",
-    characterAdvice:"Sii discreto. Osserva molto e parla soltanto quando ritieni necessario.",
-    characterMonogram:"CV",
-    greeting:"Salve, Cesare Valli."
+
+  const values = {
+
+    characterName:
+      "Cesare Valli",
+
+    characterRole:
+      "Maggiordomo di Villa Valenti",
+
+    characterDescription:
+      "Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",
+
+    characterAdvice:
+      "Sii discreto. Osserva molto e parla soltanto quando ritieni necessario.",
+
+    characterMonogram:
+      "CV",
+
+    greeting:
+      "Salve, Cesare Valli."
+
   };
 
-  for(const [id,text] of Object.entries(map)){
-    const el=d.getElementById(id);
-    if(el)el.textContent=text;
+
+  for(
+    const [id,text]
+    of Object.entries(values)
+  ){
+
+    const el =
+      d.getElementById(id);
+
+    if(el)
+      el.textContent = text;
+
   }
 
-  d.getElementById("secretRoleBox")?.classList.add("hidden");
+
+  /*
+    Nel test Pietro NON deve ricevere
+    informazioni da questa forzatura
+    riguardo ruoli speciali.
+  */
+
+  const secret =
+    d.getElementById("secretRoleBox");
+
+  if(secret)
+    secret.classList.add("hidden");
+
 }
 
-function addPlayersArea(w,d){
-  if(d.getElementById("playersNavBtn"))return;
 
-  const style=d.createElement("style");
-  style.textContent=`
-    .mobile-nav.four-items{grid-template-columns:repeat(4,1fr)!important}
-    .players-board{display:grid;gap:14px}
-    .players-empty{
-      color:#8f806b;
-      font-family:"Courier New",monospace;
-      font-size:13px
+/* =========================================================
+   LETTURA PERSONAGGIO DALL'INDEX UFFICIALE
+   ========================================================= */
+
+const characterCache = {};
+
+
+/*
+  Per non duplicare l'algoritmo ufficiale,
+  la schermata Giocatori legge il personaggio
+  direttamente dall'index ufficiale.
+
+  Non viene mai letta né mostrata
+  l'informazione Assassin/Complice.
+*/
+
+async function resolveCharacter(player){
+
+  if(characterCache[player.id])
+    return characterCache[player.id];
+
+
+  /*
+    Pietro è forzato manualmente
+    soltanto nel test.
+  */
+
+  if(player.id === "pietro"){
+
+    const result = {
+
+      character:
+        "Cesare Valli",
+
+      role:
+        "Maggiordomo"
+
+    };
+
+    characterCache[player.id] =
+      result;
+
+    return result;
+
+  }
+
+
+  return new Promise(resolve=>{
+
+    const iframe =
+      document.getElementById("resolver");
+
+
+    const attempt = ()=>{
+
+      try{
+
+        const w =
+          iframe.contentWindow;
+
+        const d =
+          iframe.contentDocument;
+
+
+        if(
+          !w ||
+          !d ||
+          typeof w.login !== "function"
+        ){
+
+          setTimeout(attempt,150);
+
+          return;
+
+        }
+
+
+        /*
+          Torniamo alla schermata login.
+        */
+
+        try{
+
+          if(typeof w.logout === "function")
+            w.logout();
+
+        }catch(e){}
+
+
+        setTimeout(()=>{
+
+          try{
+
+            const input =
+              d.getElementById("codeInput");
+
+            if(!input){
+
+              resolve({
+                character:"—",
+                role:"—"
+              });
+
+              return;
+
+            }
+
+
+            input.value =
+              player.code;
+
+
+            w.login();
+
+
+            setTimeout(()=>{
+
+              const character =
+                d.getElementById(
+                  "characterName"
+                )?.textContent?.trim()
+                || "—";
+
+
+              let role =
+                d.getElementById(
+                  "characterRole"
+                )?.textContent?.trim()
+                || "—";
+
+
+              /*
+                Nessun dato del box segreto
+                viene letto.
+              */
+
+
+              const result = {
+                character,
+                role
+              };
+
+
+              characterCache[player.id] =
+                result;
+
+
+              try{
+
+                if(
+                  typeof w.logout ===
+                  "function"
+                )
+                  w.logout();
+
+              }catch(e){}
+
+
+              resolve(result);
+
+            },180);
+
+          }catch(e){
+
+            resolve({
+              character:"—",
+              role:"—"
+            });
+
+          }
+
+        },80);
+
+      }catch(e){
+
+        setTimeout(attempt,200);
+
+      }
+
+    };
+
+
+    attempt();
+
+  });
+
+}
+
+
+/* =========================================================
+   STILE GIOCATORI
+   ========================================================= */
+
+function installPlayersStyle(d){
+
+  if(
+    d.getElementById(
+      "villaPlayersStyle"
+    )
+  )
+    return;
+
+
+  const style =
+    d.createElement("style");
+
+
+  style.id =
+    "villaPlayersStyle";
+
+
+  style.textContent = `
+
+    .mobile-nav.four-items{
+      grid-template-columns:
+      repeat(4,1fr)!important;
     }
-    .player-card{
+
+
+    .players-board{
       display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      gap:18px;
-      align-items:center;
-      background:linear-gradient(rgba(228,214,187,.97),rgba(207,187,151,.98));
-      color:#221a13;
-      border:1px solid rgba(90,67,36,.38);
-      padding:18px 20px;
-      box-shadow:0 12px 26px rgba(0,0,0,.22)
+      gap:13px;
     }
-    .player-real{
-      font-family:"Courier New",monospace;
+
+
+    .players-summary{
+      font-family:
+        "Courier New",
+        monospace;
+
       font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:1.4px;
-      color:#665035;
-      margin-bottom:6px
+
+      color:#65533d;
+
+      margin-bottom:18px;
+
+      padding-bottom:13px;
+
+      border-bottom:
+        1px solid
+        rgba(90,67,36,.25);
     }
-    .player-character{
-      font-size:24px;
-      color:#34281d
+
+
+    .player-card{
+
+      display:grid;
+
+      grid-template-columns:
+        minmax(0,1fr)
+        auto;
+
+      gap:18px;
+
+      align-items:center;
+
+      background:
+        linear-gradient(
+          rgba(228,214,187,.97),
+          rgba(207,187,151,.98)
+        );
+
+      color:#221a13;
+
+      border:
+        1px solid
+        rgba(90,67,36,.38);
+
+      padding:17px 19px;
+
+      box-shadow:
+        0 10px 22px
+        rgba(0,0,0,.20);
     }
-    .player-role{
-      font-family:"Courier New",monospace;
+
+
+    .player-real{
+
+      font-family:
+        "Courier New",
+        monospace;
+
       font-size:11px;
-      color:#6d1717;
-      font-weight:800;
+
       text-transform:uppercase;
-      letter-spacing:1.2px;
-      text-align:right
+
+      letter-spacing:1.3px;
+
+      color:#665035;
+
+      margin-bottom:5px;
     }
+
+
+    .player-character{
+
+      font-size:23px;
+
+      color:#34281d;
+    }
+
+
+    .player-role{
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:11px;
+
+      color:#6d1717;
+
+      font-weight:800;
+
+      text-transform:uppercase;
+
+      letter-spacing:1px;
+
+      text-align:right;
+
+      max-width:230px;
+    }
+
+
+    .players-empty{
+
+      color:#766650;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:13px;
+
+      padding:22px 0;
+    }
+
+
+    .players-loading{
+
+      color:#766650;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:12px;
+
+      padding:14px 0;
+    }
+
+
+    .test-reset-area{
+
+      margin-top:28px;
+
+      padding-top:20px;
+
+      border-top:
+        1px solid
+        rgba(91,67,37,.28);
+    }
+
+
+    .test-reset-warning{
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:11px;
+
+      line-height:1.55;
+
+      color:#66533d;
+
+      margin-bottom:12px;
+    }
+
+
+    .test-reset-btn{
+
+      border:
+        1px solid
+        #4c1111;
+
+      border-radius:3px;
+
+      padding:
+        12px 16px;
+
+      background:
+        linear-gradient(
+          #7f1f1f,
+          #591111
+        );
+
+      color:#f2e1c1;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      font-size:12px;
+
+      font-weight:800;
+
+      letter-spacing:1px;
+
+      cursor:pointer;
+    }
+
+
+    .test-reset-btn:active{
+      transform:translateY(1px);
+    }
+
+
+    .test-badge{
+
+      display:inline-block;
+
+      margin-left:8px;
+
+      border:
+        1px solid
+        rgba(109,23,23,.45);
+
+      color:#791d1d;
+
+      padding:3px 6px;
+
+      font-size:9px;
+
+      font-family:
+        "Courier New",
+        monospace;
+
+      letter-spacing:1px;
+
+      transform:rotate(-2deg);
+    }
+
+
     @media(max-width:560px){
-      .player-card{grid-template-columns:1fr}
-      .player-role{text-align:left}
+
+      .player-card{
+        grid-template-columns:1fr;
+        gap:7px;
+      }
+
+      .player-role{
+        text-align:left;
+        max-width:none;
+      }
+
     }
+
   `;
+
+
   d.head.appendChild(style);
 
-  const sidebar=d.querySelector('.sidebar');
-  const status=sidebar?.querySelector('.status-card');
+}
+
+
+/* =========================================================
+   CREAZIONE SEZIONE GIOCATORI — SOLO ALBERTO
+   ========================================================= */
+
+function addPlayersArea(w,d){
+
+  if(
+    d.getElementById(
+      "playersNavBtn"
+    )
+  )
+    return;
+
+
+  installPlayersStyle(d);
+
+
+  /*
+    MENU LATERALE
+  */
+
+  const sidebar =
+    d.querySelector(".sidebar");
+
+
+  const status =
+    sidebar?.querySelector(
+      ".status-card"
+    );
+
 
   if(sidebar){
-    const b=d.createElement('button');
-    b.id='playersNavBtn';
-    b.className='nav-btn';
-    b.dataset.tab='giocatori';
-    b.innerHTML='<span class="nav-icon">♟</span>Giocatori';
-    b.onclick=()=>{
-      w.openTab('giocatori');
+
+    const button =
+      d.createElement("button");
+
+
+    button.id =
+      "playersNavBtn";
+
+
+    button.className =
+      "nav-btn";
+
+
+    button.dataset.tab =
+      "giocatori";
+
+
+    button.innerHTML =
+      '<span class="nav-icon">♟</span>Giocatori';
+
+
+    button.onclick = ()=>{
+
+      w.openTab("giocatori");
+
       refreshPlayers();
+
       startPlayersPolling();
+
     };
-    sidebar.insertBefore(b,status||null);
+
+
+    sidebar.insertBefore(
+      button,
+      status || null
+    );
+
   }
 
-  const main=d.querySelector('main.main');
+
+  /*
+    PAGINA GIOCATORI
+  */
+
+  const main =
+    d.querySelector("main.main");
+
 
   if(main){
-    const s=d.createElement('section');
-    s.id='tab-giocatori';
-    s.className='tab-page hidden';
-    s.innerHTML=`
+
+    const section =
+      d.createElement("section");
+
+
+    section.id =
+      "tab-giocatori";
+
+
+    section.className =
+      "tab-page hidden";
+
+
+    section.innerHTML = `
+
       <div class="paper-sheet">
-        <div class="section-title">Giocatori</div>
-        <div class="paper-text" style="margin-bottom:16px">
-          Qui compaiono i giocatori che hanno già aperto il proprio dossier,
-          con il personaggio assegnato.
+
+        <div class="section-title">
+          Giocatori
+          <span class="test-badge">
+            TEST
+          </span>
         </div>
-        <div id="playersBoard" class="players-board">
-          <div class="players-empty">
-            Nessun giocatore ancora registrato nel test.
+
+
+        <div
+          class="paper-text"
+          style="margin-bottom:16px"
+        >
+          Elenco dei partecipanti che hanno
+          già effettuato l'accesso al dossier.
+        </div>
+
+
+        <div
+          id="playersSummary"
+          class="players-summary"
+        >
+          Aggiornamento in corso...
+        </div>
+
+
+        <div
+          id="playersBoard"
+          class="players-board"
+        >
+
+          <div class="players-loading">
+            Lettura accessi...
           </div>
+
         </div>
+
+
+        <div class="test-reset-area">
+
+          <div class="test-reset-warning">
+
+            Il comando seguente esiste
+            esclusivamente nella versione
+            di prova.
+
+            Azzera l'elenco degli accessi
+            visualizzati e permette di
+            ricominciare il test da zero.
+
+          </div>
+
+
+          <button
+            id="resetTestBtn"
+            class="test-reset-btn"
+            type="button"
+          >
+            AZZERA TEST
+          </button>
+
+        </div>
+
       </div>
+
     `;
-    main.appendChild(s);
+
+
+    main.appendChild(section);
+
+
+    const resetBtn =
+      d.getElementById(
+        "resetTestBtn"
+      );
+
+
+    if(resetBtn){
+
+      resetBtn.onclick =
+        ()=>confirmReset(d);
+
+    }
+
   }
 
-  const m=d.getElementById('mobileNav');
 
-  if(m){
-    const b=d.createElement('button');
-    b.id='playersMobileBtn';
-    b.dataset.mobileTab='giocatori';
-    b.textContent='GIOCATORI';
-    b.onclick=()=>{
-      w.openTab('giocatori');
+  /*
+    MENU MOBILE
+  */
+
+  const mobile =
+    d.getElementById(
+      "mobileNav"
+    );
+
+
+  if(mobile){
+
+    const button =
+      d.createElement("button");
+
+
+    button.id =
+      "playersMobileBtn";
+
+
+    button.dataset.mobileTab =
+      "giocatori";
+
+
+    button.textContent =
+      "GIOCATORI";
+
+
+    button.onclick = ()=>{
+
+      w.openTab("giocatori");
+
       refreshPlayers();
+
       startPlayersPolling();
+
     };
 
-    m.appendChild(b);
-    m.classList.remove('two-items','three-items');
-    m.classList.add('four-items');
+
+    mobile.appendChild(button);
+
+
+    mobile.classList.remove(
+      "two-items",
+      "three-items"
+    );
+
+
+    mobile.classList.add(
+      "four-items"
+    );
+
   }
+
 }
+
+
+/* =========================================================
+   AGGIORNAMENTO LISTA
+   ========================================================= */
+
+let playersPoll = null;
+
+let refreshRunning = false;
+
 
 async function refreshPlayers(){
-  const f=document.getElementById('baseApp');
-  const d=f.contentDocument;
-  const b=d?.getElementById('playersBoard');
 
-  if(!b)return;
+  if(refreshRunning)
+    return;
 
-  const entered=await pietroHasEntered();
 
-  b.innerHTML=entered
-    ? `
-      <div class="player-card">
-        <div>
-          <div class="player-real">Pietro Scolari</div>
-          <div class="player-character">Cesare Valli</div>
-        </div>
-        <div class="player-role">Maggiordomo</div>
-      </div>
-      `
-    : `
-      <div class="players-empty">
-        Nessun giocatore ancora registrato nel test.
-      </div>
-      `;
-}
+  refreshRunning = true;
 
-function startPlayersPolling(){
-  if(playersPoll)return;
-  refreshPlayers();
-  playersPoll=setInterval(refreshPlayers,2500);
-}
-
-function install(){
-  const f=document.getElementById('baseApp');
-  let w,d;
 
   try{
-    w=f.contentWindow;
-    d=f.contentDocument;
 
-    if(!w||!d||typeof w.login!=='function')return;
+    const frame =
+      document.getElementById(
+        "baseApp"
+      );
+
+
+    const d =
+      frame.contentDocument;
+
+
+    const board =
+      d?.getElementById(
+        "playersBoard"
+      );
+
+
+    const summary =
+      d?.getElementById(
+        "playersSummary"
+      );
+
+
+    if(!board){
+
+      refreshRunning = false;
+
+      return;
+
+    }
+
+
+    const session =
+      await getTestSession();
+
+
+    const enteredPlayers = [];
+
+
+    for(
+      const player
+      of TEST_PLAYERS
+    ){
+
+      /*
+        Alberto non viene mostrato
+        nel proprio elenco Giocatori.
+      */
+
+      if(player.admin)
+        continue;
+
+
+      const entered =
+        await hasPlayerEntered(
+          player,
+          session
+        );
+
+
+      if(entered)
+        enteredPlayers.push(player);
+
+    }
+
+
+    if(summary){
+
+      summary.textContent =
+        enteredPlayers.length +
+        " giocator" +
+        (
+          enteredPlayers.length === 1
+          ? "e"
+          : "i"
+        ) +
+        " registrat" +
+        (
+          enteredPlayers.length === 1
+          ? "o"
+          : "i"
+        ) +
+        " in questa sessione di test.";
+
+    }
+
+
+    if(
+      enteredPlayers.length === 0
+    ){
+
+      board.innerHTML = `
+
+        <div class="players-empty">
+
+          Nessun giocatore ha ancora
+          effettuato l'accesso in questa
+          sessione di test.
+
+        </div>
+
+      `;
+
+
+      refreshRunning = false;
+
+      return;
+
+    }
+
+
+    board.innerHTML =
+      '<div class="players-loading">Caricamento personaggi...</div>';
+
+
+    const cards = [];
+
+
+    for(
+      const player
+      of enteredPlayers
+    ){
+
+      const info =
+        await resolveCharacter(player);
+
+
+      cards.push(`
+
+        <div class="player-card">
+
+          <div>
+
+            <div class="player-real">
+              ${escapeHtml(player.name)}
+            </div>
+
+            <div class="player-character">
+              ${escapeHtml(info.character)}
+            </div>
+
+          </div>
+
+
+          <div class="player-role">
+            ${escapeHtml(
+              shortRole(info.role)
+            )}
+          </div>
+
+        </div>
+
+      `);
+
+    }
+
+
+    board.innerHTML =
+      cards.join("");
+
+
   }catch(e){
-    return;
+
+    console.error(e);
+
   }
 
-  const originalLogin=w.login;
-  const originalOpen=w.openCharacter;
-  const originalLogout=w.logout;
 
-  w.openCharacter=function(p){
-    originalOpen.call(w,p);
+  refreshRunning = false;
 
-    if(p&&p.id==='pietro_scolari'){
-      forcePietroDossier(d);
-    }
-  };
-
-  w.login=function(){
-    const code=(d.getElementById('codeInput')?.value||'').trim();
-
-    originalLogin.call(w);
-
-    setTimeout(()=>{
-      const visible=
-        !d.getElementById('appSection')?.classList.contains('hidden');
-
-      if(!visible)return;
-
-      if(code==='900750'){
-        forcePietroDossier(d);
-        markPietroEntered();
-      }
-
-      if(code==='321023'){
-        addPlayersArea(w,d);
-        startPlayersPolling();
-      }
-    },80);
-  };
-
-  w.logout=function(){
-    if(playersPoll){
-      clearInterval(playersPoll);
-      playersPoll=null;
-    }
-
-    originalLogout.call(w);
-  };
 }
 
-document
-  .getElementById('baseApp')
-  .addEventListener(
-    'load',
-    ()=>setTimeout(install,100)
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+async function confirmReset(d){
+
+  const ok =
+    window.confirm(
+      "Vuoi davvero azzerare il test?\n\n" +
+      "L'elenco Giocatori verrà svuotato " +
+      "e potrai ricominciare gli accessi da zero."
+    );
+
+
+  if(!ok)
+    return;
+
+
+  const button =
+    d.getElementById(
+      "resetTestBtn"
+    );
+
+
+  if(button){
+
+    button.disabled = true;
+
+    button.textContent =
+      "AZZERAMENTO...";
+
+  }
+
+
+  await resetTestSession();
+
+
+  /*
+    Puliamo la cache soltanto per
+    rendere la nuova prova indipendente.
+  */
+
+  for(
+    const key
+    of Object.keys(characterCache)
+  ){
+
+    delete characterCache[key];
+
+  }
+
+
+  await refreshPlayers();
+
+
+  if(button){
+
+    button.disabled = false;
+
+    button.textContent =
+      "AZZERA TEST";
+
+  }
+
+
+  window.alert(
+    "Test azzerato.\n\n" +
+    "Da questo momento verranno mostrati " +
+    "solo i nuovi accessi."
   );
+
+}
+
+
+/* =========================================================
+   POLLING
+   ========================================================= */
+
+function startPlayersPolling(){
+
+  if(playersPoll)
+    return;
+
+
+  refreshPlayers();
+
+
+  playersPoll =
+    setInterval(
+      refreshPlayers,
+      4000
+    );
+
+}
+
+
+function stopPlayersPolling(){
+
+  if(playersPoll){
+
+    clearInterval(
+      playersPoll
+    );
+
+    playersPoll = null;
+
+  }
+
+}
+
+
+/* =========================================================
+   UTILITY
+   ========================================================= */
+
+function escapeHtml(value){
+
+  return String(value)
+
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function shortRole(role){
+
+  if(!role)
+    return "—";
+
+
+  /*
+    Per Pietro vogliamo semplicemente
+    "Maggiordomo".
+  */
+
+  if(
+    role.toLowerCase()
+      .includes("maggiordomo")
+  )
+    return "Maggiordomo";
+
+
+  return role;
+
+}
+
+
+/* =========================================================
+   INSTALLAZIONE NELL'INDEX UFFICIALE
+   ========================================================= */
+
+function install(){
+
+  const frame =
+    document.getElementById(
+      "baseApp"
+    );
+
+
+  let w;
+  let d;
+
+
+  try{
+
+    w =
+      frame.contentWindow;
+
+    d =
+      frame.contentDocument;
+
+
+    if(
+      !w ||
+      !d ||
+      typeof w.login !== "function"
+    )
+      return;
+
+  }catch(e){
+
+    return;
+
+  }
+
+
+  /*
+    Evita installazioni doppie.
+  */
+
+  if(w.__villaTestInstalled)
+    return;
+
+
+  w.__villaTestInstalled = true;
+
+
+  const originalLogin =
+    w.login;
+
+
+  const originalOpen =
+    w.openCharacter;
+
+
+  const originalLogout =
+    w.logout;
+
+
+  /*
+    APERTURA DOSSIER
+  */
+
+  if(
+    typeof originalOpen ===
+    "function"
+  ){
+
+    w.openCharacter =
+      function(player){
+
+        originalOpen.call(w,player);
+
+
+        if(
+          player &&
+          player.id ===
+          "pietro_scolari"
+        ){
+
+          forcePietroDossier(d);
+
+        }
+
+      };
+
+  }
+
+
+  /*
+    LOGIN
+  */
+
+  w.login =
+    function(){
+
+      const code =
+        (
+          d.getElementById(
+            "codeInput"
+          )?.value || ""
+        ).trim();
+
+
+      const player =
+        TEST_PLAYERS.find(
+          p => p.code === code
+        );
+
+
+      /*
+        L'index ufficiale continua
+        a decidere se il codice è valido.
+      */
+
+      originalLogin.call(w);
+
+
+      setTimeout(
+        async ()=>{
+
+          const app =
+            d.getElementById(
+              "appSection"
+            );
+
+
+          const visible =
+            app &&
+            !app.classList.contains(
+              "hidden"
+            );
+
+
+          if(!visible)
+            return;
+
+
+          /*
+            Registriamo solo codici
+            conosciuti dal test.
+          */
+
+          if(player){
+
+            await registerPlayer(
+              player
+            );
+
+          }
+
+
+          /*
+            Pietro:
+            Cesare Valli soltanto
+            nella versione test.
+          */
+
+          if(
+            code === "900750"
+          ){
+
+            forcePietroDossier(d);
+
+          }
+
+
+          /*
+            Alberto:
+            abilitiamo Giocatori.
+          */
+
+          if(
+            code === "321023"
+          ){
+
+            addPlayersArea(w,d);
+
+            startPlayersPolling();
+
+          }
+
+        },
+        100
+      );
+
+    };
+
+
+  /*
+    LOGOUT
+  */
+
+  w.logout =
+    function(){
+
+      stopPlayersPolling();
+
+      originalLogout.call(w);
+
+    };
+
+}
+
+
+/* =========================================================
+   AVVIO
+   ========================================================= */
+
+document
+  .getElementById("baseApp")
+  .addEventListener(
+    "load",
+    ()=>{
+
+      setTimeout(
+        install,
+        120
+      );
+
+    }
+  );
+
 </script>
+
 </body>
 </html>
