@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Villa Valenti — Test Saluto</title>
+</head>
+<body>
+
+<script>
+(async () => {
+  const TEST_CODE = "321023";
+  const PREFIX = "VV_TEST_SALUTO_";
+
+  /*
+    Archivio separato per il test.
+    L'index ufficiale non viene modificato.
+  */
+  const realStorage = window.localStorage;
+
+  const testStorage = {
+    getItem(key) {
+      return realStorage.getItem(PREFIX + key);
+    },
+
+    setItem(key, value) {
+      realStorage.setItem(PREFIX + key, String(value));
+    },
+
+    removeItem(key) {
+      realStorage.removeItem(PREFIX + key);
+    },
+
+    clear() {
+      const keys = [];
+
+      for (let i = 0; i < realStorage.length; i++) {
+        const key = realStorage.key(i);
+
+        if (key && key.startsWith(PREFIX)) {
+          keys.push(key);
+        }
+      }
+
+      keys.forEach(key => realStorage.removeItem(key));
+    },
+
+    key(index) {
+      const keys = [];
+
+      for (let i = 0; i < realStorage.length; i++) {
+        const key = realStorage.key(i);
+
+        if (key && key.startsWith(PREFIX)) {
+          keys.push(key.substring(PREFIX.length));
+        }
+      }
+
+      return keys[index] || null;
+    },
+
+    get length() {
+      let count = 0;
+
+      for (let i = 0; i < realStorage.length; i++) {
+        const key = realStorage.key(i);
+
+        if (key && key.startsWith(PREFIX)) {
+          count++;
+        }
+      }
+
+      return count;
+    }
+  };
+
+  window.testStorage = testStorage;
+
+  /*
+    Generazione del test.
+    Cambia quando viene premuto AZZERA TEST.
+  */
+  let generation =
+    parseInt(realStorage.getItem("VV_TEST_SALUTO_GEN") || "0", 10);
+
+  try {
+
+    /*
+      Carica SEMPRE l'index ufficiale.
+      ?v=3 evita di usare una vecchia copia in cache.
+    */
+    const response = await fetch("../index.html?v=3", {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Impossibile caricare l'index ufficiale.");
+    }
+
+    let html = await response.text();
+
+
+    /*
+      Tutto ciò che nell'index ufficiale usa localStorage
+      viene deviato verso l'archivio separato del test.
+    */
+    html = html.replaceAll(
+      "localStorage",
+      "window.testStorage"
+    );
+
+
+    /*
+      Seed separato per il test.
+      Dopo AZZERA TEST viene generata una nuova assegnazione.
+    */
+    html = html.replaceAll(
+      "VILLA-VALENTI-2026-DOSSIER-V2",
+      "VILLA-VALENTI-2026-DOSSIER-V2-TEST-" + generation
+    );
+
+
+    /*
+      Inseriamo il pannello di controllo del test.
+    */
+    const testPanel = `
+      <style>
+
+        #vvTestPanel {
+          position: fixed;
+          left: 12px;
+          bottom: 90px;
+          z-index: 999999;
+
+          display: flex;
+          flex-direction: column;
+          gap: 7px;
+
+          padding: 10px;
+
+          background: rgba(12,9,7,.96);
+          border: 1px solid rgba(208,183,124,.45);
+          border-radius: 9px;
+
+          box-shadow:
+            0 10px 30px rgba(0,0,0,.45);
+
+          font-family:
+            Georgia,
+            "Times New Roman",
+            serif;
+        }
+
+        #vvTestLabel {
+          color: #cdb488;
+          font-size: 10px;
+          letter-spacing: 1.2px;
+          text-transform: uppercase;
+          text-align: center;
+        }
+
+        #vvResetTest {
+          border: 1px solid #6d1717;
+          border-radius: 5px;
+
+          padding: 9px 12px;
+
+          background:
+            linear-gradient(
+              #7f1f1f,
+              #591111
+            );
+
+          color: #f2e1c1;
+
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: .8px;
+
+          cursor: pointer;
+        }
+
+      </style>
+
+      <div id="vvTestPanel">
+
+        <div id="vvTestLabel">
+          TEST SALUTO · 321023
+        </div>
+
+        <button
+          id="vvResetTest"
+          type="button"
+        >
+          AZZERA TEST
+        </button>
+
+      </div>
+    `;
+
+    html = html.replace(
+      "</body>",
+      testPanel + "</body>"
+    );
+
+
+    /*
+      Script aggiuntivo del test.
+    */
+    const controlScript = `
+
+      <script>
+
+      (() => {
+
+        const TEST_CODE = "321023";
+
+
+        /*
+          Blocca qualsiasi codice diverso da Alberto.
+        */
+        function installCodeGuard() {
+
+          const input =
+            document.getElementById("codeInput");
+
+          if (!input) {
+            setTimeout(installCodeGuard, 100);
+            return;
+          }
+
+
+          const form =
+            input.closest("form");
+
+
+          /*
+            Se l'index usa un FORM.
+          */
+          if (form) {
+
+            form.addEventListener(
+              "submit",
+              function(event) {
+
+                const code =
+                  String(input.value || "").trim();
+
+                if (code !== TEST_CODE) {
+
+                  event.preventDefault();
+                  event.stopImmediatePropagation();
+
+                  const error =
+                    document.querySelector(".error");
+
+                  if (error) {
+                    error.textContent =
+                      "Nel test è abilitato soltanto il codice 321023.";
+                  }
+
+                  return false;
+                }
+
+              },
+              true
+            );
+
+          }
+
+
+          /*
+            Controllo anche sul pulsante ACCESSO
+            nel caso l'index non utilizzi un form.
+          */
+          const buttons =
+            Array.from(
+              document.querySelectorAll("button")
+            );
+
+          buttons.forEach(button => {
+
+            const text =
+              (button.textContent || "")
+                .trim()
+                .toUpperCase();
+
+            if (
+              text.includes("ACCEDI") ||
+              text.includes("ACCESSO") ||
+              text.includes("ENTRA")
+            ) {
+
+              button.addEventListener(
+                "click",
+                function(event) {
+
+                  const code =
+                    String(input.value || "").trim();
+
+                  if (code !== TEST_CODE) {
+
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+
+                    const error =
+                      document.querySelector(".error");
+
+                    if (error) {
+                      error.textContent =
+                        "Nel test è abilitato soltanto il codice 321023.";
+                    }
+
+                    return false;
+                  }
+
+                },
+                true
+              );
+
+            }
+
+          });
+
+        }
+
+
+        /*
+          Nel test non devono essere mostrate
+          informazioni Assassino / Complice.
+        */
+        function hideSpecialInformation() {
+
+          const elements =
+            document.querySelectorAll(
+              '[id*="secret"],' +
+              '[id*="Secret"],' +
+              '[class*="secret-role"],' +
+              '[class*="special-role"]'
+            );
+
+          elements.forEach(element => {
+            element.style.display = "none";
+          });
+
+        }
+
+
+        /*
+          Pulsante temporaneo AZZERA TEST.
+        */
+        function installReset() {
+
+          const reset =
+            document.getElementById("vvResetTest");
+
+          if (!reset) {
+            setTimeout(installReset, 100);
+            return;
+          }
+
+          reset.addEventListener(
+            "click",
+            () => {
+
+              const confirmed =
+                confirm(
+                  "Azzerare il test?\\n\\n" +
+                  "Al prossimo accesso verrà simulato " +
+                  "un nuovo primo accesso."
+                );
+
+              if (!confirmed) {
+                return;
+              }
+
+
+              /*
+                Cancella SOLO i dati del test.
+                L'index ufficiale rimane intatto.
+              */
+              const keys = [];
+
+              for (
+                let i = 0;
+                i < window.localStorage.length;
+                i++
+              ) {
+
+                const key =
+                  window.localStorage.key(i);
+
+                if (
+                  key &&
+                  key.startsWith(
+                    "VV_TEST_SALUTO_"
+                  )
+                ) {
+
+                  keys.push(key);
+
+                }
+
+              }
+
+              keys.forEach(key => {
+                window.localStorage.removeItem(key);
+              });
+
+
+              /*
+                Cambia generazione per ottenere
+                una nuova assegnazione.
+              */
+              const generationKey =
+                "VV_TEST_SALUTO_GEN";
+
+              const current =
+                parseInt(
+                  window.localStorage.getItem(
+                    generationKey
+                  ) || "0",
+                  10
+                );
+
+              window.localStorage.setItem(
+                generationKey,
+                String(current + 1)
+              );
+
+
+              window.location.reload();
+
+            }
+          );
+
+        }
+
+
+        installCodeGuard();
+        installReset();
+
+        setInterval(
+          hideSpecialInformation,
+          250
+        );
+
+      })();
+
+      <\/script>
+    `;
+
+
+    html = html.replace(
+      "</body>",
+      controlScript + "</body>"
+    );
+
+
+    /*
+      Carica l'interfaccia ufficiale modificata
+      esclusivamente per il test.
+    */
+    document.open();
+    document.write(html);
+    document.close();
+
+  }
+
+  catch (error) {
+
+    document.body.innerHTML = `
+      <div style="
+        max-width:700px;
+        margin:60px auto;
+        padding:25px;
+        font-family:Georgia,serif;
+      ">
+        <h2>Villa Valenti — Test</h2>
+
+        <p>
+          Non è stato possibile caricare
+          l'index ufficiale.
+        </p>
+
+        <p>
+          ${error.message}
+        </p>
+      </div>
+    `;
+
+  }
+
+})();
+</script>
+
+</body>
+</html>
