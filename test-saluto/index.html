@@ -3,92 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Villa Valenti — Test Saluto</title>
+  <title>Villa Valenti — Test Firebase</title>
 </head>
+
 <body>
 
 <script>
 (async () => {
+
   const TEST_CODE = "321023";
-  const PREFIX = "VV_TEST_SALUTO_";
 
-  /*
-    Archivio separato per il test.
-    L'index ufficiale non viene modificato.
-  */
-  const realStorage = window.localStorage;
-
-  const testStorage = {
-    getItem(key) {
-      return realStorage.getItem(PREFIX + key);
-    },
-
-    setItem(key, value) {
-      realStorage.setItem(PREFIX + key, String(value));
-    },
-
-    removeItem(key) {
-      realStorage.removeItem(PREFIX + key);
-    },
-
-    clear() {
-      const keys = [];
-
-      for (let i = 0; i < realStorage.length; i++) {
-        const key = realStorage.key(i);
-
-        if (key && key.startsWith(PREFIX)) {
-          keys.push(key);
-        }
-      }
-
-      keys.forEach(key => realStorage.removeItem(key));
-    },
-
-    key(index) {
-      const keys = [];
-
-      for (let i = 0; i < realStorage.length; i++) {
-        const key = realStorage.key(i);
-
-        if (key && key.startsWith(PREFIX)) {
-          keys.push(key.substring(PREFIX.length));
-        }
-      }
-
-      return keys[index] || null;
-    },
-
-    get length() {
-      let count = 0;
-
-      for (let i = 0; i < realStorage.length; i++) {
-        const key = realStorage.key(i);
-
-        if (key && key.startsWith(PREFIX)) {
-          count++;
-        }
-      }
-
-      return count;
-    }
-  };
-
-  window.testStorage = testStorage;
-
-  /*
-    Generazione del test.
-    Cambia quando viene premuto AZZERA TEST.
-  */
-  let generation =
-    parseInt(realStorage.getItem("VV_TEST_SALUTO_GEN") || "0", 10);
+  const FIREBASE_URL =
+    "https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 
   try {
 
-    /*
-      Carica SEMPRE l'index ufficiale.
-      ?v=3 evita di usare una vecchia copia in cache.
-    */
+    /* =========================================
+       CARICA L'INDEX UFFICIALE
+       ========================================= */
+
     const response = await fetch("../index.html?v=3", {
       cache: "no-store"
     });
@@ -100,367 +33,549 @@
     let html = await response.text();
 
 
-    /*
-      Tutto ciò che nell'index ufficiale usa localStorage
-      viene deviato verso l'archivio separato del test.
-    */
-    html = html.replaceAll(
-      "localStorage",
-      "window.testStorage"
+    /* =========================================
+       NASCONDE INFORMAZIONI SPECIALI NEL TEST
+       ========================================= */
+
+    html = html.replace(
+      '<article\n                id="secretRoleBox"',
+      '<article\n                style="display:none !important"\n                id="secretRoleBox"'
     );
 
 
-    /*
-      Seed separato per il test.
-      Dopo AZZERA TEST viene generata una nuova assegnazione.
-    */
-    html = html.replaceAll(
-      "VILLA-VALENTI-2026-DOSSIER-V2",
-      "VILLA-VALENTI-2026-DOSSIER-V2-TEST-" + generation
+    /* =========================================
+       SOSTITUISCE IL LOGIN UFFICIALE
+       CON IL LOGIN FIREBASE DEL TEST
+       ========================================= */
+
+    html = html.replace(
+      "function login() {",
+      "async function login() {"
     );
 
 
+    const oldLoginEnd = `
+  currentParticipant = participant;
+
+  openCharacter(participant);
+}`;
+
+    const newLoginEnd = `
+  if (participant.code !== "${TEST_CODE}") {
+    error.textContent =
+      "TEST FIREBASE · UTILIZZA IL CODICE 321023";
+    return;
+  }
+
+  currentParticipant = participant;
+
+  try {
+
+    error.textContent =
+      "COLLEGAMENTO ALL'ARCHIVIO DELLA VILLA...";
+
+    await openCharacterFirebase(participant);
+
+  }
+
+  catch (firebaseError) {
+
+    console.error(firebaseError);
+
+    error.textContent =
+      "ERRORE DI COLLEGAMENTO CON L'ARCHIVIO FIREBASE";
+
+  }
+}`;
+
+    if (!html.includes(oldLoginEnd)) {
+      throw new Error(
+        "Non riesco a individuare il login nell'index ufficiale."
+      );
+    }
+
+    html = html.replace(
+      oldLoginEnd,
+      newLoginEnd
+    );
+
+
+    /* =========================================
+       AGGIUNGE LA FUNZIONE FIREBASE
+       ========================================= */
+
+    const firebaseScript = `
+
+<script>
+
+const VV_FIREBASE_URL =
+  "${FIREBASE_URL}";
+
+
+async function vvFirebaseRequest(
+  path,
+  options = {}
+) {
+
+  const response =
+    await fetch(
+      VV_FIREBASE_URL +
+      "/" +
+      path +
+      ".json",
+      {
+        cache: "no-store",
+        ...options
+      }
+    );
+
+  if (!response.ok) {
+
+    const message =
+      await response.text();
+
+    throw new Error(
+      "Firebase " +
+      response.status +
+      ": " +
+      message
+    );
+
+  }
+
+  return response.json();
+
+}
+
+
+/* =========================================
+   CREA IL RECORD SOLO AL PRIMO ACCESSO
+   ========================================= */
+
+async function vvGetOrCreatePlayer(
+  participant,
+  character
+) {
+
+  const path =
+    "testSaluto/players/" +
+    participant.code;
+
+  /*
+    Prima controlliamo se il codice
+    esiste già nel database.
+  */
+
+  let existing =
+    await vvFirebaseRequest(path);
+
+  if (existing) {
+
     /*
-      Inseriamo il pannello di controllo del test.
+      ACCESSO SUCCESSIVO
     */
-    const testPanel = `
-      <style>
 
-        #vvTestPanel {
-          position: fixed;
-          left: 12px;
-          bottom: 90px;
-          z-index: 999999;
+    const updated = {
+      ...existing,
 
-          display: flex;
-          flex-direction: column;
-          gap: 7px;
+      lastSeen:
+        new Date().toISOString(),
 
-          padding: 10px;
+      loginCount:
+        Number(
+          existing.loginCount || 1
+        ) + 1
+    };
 
-          background: rgba(12,9,7,.96);
-          border: 1px solid rgba(208,183,124,.45);
-          border-radius: 9px;
+    await vvFirebaseRequest(
+      path,
+      {
+        method: "PATCH",
 
-          box-shadow:
-            0 10px 30px rgba(0,0,0,.45);
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
 
-          font-family:
-            Georgia,
-            "Times New Roman",
-            serif;
-        }
+        body: JSON.stringify({
+          lastSeen:
+            updated.lastSeen,
 
-        #vvTestLabel {
-          color: #cdb488;
-          font-size: 10px;
-          letter-spacing: 1.2px;
-          text-transform: uppercase;
-          text-align: center;
-        }
+          loginCount:
+            updated.loginCount
+        })
+      }
+    );
 
-        #vvResetTest {
-          border: 1px solid #6d1717;
-          border-radius: 5px;
+    return {
+      firstAccess: false,
+      data: updated
+    };
 
-          padding: 9px 12px;
+  }
 
-          background:
-            linear-gradient(
-              #7f1f1f,
-              #591111
-            );
 
-          color: #f2e1c1;
+  /*
+    PRIMO ACCESSO
 
-          font-size: 11px;
-          font-weight: 700;
-          letter-spacing: .8px;
+    Il personaggio viene preso
+    dall'assegnazione ufficiale
+    dell'index principale.
+  */
 
-          cursor: pointer;
-        }
+  const firstRecord = {
 
-      </style>
+    characterId:
+      character.id,
 
-      <div id="vvTestPanel">
+    characterName:
+      character.name,
 
-        <div id="vvTestLabel">
-          TEST SALUTO · 321023
-        </div>
+    characterGender:
+      character.gender,
 
-        <button
-          id="vvResetTest"
-          type="button"
-        >
-          AZZERA TEST
-        </button>
+    assigned:
+      true,
 
-      </div>
-    `;
+    firstSeen:
+      new Date().toISOString(),
+
+    lastSeen:
+      new Date().toISOString(),
+
+    loginCount:
+      1
+
+  };
+
+
+  /*
+    Scriviamo il record.
+  */
+
+  await vvFirebaseRequest(
+    path,
+    {
+      method: "PUT",
+
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
+
+      body:
+        JSON.stringify(
+          firstRecord
+        )
+    }
+  );
+
+
+  /*
+    Rilettura di sicurezza.
+
+    Da questo momento Firebase
+    diventa la memoria centrale.
+  */
+
+  existing =
+    await vvFirebaseRequest(path);
+
+
+  return {
+    firstAccess: true,
+    data: existing
+  };
+
+}
+
+
+/* =========================================
+   APERTURA DOSSIER FIREBASE
+   ========================================= */
+
+async function openCharacterFirebase(
+  participant
+) {
+
+  const officialCharacterId =
+    CHARACTER_ASSIGNMENTS[
+      participant.id
+    ];
+
+
+  const officialCharacter =
+    characters.find(
+      item =>
+        item.id ===
+        officialCharacterId
+    );
+
+
+  if (!officialCharacter) {
+
+    throw new Error(
+      "Personaggio ufficiale non trovato."
+    );
+
+  }
+
+
+  const firebaseResult =
+    await vvGetOrCreatePlayer(
+      participant,
+      officialCharacter
+    );
+
+
+  /*
+    Se Firebase contiene già
+    un personaggio, usiamo SEMPRE quello.
+
+    Questo significa che cambiando telefono
+    il personaggio rimane identico.
+  */
+
+  const storedCharacterId =
+    firebaseResult.data.characterId;
+
+
+  const character =
+    characters.find(
+      item =>
+        item.id ===
+        storedCharacterId
+    );
+
+
+  if (!character) {
+
+    throw new Error(
+      "Il personaggio salvato su Firebase non esiste."
+    );
+
+  }
+
+
+  let greeting;
+
+
+  if (firebaseResult.firstAccess) {
+
+    greeting =
+      "Salve, " +
+      character.name +
+      ".";
+
+  }
+
+  else {
+
+    greeting =
+      (
+        character.gender === "F"
+          ?
+          "Bentornata, "
+          :
+          "Bentornato, "
+      ) +
+      character.name +
+      ".";
+
+  }
+
+
+  /* =========================================
+     MOSTRA L'APP
+     ========================================= */
+
+  document
+    .getElementById("loginSection")
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById("appSection")
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById("greeting")
+    .textContent =
+      greeting;
+
+
+  document
+    .getElementById("characterName")
+    .textContent =
+      character.name;
+
+
+  document
+    .getElementById("characterRole")
+    .textContent =
+      character.role;
+
+
+  document
+    .getElementById(
+      "characterDescription"
+    )
+    .textContent =
+      character.description;
+
+
+  document
+    .getElementById(
+      "characterAdvice"
+    )
+    .textContent =
+      character.advice;
+
+
+  document
+    .getElementById(
+      "realUserLabel"
+    )
+    .textContent =
+      "ID: " +
+      participant.name;
+
+
+  const initials =
+    character.name
+      .split(" ")
+      .map(
+        part =>
+          part[0]
+      )
+      .join("")
+      .slice(0,2)
+      .toUpperCase();
+
+
+  document
+    .getElementById(
+      "characterMonogram"
+    )
+    .textContent =
+      initials;
+
+
+  /* =========================================
+     NESSUN RUOLO SEGRETO NEL TEST
+     ========================================= */
+
+  const secretBox =
+    document.getElementById(
+      "secretRoleBox"
+    );
+
+  if (secretBox) {
+
+    secretBox
+      .classList
+      .add("hidden");
+
+    secretBox.style.display =
+      "none";
+
+  }
+
+
+  /* =========================================
+     HAVILAND RESTA DISPONIBILE AD ALBERTO
+     ========================================= */
+
+  const havilandNavBtn =
+    document.getElementById(
+      "havilandNavBtn"
+    );
+
+
+  const havilandMobileBtn =
+    document.getElementById(
+      "havilandMobileBtn"
+    );
+
+
+  const mobileNav =
+    document.getElementById(
+      "mobileNav"
+    );
+
+
+  if (participant.hasVoice) {
+
+    havilandNavBtn
+      .classList
+      .remove("hidden");
+
+
+    havilandMobileBtn
+      .classList
+      .remove("hidden");
+
+
+    mobileNav
+      .classList
+      .remove("two-items");
+
+
+    mobileNav
+      .classList
+      .add("three-items");
+
+  }
+
+
+  openTab("dossier");
+
+}
+
+
+/* =========================================
+   INVIO CON TASTO ENTER
+   ========================================= */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Enter" &&
+      !document
+        .getElementById(
+          "loginSection"
+        )
+        .classList
+        .contains("hidden")
+    ) {
+
+      login();
+
+    }
+
+  }
+);
+
+<\/script>
+`;
+
 
     html = html.replace(
       "</body>",
-      testPanel + "</body>"
+      firebaseScript +
+      "</body>"
     );
 
 
-    /*
-      Script aggiuntivo del test.
-    */
-    const controlScript = `
+    /* =========================================
+       APRE L'INTERFACCIA
+       ========================================= */
 
-      <script>
-
-      (() => {
-
-        const TEST_CODE = "321023";
-
-
-        /*
-          Blocca qualsiasi codice diverso da Alberto.
-        */
-        function installCodeGuard() {
-
-          const input =
-            document.getElementById("codeInput");
-
-          if (!input) {
-            setTimeout(installCodeGuard, 100);
-            return;
-          }
-
-
-          const form =
-            input.closest("form");
-
-
-          /*
-            Se l'index usa un FORM.
-          */
-          if (form) {
-
-            form.addEventListener(
-              "submit",
-              function(event) {
-
-                const code =
-                  String(input.value || "").trim();
-
-                if (code !== TEST_CODE) {
-
-                  event.preventDefault();
-                  event.stopImmediatePropagation();
-
-                  const error =
-                    document.querySelector(".error");
-
-                  if (error) {
-                    error.textContent =
-                      "Nel test è abilitato soltanto il codice 321023.";
-                  }
-
-                  return false;
-                }
-
-              },
-              true
-            );
-
-          }
-
-
-          /*
-            Controllo anche sul pulsante ACCESSO
-            nel caso l'index non utilizzi un form.
-          */
-          const buttons =
-            Array.from(
-              document.querySelectorAll("button")
-            );
-
-          buttons.forEach(button => {
-
-            const text =
-              (button.textContent || "")
-                .trim()
-                .toUpperCase();
-
-            if (
-              text.includes("ACCEDI") ||
-              text.includes("ACCESSO") ||
-              text.includes("ENTRA")
-            ) {
-
-              button.addEventListener(
-                "click",
-                function(event) {
-
-                  const code =
-                    String(input.value || "").trim();
-
-                  if (code !== TEST_CODE) {
-
-                    event.preventDefault();
-                    event.stopImmediatePropagation();
-
-                    const error =
-                      document.querySelector(".error");
-
-                    if (error) {
-                      error.textContent =
-                        "Nel test è abilitato soltanto il codice 321023.";
-                    }
-
-                    return false;
-                  }
-
-                },
-                true
-              );
-
-            }
-
-          });
-
-        }
-
-
-        /*
-          Nel test non devono essere mostrate
-          informazioni Assassino / Complice.
-        */
-        function hideSpecialInformation() {
-
-          const elements =
-            document.querySelectorAll(
-              '[id*="secret"],' +
-              '[id*="Secret"],' +
-              '[class*="secret-role"],' +
-              '[class*="special-role"]'
-            );
-
-          elements.forEach(element => {
-            element.style.display = "none";
-          });
-
-        }
-
-
-        /*
-          Pulsante temporaneo AZZERA TEST.
-        */
-        function installReset() {
-
-          const reset =
-            document.getElementById("vvResetTest");
-
-          if (!reset) {
-            setTimeout(installReset, 100);
-            return;
-          }
-
-          reset.addEventListener(
-            "click",
-            () => {
-
-              const confirmed =
-                confirm(
-                  "Azzerare il test?\\n\\n" +
-                  "Al prossimo accesso verrà simulato " +
-                  "un nuovo primo accesso."
-                );
-
-              if (!confirmed) {
-                return;
-              }
-
-
-              /*
-                Cancella SOLO i dati del test.
-                L'index ufficiale rimane intatto.
-              */
-              const keys = [];
-
-              for (
-                let i = 0;
-                i < window.localStorage.length;
-                i++
-              ) {
-
-                const key =
-                  window.localStorage.key(i);
-
-                if (
-                  key &&
-                  key.startsWith(
-                    "VV_TEST_SALUTO_"
-                  )
-                ) {
-
-                  keys.push(key);
-
-                }
-
-              }
-
-              keys.forEach(key => {
-                window.localStorage.removeItem(key);
-              });
-
-
-              /*
-                Cambia generazione per ottenere
-                una nuova assegnazione.
-              */
-              const generationKey =
-                "VV_TEST_SALUTO_GEN";
-
-              const current =
-                parseInt(
-                  window.localStorage.getItem(
-                    generationKey
-                  ) || "0",
-                  10
-                );
-
-              window.localStorage.setItem(
-                generationKey,
-                String(current + 1)
-              );
-
-
-              window.location.reload();
-
-            }
-          );
-
-        }
-
-
-        installCodeGuard();
-        installReset();
-
-        setInterval(
-          hideSpecialInformation,
-          250
-        );
-
-      })();
-
-      <\/script>
-    `;
-
-
-    html = html.replace(
-      "</body>",
-      controlScript + "</body>"
-    );
-
-
-    /*
-      Carica l'interfaccia ufficiale modificata
-      esclusivamente per il test.
-    */
     document.open();
     document.write(html);
     document.close();
@@ -469,23 +584,34 @@
 
   catch (error) {
 
+    console.error(error);
+
     document.body.innerHTML = `
       <div style="
         max-width:700px;
         margin:60px auto;
         padding:25px;
+        color:#eee;
+        background:#15100b;
         font-family:Georgia,serif;
       ">
-        <h2>Villa Valenti — Test</h2>
+
+        <h2>
+          Villa Valenti — Test Firebase
+        </h2>
 
         <p>
-          Non è stato possibile caricare
-          l'index ufficiale.
+          Non è stato possibile avviare
+          il test.
         </p>
 
-        <p>
+        <p style="
+          color:#c99;
+          font-family:monospace;
+        ">
           ${error.message}
         </p>
+
       </div>
     `;
 
