@@ -619,6 +619,968 @@ document.addEventListener(
 
 })();
 </script>
+<script>
+/* ============================================================
+   VILLA VALENTI — FIREBASE MULTI-DISPOSITIVO
+   ============================================================ */
 
+const VV_DATABASE =
+  "https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
+
+const VV_ORGANIZER_CODE = "321023";
+
+
+async function vvRequest(path, options = {}) {
+
+  const response = await fetch(
+    VV_DATABASE + "/" + path + ".json",
+    {
+      cache: "no-store",
+      ...options
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Errore Firebase: " +
+      response.status
+    );
+  }
+
+  return response.json();
+}
+
+
+async function vvWrite(
+  path,
+  data,
+  method = "PUT"
+) {
+
+  return vvRequest(
+    path,
+    {
+      method: method,
+
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
+
+      body:
+        JSON.stringify(data)
+    }
+  );
+}
+
+
+/* ============================================================
+   PRIMO ACCESSO / ACCESSI SUCCESSIVI
+   ============================================================ */
+
+async function vvGetPlayer(
+  participant,
+  officialCharacter
+) {
+
+  const path =
+    "players/" +
+    participant.code +
+    "/public";
+
+
+  let stored =
+    await vvRequest(path);
+
+
+  if (
+    stored &&
+    stored.characterId
+  ) {
+
+    const lastSeen =
+      new Date().toISOString();
+
+    const loginCount =
+      Number(
+        stored.loginCount || 1
+      ) + 1;
+
+
+    await vvWrite(
+      path,
+      {
+        lastSeen,
+        loginCount
+      },
+      "PATCH"
+    );
+
+
+    return {
+      firstAccess: false,
+
+      data: {
+        ...stored,
+        lastSeen,
+        loginCount
+      }
+    };
+  }
+
+
+  const now =
+    new Date().toISOString();
+
+
+  const record = {
+
+    characterId:
+      officialCharacter.id,
+
+    characterName:
+      officialCharacter.name,
+
+    characterGender:
+      officialCharacter.gender,
+
+    assigned: true,
+
+    firstSeen: now,
+
+    lastSeen: now,
+
+    loginCount: 1
+  };
+
+
+  await vvWrite(
+    path,
+    record
+  );
+
+
+  stored =
+    await vvRequest(path);
+
+
+  return {
+    firstAccess: true,
+    data: stored || record
+  };
+}
+
+
+/* ============================================================
+   NUOVO LOGIN
+   Sovrascrive la funzione login precedente.
+   ============================================================ */
+
+login = async function() {
+
+  const input =
+    document
+      .getElementById("codeInput")
+      .value
+      .trim();
+
+
+  const error =
+    document
+      .getElementById("error");
+
+
+  error.textContent = "";
+
+
+  const participant =
+    participants.find(
+      person =>
+        person.code &&
+        person.code === input
+    );
+
+
+  if (!participant) {
+
+    error.textContent =
+      "ACCESSO NEGATO · CODICE NON RICONOSCIUTO";
+
+    return;
+  }
+
+
+  currentParticipant =
+    participant;
+
+
+  error.textContent =
+    "ACCESSO ALL'ARCHIVIO...";
+
+
+  try {
+
+    await vvOpenCharacter(
+      participant
+    );
+
+  }
+
+  catch (err) {
+
+    console.error(err);
+
+    error.textContent =
+      "ERRORE DI COLLEGAMENTO CON L'ARCHIVIO";
+
+    currentParticipant = null;
+  }
+};
+
+
+/* ============================================================
+   APERTURA DOSSIER
+   ============================================================ */
+
+async function vvOpenCharacter(
+  participant
+) {
+
+  const officialCharacterId =
+    CHARACTER_ASSIGNMENTS[
+      participant.id
+    ];
+
+
+  const officialCharacter =
+    characters.find(
+      character =>
+        character.id ===
+        officialCharacterId
+    );
+
+
+  if (!officialCharacter) {
+    throw new Error(
+      "Personaggio non trovato."
+    );
+  }
+
+
+  const result =
+    await vvGetPlayer(
+      participant,
+      officialCharacter
+    );
+
+
+  /*
+    Da questo momento il personaggio
+    salvato su Firebase ha la precedenza.
+  */
+
+  const character =
+    characters.find(
+      item =>
+        item.id ===
+        result.data.characterId
+    );
+
+
+  if (!character) {
+    throw new Error(
+      "Personaggio Firebase non valido."
+    );
+  }
+
+
+  /* ---------------- SALUTO ---------------- */
+
+  let greeting;
+
+
+  if (result.firstAccess) {
+
+    greeting =
+      "Salve, " +
+      character.name +
+      ".";
+
+  }
+
+  else {
+
+    greeting =
+      (
+        character.gender === "F"
+          ? "Bentornata, "
+          : "Bentornato, "
+      ) +
+      character.name +
+      ".";
+  }
+
+
+  /* ---------------- INTERFACCIA ---------------- */
+
+  document
+    .getElementById(
+      "loginSection"
+    )
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById(
+      "appSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "greeting"
+    )
+    .textContent =
+      greeting;
+
+
+  document
+    .getElementById(
+      "characterName"
+    )
+    .textContent =
+      character.name;
+
+
+  document
+    .getElementById(
+      "characterRole"
+    )
+    .textContent =
+      character.role;
+
+
+  document
+    .getElementById(
+      "characterDescription"
+    )
+    .textContent =
+      character.description;
+
+
+  document
+    .getElementById(
+      "characterAdvice"
+    )
+    .textContent =
+      character.advice;
+
+
+  document
+    .getElementById(
+      "realUserLabel"
+    )
+    .textContent =
+      "ID: " +
+      participant.name;
+
+
+  const initials =
+    character.name
+      .split(" ")
+      .map(
+        part => part[0]
+      )
+      .join("")
+      .slice(0,2)
+      .toUpperCase();
+
+
+  document
+    .getElementById(
+      "characterMonogram"
+    )
+    .textContent =
+      initials;
+
+
+  /* ========================================================
+     DOCUMENTO PERSONALE RISERVATO
+
+     Questa informazione NON viene mai scritta
+     nel Registro Villa né nel record Firebase pubblico.
+     ======================================================== */
+
+  const secretBox =
+    document.getElementById(
+      "secretRoleBox"
+    );
+
+
+  const secretText =
+    document.getElementById(
+      "secretRole"
+    );
+
+
+  secretBox
+    .classList
+    .add("hidden");
+
+
+  secretText.innerHTML = "";
+
+
+  if (
+    participant.id ===
+    SPECIAL_ROLES.assassin
+  ) {
+
+    secretText.innerHTML = `
+      <strong>
+        DOCUMENTO PERSONALE RISERVATO
+      </strong>
+
+      <br><br>
+
+      Ti è stato assegnato un ruolo
+      speciale nella storia di Villa Valenti.
+
+      <br><br>
+
+      Le istruzioni definitive saranno
+      disponibili qui nella versione
+      completa del gioco.
+    `;
+
+
+    secretBox
+      .classList
+      .remove("hidden");
+  }
+
+
+  else if (
+    participant.id ===
+    SPECIAL_ROLES.accomplice
+  ) {
+
+    secretText.innerHTML = `
+      <strong>
+        DOCUMENTO PERSONALE RISERVATO
+      </strong>
+
+      <br><br>
+
+      Ti è stato assegnato un ruolo
+      speciale nella storia di Villa Valenti.
+
+      <br><br>
+
+      Le istruzioni definitive saranno
+      disponibili qui nella versione
+      completa del gioco.
+    `;
+
+
+    secretBox
+      .classList
+      .remove("hidden");
+  }
+
+
+  /* ---------------- HAVILAND ---------------- */
+
+  const desktopHaviland =
+    document.getElementById(
+      "havilandNavBtn"
+    );
+
+
+  const mobileHaviland =
+    document.getElementById(
+      "havilandMobileBtn"
+    );
+
+
+  const mobileNav =
+    document.getElementById(
+      "mobileNav"
+    );
+
+
+  if (participant.hasVoice) {
+
+    desktopHaviland
+      .classList
+      .remove("hidden");
+
+
+    mobileHaviland
+      .classList
+      .remove("hidden");
+
+
+    mobileNav
+      .classList
+      .remove("two-items");
+
+
+    mobileNav
+      .classList
+      .add("three-items");
+
+
+    await vvCreateRegistry();
+
+  }
+
+  else {
+
+    desktopHaviland
+      .classList
+      .add("hidden");
+
+
+    mobileHaviland
+      .classList
+      .add("hidden");
+
+
+    mobileNav
+      .classList
+      .remove("three-items");
+
+
+    mobileNav
+      .classList
+      .add("two-items");
+  }
+
+
+  openTab("dossier");
+
+
+  /*
+    Haviland pronuncia il saluto.
+  */
+
+  vvSpeak(greeting);
+}
+
+
+/* ============================================================
+   VOCE HAVILAND
+   ============================================================ */
+
+function vvSpeak(text) {
+
+  if (
+    !("speechSynthesis" in window)
+  ) {
+    return;
+  }
+
+
+  try {
+
+    speechSynthesis.cancel();
+
+
+    const voice =
+      new SpeechSynthesisUtterance(
+        text
+      );
+
+
+    voice.lang =
+      "it-IT";
+
+
+    voice.rate =
+      0.86;
+
+
+    voice.pitch =
+      0.82;
+
+
+    voice.volume =
+      1;
+
+
+    speechSynthesis.speak(
+      voice
+    );
+
+  }
+
+  catch (error) {
+
+    console.warn(
+      "Haviland:",
+      error
+    );
+  }
+}
+
+
+/* ============================================================
+   REGISTRO VILLA
+   ============================================================ */
+
+async function vvCreateRegistry() {
+
+  /*
+    Solo Alberto.
+  */
+
+  if (
+    !currentParticipant ||
+    currentParticipant.code !==
+      VV_ORGANIZER_CODE
+  ) {
+    return;
+  }
+
+
+  const panel =
+    document.querySelector(
+      "#tab-haviland .haviland-core"
+    );
+
+
+  if (!panel) {
+    return;
+  }
+
+
+  let registry =
+    document.getElementById(
+      "villaRegistry"
+    );
+
+
+  if (!registry) {
+
+    registry =
+      document.createElement(
+        "div"
+      );
+
+
+    registry.id =
+      "villaRegistry";
+
+
+    registry.style.cssText = `
+      margin-top:32px;
+      padding-top:26px;
+      border-top:
+        1px solid
+        rgba(202,171,111,.28);
+      text-align:left;
+    `;
+
+
+    panel.appendChild(
+      registry
+    );
+  }
+
+
+  registry.innerHTML = `
+
+    <div style="
+      color:#e5d1ae;
+      font-size:24px;
+      margin-bottom:6px;
+    ">
+      Registro Villa
+    </div>
+
+    <div style="
+      color:#8f806b;
+      font-size:13px;
+      margin-bottom:18px;
+    ">
+      Recupero dei registri
+      degli ospiti...
+    </div>
+
+  `;
+
+
+  const database =
+    await vvRequest(
+      "players"
+    ) || {};
+
+
+  const guests =
+    participants.filter(
+      participant =>
+        participant.code
+    );
+
+
+  const entered =
+    guests.filter(
+      participant =>
+        database[
+          participant.code
+        ] &&
+        database[
+          participant.code
+        ].public &&
+        database[
+          participant.code
+        ].public.characterId
+    ).length;
+
+
+  let html = `
+
+    <div style="
+      color:#e5d1ae;
+      font-size:24px;
+      margin-bottom:6px;
+    ">
+      Registro Villa
+    </div>
+
+
+    <div style="
+      color:#8f806b;
+      font-size:13px;
+      line-height:1.6;
+      margin-bottom:20px;
+    ">
+
+      Ospiti registrati:
+      <strong style="color:#c9b38d;">
+        ${entered} / ${guests.length}
+      </strong>
+
+      <br>
+
+      Il registro contiene esclusivamente
+      i dati di accesso e il personaggio
+      assegnato.
+
+    </div>
+
+
+    <div style="
+      display:grid;
+      gap:10px;
+    ">
+  `;
+
+
+  guests.forEach(
+    participant => {
+
+      const entry =
+        database[
+          participant.code
+        ];
+
+
+      const data =
+        entry &&
+        entry.public
+          ? entry.public
+          : null;
+
+
+      let characterName =
+        "Non ancora assegnato";
+
+
+      let status =
+        "○ Mai entrato";
+
+
+      let accessCount =
+        "—";
+
+
+      if (
+        data &&
+        data.characterId
+      ) {
+
+        const character =
+          characters.find(
+            item =>
+              item.id ===
+              data.characterId
+          );
+
+
+        if (character) {
+
+          characterName =
+            character.name;
+        }
+
+
+        status =
+          "✓ Accesso effettuato";
+
+
+        accessCount =
+          String(
+            data.loginCount || 1
+          );
+      }
+
+
+      html += `
+
+        <div style="
+          padding:14px;
+          border:
+            1px solid
+            rgba(190,158,101,.20);
+          border-radius:9px;
+          background:
+            rgba(255,255,255,.025);
+        ">
+
+
+          <div style="
+            color:#dfcaab;
+            font-size:15px;
+            margin-bottom:6px;
+          ">
+
+            ${vvEscape(
+              participant.name
+            )}
+
+          </div>
+
+
+          <div style="
+            color:#95836a;
+            font-size:12px;
+            line-height:1.65;
+          ">
+
+            Personaggio:
+
+            <strong style="
+              color:#c8af84;
+            ">
+
+              ${vvEscape(
+                characterName
+              )}
+
+            </strong>
+
+            <br>
+
+            ${vvEscape(status)}
+
+            · Accessi:
+            ${vvEscape(accessCount)}
+
+          </div>
+
+        </div>
+      `;
+    }
+  );
+
+
+  html += `
+
+    </div>
+
+
+    <button
+      type="button"
+      onclick="vvCreateRegistry()"
+      style="
+        width:100%;
+        margin-top:18px;
+        border:
+          1px solid
+          rgba(194,158,96,.30);
+        border-radius:8px;
+        background:#211810;
+        color:#c9b38d;
+        padding:13px;
+        cursor:pointer;
+        font-family:
+          Georgia,
+          'Times New Roman',
+          serif;
+        letter-spacing:.7px;
+      "
+    >
+
+      AGGIORNA REGISTRO
+
+    </button>
+
+  `;
+
+
+  registry.innerHTML =
+    html;
+}
+
+
+/* ============================================================
+   ESCAPE HTML
+   ============================================================ */
+
+function vvEscape(value) {
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+}
+
+
+/* ============================================================
+   IMPORTANTE:
+   logout() originale resta valido.
+
+   Non cancella Firebase.
+   ============================================================ */
+
+</script>
+  
 </body>
 </html>
