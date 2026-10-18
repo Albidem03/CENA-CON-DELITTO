@@ -1,668 +1,1232 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Villa Valenti — Test Firebase</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#120d09">
+
+<title>Villa Valenti — Archivio Riservato</title>
+
+<style>
+:root{
+  --gold:#d0b77c;
+  --line:rgba(188,157,104,.35);
+  --ink:#221a13;
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:#efe5d2;
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(93,62,28,.15),transparent 30%),
+    radial-gradient(circle at 90% 0%,rgba(92,21,21,.14),transparent 26%),
+    linear-gradient(135deg,#17110c,#0b0907 50%,#15100b);
+  overflow-x:hidden;
+}
+
+.hidden{display:none!important}
+
+button,input{font:inherit}
+
+.login-shell{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:22px;
+}
+
+.login-dossier{
+  width:min(760px,100%);
+  border:1px solid rgba(213,180,123,.38);
+  border-radius:16px;
+  background:rgba(20,14,10,.97);
+  box-shadow:0 24px 70px rgba(0,0,0,.55);
+  overflow:hidden;
+}
+
+.login-top{
+  text-align:center;
+  padding:38px 25px 22px;
+  border-bottom:1px solid var(--line);
+}
+
+.crest{
+  width:78px;
+  height:78px;
+  margin:0 auto 18px;
+  border:1px solid rgba(215,183,124,.55);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--gold);
+  font-size:28px;
+}
+
+.eyebrow{
+  color:#bda77f;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:3px;
+}
+
+h1{
+  margin:8px 0;
+  color:#ead7b6;
+  font-weight:500;
+  font-size:clamp(30px,6vw,46px);
+}
+
+.subtitle{color:#99866b}
+
+.paper-wrap{padding:26px}
+
+.paper{
+  padding:28px 24px;
+  background:linear-gradient(#e6d6b7,#cfb991);
+  color:var(--ink);
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+}
+
+.paper-heading{
+  font-family:"Courier New",monospace;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.paper-copy{
+  font-family:"Courier New",monospace;
+  line-height:1.6;
+  margin:10px 0 22px;
+}
+
+.code-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+}
+
+#codeInput{
+  min-width:0;
+  padding:15px;
+  text-align:center;
+  font:700 21px "Courier New",monospace;
+  letter-spacing:7px;
+  background:rgba(255,249,232,.56);
+  border:1px solid #63492f;
+}
+
+.enter-btn,.action-btn{
+  border:1px solid #4c1111;
+  background:linear-gradient(#7f1f1f,#591111);
+  color:#f2e1c1;
+  padding:12px 18px;
+  cursor:pointer;
+}
+
+.error{
+  min-height:20px;
+  margin-top:12px;
+  color:#791d1d;
+  font:700 13px "Courier New",monospace;
+}
+
+.app{
+  width:min(1200px,100%);
+  margin:auto;
+  padding:18px;
+}
+
+.topbar{
+  position:sticky;
+  top:8px;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 17px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(20,15,11,.96);
+}
+
+.brand strong{
+  display:block;
+  color:#e8d6b7;
+}
+
+.brand span{
+  font-size:11px;
+  color:#8c7c67;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.topbar button{
+  background:#211810;
+  color:#c9b38d;
+  border:1px solid rgba(194,158,96,.3);
+  padding:9px 12px;
+  border-radius:7px;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:210px 1fr;
+  gap:16px;
+  margin-top:16px;
+}
+
+.sidebar{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px;
+  background:rgba(19,14,10,.94);
+  align-self:start;
+}
+
+.nav-btn{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#bbaa8f;
+  text-align:left;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:5px;
+  cursor:pointer;
+}
+
+.nav-btn.active{
+  background:rgba(121,28,28,.25);
+  color:#f0dfbd;
+}
+
+.status{
+  border-top:1px solid var(--line);
+  margin-top:18px;
+  padding-top:14px;
+  color:#8b7b65;
+  font:11px "Courier New",monospace;
+}
+
+.case{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 18px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(21,15,11,.92);
+  margin-bottom:16px;
+}
+
+.case small{
+  color:#7e6f5d;
+  letter-spacing:2px;
+}
+
+.case-title{
+  color:#e1cda9;
+  font-size:18px;
+}
+
+.stamp{
+  border:2px solid #842323;
+  color:#9d3434;
+  padding:6px 9px;
+  transform:rotate(-4deg);
+  font:800 12px "Courier New",monospace;
+}
+
+.dossier-grid{
+  display:grid;
+  grid-template-columns:.85fr 1.35fr;
+  gap:16px;
+}
+
+.folder{
+  background:linear-gradient(160deg,#bf9f69,#96733f);
+  padding:16px;
+  border-radius:6px;
+}
+
+.portrait-card,.sheet{
+  background:linear-gradient(#e4d6bb,#cfbb97);
+  color:var(--ink);
+  padding:20px;
+  box-shadow:0 12px 30px rgba(0,0,0,.22);
+}
+
+.portrait{
+  aspect-ratio:4/3;
+  background:linear-gradient(135deg,#50463b,#16120f);
+  display:grid;
+  place-items:center;
+  border:7px solid #eee1c5;
+}
+
+.monogram{
+  width:105px;
+  height:105px;
+  border:1px solid rgba(234,221,188,.45);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#d4c29e;
+  font-size:35px;
+}
+
+.char-name{
+  font-size:32px;
+  margin-top:16px;
+}
+
+.char-role{
+  font:700 12px "Courier New",monospace;
+  color:#5c4127;
+}
+
+.stack{
+  display:grid;
+  gap:14px;
+}
+
+.section-title{
+  font:800 12px "Courier New",monospace;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border-bottom:1px solid rgba(88,62,34,.3);
+  padding-bottom:8px;
+  margin-bottom:12px;
+}
+
+.paper-text{line-height:1.65}
+
+.secret{border:1px dashed #7d2424}
+
+.evidence,.haviland{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:26px;
+  background:rgba(16,12,9,.96);
+}
+
+.evidence .sheet{max-width:500px}
+
+.haviland{text-align:center}
+
+.haviland h2{color:#e5d1ae}
+
+.haviland p{
+  color:#9b8a70;
+  line-height:1.6;
+}
+
+.registry{
+  margin-top:30px;
+  padding-top:25px;
+  border-top:1px solid var(--line);
+  text-align:left;
+}
+
+.registry-grid{
+  display:grid;
+  gap:8px;
+}
+
+.registry-row{
+  display:grid;
+  grid-template-columns:1.25fr 1.25fr .8fr;
+  gap:10px;
+  padding:11px;
+  border:1px solid rgba(188,157,104,.2);
+  border-radius:8px;
+  background:rgba(255,255,255,.025);
+  font-size:13px;
+}
+
+.ok{color:#b9d09d}
+.pending{color:#8f806b}
+
+.mobile-nav{display:none}
+
+@media(max-width:860px){
+  .layout{display:block}
+  .sidebar{display:none}
+  .dossier-grid{grid-template-columns:1fr}
+  .app{padding:10px 10px 85px}
+
+  .mobile-nav{
+    display:grid;
+    position:fixed;
+    left:10px;
+    right:10px;
+    bottom:calc(10px + env(safe-area-inset-bottom));
+    grid-template-columns:repeat(2,1fr);
+    z-index:50;
+    background:rgba(18,13,9,.97);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+  }
+
+  .mobile-nav.three{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .mobile-nav button{
+    border:0;
+    background:transparent;
+    color:#9f8c6f;
+    padding:13px 5px;
+  }
+
+  .mobile-nav button.active{
+    background:rgba(118,28,28,.22);
+    color:#ead8b7;
+  }
+
+  .registry-row{grid-template-columns:1fr}
+  .code-row{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
 
+<section id="loginSection" class="login-shell">
+  <div class="login-dossier">
+
+    <div class="login-top">
+      <div class="crest">VV</div>
+      <div class="eyebrow">Archivio Villa Valenti</div>
+      <h1>Accesso Riservato</h1>
+      <div class="subtitle">
+        Cena con delitto · 31 ottobre 2026
+      </div>
+    </div>
+
+    <div class="paper-wrap">
+      <div class="paper">
+
+        <div class="paper-heading">
+          Identificazione richiesta
+        </div>
+
+        <div class="paper-copy">
+          Inserisci il codice personale ricevuto con il tuo invito.
+          Il dossier assegnato resterà associato al tuo codice per
+          l'intera serata, anche cambiando dispositivo.
+        </div>
+
+        <div class="code-row">
+          <input
+            id="codeInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="off"
+            placeholder="000000"
+          >
+
+          <button
+            class="enter-btn"
+            onclick="login()">
+            APRI DOSSIER
+          </button>
+        </div>
+
+        <div id="error" class="error"></div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="appSection" class="hidden">
+
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <strong>Archivio Villa Valenti</strong>
+    <span>Accesso autenticato</span>
+  </div>
+
+  <button onclick="logout()">
+    CHIUDI DOSSIER
+  </button>
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+  <button
+    class="nav-btn active"
+    data-tab="dossier"
+    onclick="openTab('dossier')">
+    ▣ Dossier personale
+  </button>
+
+  <button
+    class="nav-btn"
+    data-tab="indizi"
+    onclick="openTab('indizi')">
+    ⌕ Indizi
+  </button>
+
+  <button
+    id="havilandNavBtn"
+    class="nav-btn hidden"
+    data-tab="haviland"
+    onclick="openTab('haviland')">
+    ◉ Haviland / Regia
+  </button>
+
+  <div class="status">
+    ● SESSIONE ATTIVA
+    <div
+      id="realUserLabel"
+      style="margin-top:7px">
+    </div>
+  </div>
+
+</aside>
+
+<main>
+
+<div class="case">
+  <div>
+    <small>FASCICOLO</small>
+    <div class="case-title">
+      Il Dossier Scomparso
+    </div>
+  </div>
+
+  <div class="stamp">
+    RISERVATO
+  </div>
+</div>
+
+<section
+  id="tab-dossier"
+  class="tab-page">
+
+<div class="dossier-grid">
+
+<div class="folder">
+  <article class="portrait-card">
+
+    <div class="portrait">
+      <div
+        id="characterMonogram"
+        class="monogram">
+        VV
+      </div>
+    </div>
+
+    <div
+      id="characterName"
+      class="char-name">
+    </div>
+
+    <div
+      id="characterRole"
+      class="char-role">
+    </div>
+
+  </article>
+</div>
+
+<div class="stack">
+
+<article class="sheet">
+  <div class="section-title">
+    Profilo
+  </div>
+
+  <div
+    id="greeting"
+    class="paper-text"
+    style="font-weight:700;margin-bottom:12px">
+  </div>
+
+  <div
+    id="characterDescription"
+    class="paper-text">
+  </div>
+</article>
+
+<article class="sheet">
+  <div class="section-title">
+    Indicazioni di comportamento
+  </div>
+
+  <div
+    id="characterAdvice"
+    class="paper-text">
+  </div>
+</article>
+
+<article
+  id="secretRoleBox"
+  class="sheet secret hidden">
+
+  <div class="section-title">
+    Documento personale riservato
+  </div>
+
+  <div
+    id="secretRole"
+    class="paper-text">
+  </div>
+
+</article>
+
+</div>
+</div>
+</section>
+
+<section
+  id="tab-indizi"
+  class="tab-page hidden">
+
+<div class="evidence">
+  <article class="sheet">
+
+    <div class="section-title">
+      Archivio indizi
+    </div>
+
+    <div class="paper-text">
+      Nessun nuovo documento è stato reso disponibile.
+      Gli indizi compariranno qui durante la serata.
+    </div>
+
+  </article>
+</div>
+
+</section>
+
+<section
+  id="tab-haviland"
+  class="tab-page hidden">
+
+<div class="haviland">
+
+  <h2>Haviland — Regia Villa</h2>
+
+  <p>
+    Pannello privato riservato all'organizzatore.
+    Qui collegheremo i comandi vocali e gli annunci definitivi.
+  </p>
+
+  <button
+    class="action-btn"
+    onclick="havilandPlaceholder()">
+    ATTIVA MICROFONO
+  </button>
+
+  <div class="registry">
+
+    <h2>Registro Villa</h2>
+
+    <div id="registryStatus">
+      Caricamento registro…
+    </div>
+
+    <div
+      id="registryRows"
+      class="registry-grid">
+    </div>
+
+  </div>
+
+</div>
+</section>
+
+</main>
+</div>
+</div>
+
+<nav
+  id="mobileNav"
+  class="mobile-nav">
+
+  <button
+    class="active"
+    data-mobile-tab="dossier"
+    onclick="openTab('dossier')">
+    DOSSIER
+  </button>
+
+  <button
+    data-mobile-tab="indizi"
+    onclick="openTab('indizi')">
+    INDIZI
+  </button>
+
+  <button
+    id="havilandMobileBtn"
+    class="hidden"
+    data-mobile-tab="haviland"
+    onclick="openTab('haviland')">
+    REGIA
+  </button>
+
+</nav>
+
+</section>
+
 <script>
-(async () => {
 
-  const TEST_CODE = "321023";
+const FIREBASE_DB =
+  "https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 
-  const FIREBASE_URL =
-    "https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
+const ORGANIZER_CODE = "321023";
 
-  try {
+const participants = [
+  {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
+  {id:"giulia_tesini_vigasio",name:"Giulia Tesini di Vigasio",code:"290604",gender:"F"},
+  {id:"angela_viviani",name:"Angela Viviani",code:"240383",gender:"F"},
+  {id:"eleonora_pinto",name:"Eleonora Pinto",code:"141019",gender:"F"},
+  {id:"rocco_monaco",name:"Rocco Monaco",code:"190797",gender:"M"},
+  {id:"alessia_remelli",name:"Alessia Remelli",code:"949699",gender:"F"},
+  {id:"andrea_filippi",name:"Andrea Filippi",code:"140918",gender:"M"},
+  {id:"pietro_scolari",name:"Pietro Scolari",code:"900750",gender:"M"},
+  {id:"julian_remelli",name:"Julian Remelli",code:"170504",gender:"M"},
+  {id:"elena_pelizzaro",name:"Elena Pelizzaro",code:"122906",gender:"F"},
+  {id:"beatrice_remelli",name:"Beatrice Remelli",code:"347106",gender:"F"},
+  {id:"gabriele_di_cristo",name:"Gabriele Di Cristo",code:"319903",gender:"M"},
+  {id:"gabriele_battini",name:"Gabriele Battini",code:"248842",gender:"M"},
+  {id:"cristian_campesi",name:"Cristian Campesi",code:"265069",gender:"M"},
+  {id:"vivald_keri",name:"Vivald Keri",code:"111111",gender:"M"},
+  {id:"giulia_tesini_povegliano",name:"Giulia Tesini di Povegliano",code:"220226",gender:"F"},
+  {id:"sonia_vanoni",name:"Sonia Vanoni",code:"150704",gender:"F"},
+  {id:"andrea_raffi",name:"Andrea Raffi",code:"535506",gender:"M"},
+  {
+    id:"emma_biasi",
+    name:"Emma Biasi",
+    code:"230704",
+    gender:"F",
+    forcedCharacter:"isabella_roversi",
+    cannotBeSpecial:true
+  },
+  {
+    id:"andrea_volpato",
+    name:"Andrea Volpato",
+    code:null,
+    gender:"M",
+    forcedCharacter:"ottavio_serra",
+    cannotBeSpecial:true
+  }
+];
+  const characters = [
 
-    /* =========================================
-       CARICA L'INDEX UFFICIALE
-       ========================================= */
+  {
+    id:"ettore_valenti",
+    name:"Ettore Valenti",
+    gender:"M",
+    role:"Zio paterno di Angelina",
+    description:"Appartieni alla vecchia generazione dei Valenti e sei molto legato al patrimonio e al nome della famiglia.",
+    advice:"Mostrati autorevole. Fai attenzione a tutto ciò che riguarda eredità, proprietà e decisioni familiari."
+  },
 
-    const response = await fetch("../index.html?v=3", {
-      cache: "no-store"
-    });
+  {
+    id:"ludovico_orsini",
+    name:"Ludovico Orsini",
+    gender:"M",
+    role:"Marito di Angelina",
+    description:"Il tuo matrimonio con Angelina negli ultimi mesi è diventato molto più complicato di quanto gli altri sappiano.",
+    advice:"Mantieni la calma. Difendi il tuo rapporto con Angelina senza raccontare immediatamente tutto."
+  },
 
-    if (!response.ok) {
-      throw new Error("Impossibile caricare l'index ufficiale.");
-    }
+  {
+    id:"corrado_de_marchi",
+    name:"Corrado De Marchi",
+    gender:"M",
+    role:"Cugino materno di Angelina",
+    description:"Hai avuto diversi contrasti con Angelina riguardo alcune proprietà della famiglia materna.",
+    advice:"Mostrati cordiale, ma presta molta attenzione quando si parla di denaro e proprietà."
+  },
 
-    let html = await response.text();
+  {
+    id:"leone_de_marchi",
+    name:"Leone De Marchi",
+    gender:"M",
+    role:"Zio materno di Angelina",
+    description:"Conosci molti episodi della famiglia risalenti alla generazione precedente.",
+    advice:"Parla poco e ascolta molto. Confronta ciò che gli altri raccontano con quello che ricordi."
+  },
+
+  {
+    id:"dorian_ferretti",
+    name:"Dorian Ferretti",
+    gender:"M",
+    role:"Socio d'affari di Angelina",
+    description:"Hai gestito diversi affari con Angelina e recentemente sono nate tensioni riguardo alcuni conti.",
+    advice:"Rimani professionale e cerca di separare gli affari dalle questioni personali."
+  },
+
+  {
+    id:"tancredi_moreau",
+    name:"Tancredi Moreau",
+    gender:"M",
+    role:"Avvocato della famiglia",
+    description:"Conosci contratti, testamenti, proprietà e controversie riguardanti molti dei presenti.",
+    advice:"Ascolta con attenzione e cerca contraddizioni. Presta particolare attenzione a documenti, eredità e questioni economiche."
+  },
+
+  {
+    id:"marcello_albrizzi",
+    name:"Marcello Albrizzi",
+    gender:"M",
+    role:"Medico e amico di famiglia",
+    description:"Conosci Angelina da molti anni e possiedi competenze mediche che potrebbero diventare importanti.",
+    advice:"Osserva dettagli fisici e comportamenti. Non arrivare troppo velocemente a una conclusione."
+  },
+
+  {
+    id:"cesare_valli",
+    name:"Cesare Valli",
+    gender:"M",
+    role:"Maggiordomo di Villa Valenti",
+    description:"Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",
+    advice:"Sii discreto. Osserva molto e parla soltanto quando ritieni necessario."
+  },
+
+  {
+    id:"adriano_conti",
+    name:"Adriano Conti",
+    gender:"M",
+    role:"Ex spasimante di Angelina",
+    description:"In passato hai provato sentimenti importanti per Angelina e il vostro rapporto non è stato completamente dimenticato.",
+    advice:"Evita di sembrare apertamente geloso, ma reagisci quando qualcuno mette in dubbio il vostro passato."
+  },
+
+  {
+    id:"elia_neroni",
+    name:"Elia Neroni",
+    gender:"M",
+    role:"Amico d'infanzia di Angelina",
+    description:"Conosci Angelina da prima della villa, della ricchezza e degli affari.",
+    advice:"Osserva soprattutto i comportamenti. Sei bravo a capire quando qualcuno non sta raccontando tutta la verità."
+  },
+
+  {
+    id:"lavinia_valenti",
+    name:"Lavinia Valenti",
+    gender:"F",
+    role:"Sorella maggiore di Angelina",
+    description:"Il rapporto con Angelina è sempre stato segnato da una certa rivalità.",
+    advice:"Difendi il nome della famiglia, ma non lasciare che i vecchi contrasti diventino automaticamente un'accusa contro di te."
+  },
+
+  {
+    id:"celeste_valenti",
+    name:"Celeste Valenti",
+    gender:"F",
+    role:"Sorella minore di Angelina",
+    description:"Sei sempre stata molto protetta dalla famiglia e soprattutto da Angelina.",
+    advice:"Cerca di capire perché Angelina avesse recentemente cambiato atteggiamento nei tuoi confronti."
+  },
+
+  {
+    id:"ofelia_de_marchi",
+    name:"Ofelia De Marchi",
+    gender:"F",
+    role:"Cugina materna",
+    description:"Da tempo sospetti che alcune questioni relative all'eredità materna non siano mai state chiarite completamente.",
+    advice:"Fai domande sui vecchi documenti, sulle proprietà e sulla storia della famiglia."
+  },
+
+  {
+    id:"viola_neroni",
+    name:"Viola Neroni",
+    gender:"F",
+    role:"Migliore amica di Angelina",
+    description:"Angelina si confidava spesso con te, ma nelle ultime settimane aveva iniziato a tenerti all'oscuro di qualcosa.",
+    advice:"Cerca di capire perché Angelina abbia improvvisamente smesso di raccontarti tutto."
+  },
+
+  {
+    id:"eva_montorsi",
+    name:"Eva Montorsi",
+    gender:"F",
+    role:"Governante di Villa Valenti",
+    description:"Lavori nella villa da molti anni e conosci bene le vere dinamiche della famiglia.",
+    advice:"Confronta ciò che gli invitati dichiarano con ciò che hai visto personalmente negli anni."
+  },
+
+  {
+    id:"bianca_albrizzi",
+    name:"Bianca Albrizzi",
+    gender:"F",
+    role:"Segretaria personale di Angelina",
+    description:"Gestivi appuntamenti, telefonate e parte della documentazione privata di Angelina.",
+    advice:"Presta particolare attenzione agli orari, agli incontri e agli eventuali documenti mancanti."
+  },
+
+  {
+    id:"emilia_riva",
+    name:"Emilia Riva",
+    gender:"F",
+    role:"Collaboratrice della villa",
+    description:"Collabori spesso all'organizzazione degli eventi di Villa Valenti.",
+    advice:"Fai attenzione agli spostamenti degli invitati e a ciò che accade nelle zone di servizio."
+  },
+
+  {
+    id:"ginevra_ferretti",
+    name:"Ginevra Ferretti",
+    gender:"F",
+    role:"Conoscente dell'ambiente lavorativo di Angelina",
+    description:"Conosci sia l'ambiente professionale sia alcune persone della cerchia privata di Angelina.",
+    advice:"Cerca collegamenti tra gli affari e i rapporti personali presenti nella villa."
+  },
+
+  {
+    id:"ottavio_serra",
+    name:"Ottavio Serra",
+    gender:"M",
+    modular:true,
+    role:"Fotografo e documentarista della famiglia",
+    description:"Da anni documenti feste, ricorrenze ed eventi della famiglia Valenti.",
+    advice:"Osserva dettagli, posizioni e comportamenti."
+  },
+
+  {
+    id:"isabella_roversi",
+    name:"Isabella Roversi",
+    gender:"F",
+    modular:true,
+    role:"Antiquaria e conoscente di Angelina",
+    description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",
+    advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."
+  }
+
+];
+
+const GAME_SEED =
+  "VILLA-VALENTI-2026-DOSSIER-V2";
 
 
-    /* =========================================
-       NASCONDE INFORMAZIONI SPECIALI NEL TEST
-       ========================================= */
+function hashString(str) {
 
-    html = html.replace(
-      '<article\n                id="secretRoleBox"',
-      '<article\n                style="display:none !important"\n                id="secretRoleBox"'
+  let h = 2166136261;
+
+  for (let i = 0; i < str.length; i++) {
+
+    h ^= str.charCodeAt(i);
+
+    h = Math.imul(
+      h,
+      16777619
     );
 
+  }
 
-    /* =========================================
-       SOSTITUISCE IL LOGIN UFFICIALE
-       CON IL LOGIN FIREBASE DEL TEST
-       ========================================= */
+  return h >>> 0;
 
-    html = html.replace(
-      "function login() {",
-      "async function login() {"
+}
+
+
+function seededRandom(seed) {
+
+  let value = seed >>> 0;
+
+  return function() {
+
+    value += 0x6D2B79F5;
+
+    let t = value;
+
+    t = Math.imul(
+      t ^ (t >>> 15),
+      t | 1
     );
 
-
-    const oldLoginEnd = `
-  currentParticipant = participant;
-
-  openCharacter(participant);
-}`;
-
-    const newLoginEnd = `
-  if (participant.code !== "${TEST_CODE}") {
-    error.textContent =
-      "TEST FIREBASE · UTILIZZA IL CODICE 321023";
-    return;
-  }
-
-  currentParticipant = participant;
-
-  try {
-
-    error.textContent =
-      "COLLEGAMENTO ALL'ARCHIVIO DELLA VILLA...";
-
-    await openCharacterFirebase(participant);
-
-  }
-
-  catch (firebaseError) {
-
-    console.error(firebaseError);
-
-    error.textContent =
-      "ERRORE DI COLLEGAMENTO CON L'ARCHIVIO FIREBASE";
-
-  }
-}`;
-
-    if (!html.includes(oldLoginEnd)) {
-      throw new Error(
-        "Non riesco a individuare il login nell'index ufficiale."
+    t ^=
+      t +
+      Math.imul(
+        t ^ (t >>> 7),
+        t | 61
       );
-    }
 
-    html = html.replace(
-      oldLoginEnd,
-      newLoginEnd
+    return (
+      (t ^ (t >>> 14))
+      >>> 0
+    ) / 4294967296;
+
+  };
+
+}
+
+
+function shuffleStable(
+  array,
+  seedText
+) {
+
+  const result = [...array];
+
+  const random =
+    seededRandom(
+      hashString(
+        GAME_SEED +
+        "|" +
+        seedText
+      )
+    );
+
+  for (
+    let i = result.length - 1;
+    i > 0;
+    i--
+  ) {
+
+    const j =
+      Math.floor(
+        random() *
+        (i + 1)
+      );
+
+    [
+      result[i],
+      result[j]
+    ] = [
+      result[j],
+      result[i]
+    ];
+
+  }
+
+  return result;
+
+}
+
+
+function createCharacterAssignments() {
+
+  const assignments = {
+
+    emma_biasi:
+      "isabella_roversi",
+
+    andrea_volpato:
+      "ottavio_serra"
+
+  };
+
+
+  const normalParticipants =
+    participants.filter(
+      participant =>
+        !participant.forcedCharacter
     );
 
 
-    /* =========================================
-       AGGIUNGE LA FUNZIONE FIREBASE
-       ========================================= */
-
-    const firebaseScript = `
-
-<script>
-
-const VV_FIREBASE_URL =
-  "${FIREBASE_URL}";
+  const normalCharacters =
+    characters.filter(
+      character =>
+        !character.modular
+    );
 
 
-async function vvFirebaseRequest(
+  const maleParticipants =
+    shuffleStable(
+
+      normalParticipants.filter(
+        participant =>
+          participant.gender === "M"
+      ),
+
+      "MALE-PARTICIPANTS"
+
+    );
+
+
+  const femaleParticipants =
+    shuffleStable(
+
+      normalParticipants.filter(
+        participant =>
+          participant.gender === "F"
+      ),
+
+      "FEMALE-PARTICIPANTS"
+
+    );
+
+
+  const maleCharacters =
+    shuffleStable(
+
+      normalCharacters.filter(
+        character =>
+          character.gender === "M"
+      ),
+
+      "MALE-CHARACTERS"
+
+    );
+
+
+  const femaleCharacters =
+    shuffleStable(
+
+      normalCharacters.filter(
+        character =>
+          character.gender === "F"
+      ),
+
+      "FEMALE-CHARACTERS"
+
+    );
+
+
+  maleParticipants.forEach(
+    (participant,index) => {
+
+      assignments[
+        participant.id
+      ] =
+        maleCharacters[
+          index
+        ].id;
+
+    }
+  );
+
+
+  femaleParticipants.forEach(
+    (participant,index) => {
+
+      assignments[
+        participant.id
+      ] =
+        femaleCharacters[
+          index
+        ].id;
+
+    }
+  );
+
+
+  return assignments;
+
+}
+
+
+const CHARACTER_ASSIGNMENTS =
+  createCharacterAssignments();
+
+
+/*
+  I ruoli speciali NON vengono
+  mai salvati nel Registro Villa
+  o nel percorso pubblico Firebase.
+*/
+
+function createSpecialRoles() {
+
+  const eligibleParticipants =
+    participants.filter(
+      participant =>
+        !participant.cannotBeSpecial
+    );
+
+
+  const shuffled =
+    shuffleStable(
+      eligibleParticipants,
+      "ASSASSINO-COMPLICE"
+    );
+
+
+  return {
+
+    assassin:
+      shuffled[0].id,
+
+    accomplice:
+      shuffled[1].id
+
+  };
+
+}
+
+
+const SPECIAL_ROLES =
+  createSpecialRoles();
+
+
+let currentParticipant = null;
+
+
+/* =========================================
+   FIREBASE REALTIME DATABASE
+   ========================================= */
+
+async function firebaseRequest(
   path,
   options = {}
 ) {
 
   const response =
     await fetch(
-      VV_FIREBASE_URL +
+
+      FIREBASE_DB +
       "/" +
       path +
       ".json",
+
       {
-        cache: "no-store",
+        cache:"no-store",
         ...options
       }
+
     );
+
 
   if (!response.ok) {
 
-    const message =
-      await response.text();
-
     throw new Error(
-      "Firebase " +
-      response.status +
-      ": " +
-      message
-    );
-
-  }
-
-  return response.json();
-
-}
-
-
-/* =========================================
-   CREA IL RECORD SOLO AL PRIMO ACCESSO
-   ========================================= */
-
-async function vvGetOrCreatePlayer(
-  participant,
-  character
-) {
-
-  const path =
-    "testSaluto/players/" +
-    participant.code;
-
-  /*
-    Prima controlliamo se il codice
-    esiste già nel database.
-  */
-
-  let existing =
-    await vvFirebaseRequest(path);
-
-  if (existing) {
-
-    /*
-      ACCESSO SUCCESSIVO
-    */
-
-    const updated = {
-      ...existing,
-
-      lastSeen:
-        new Date().toISOString(),
-
-      loginCount:
-        Number(
-          existing.loginCount || 1
-        ) + 1
-    };
-
-    await vvFirebaseRequest(
-      path,
-      {
-        method: "PATCH",
-
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
-
-        body: JSON.stringify({
-          lastSeen:
-            updated.lastSeen,
-
-          loginCount:
-            updated.loginCount
-        })
-      }
-    );
-
-    return {
-      firstAccess: false,
-      data: updated
-    };
-
-  }
-
-
-  /*
-    PRIMO ACCESSO
-
-    Il personaggio viene preso
-    dall'assegnazione ufficiale
-    dell'index principale.
-  */
-
-  const firstRecord = {
-
-    characterId:
-      character.id,
-
-    characterName:
-      character.name,
-
-    characterGender:
-      character.gender,
-
-    assigned:
-      true,
-
-    firstSeen:
-      new Date().toISOString(),
-
-    lastSeen:
-      new Date().toISOString(),
-
-    loginCount:
-      1
-
-  };
-
-
-  /*
-    Scriviamo il record.
-  */
-
-  await vvFirebaseRequest(
-    path,
-    {
-      method: "PUT",
-
-      headers: {
-        "Content-Type":
-          "application/json"
-      },
-
-      body:
-        JSON.stringify(
-          firstRecord
-        )
-    }
-  );
-
-
-  /*
-    Rilettura di sicurezza.
-
-    Da questo momento Firebase
-    diventa la memoria centrale.
-  */
-
-  existing =
-    await vvFirebaseRequest(path);
-
-
-  return {
-    firstAccess: true,
-    data: existing
-  };
-
-}
-
-
-/* =========================================
-   APERTURA DOSSIER FIREBASE
-   ========================================= */
-
-async function openCharacterFirebase(
-  participant
-) {
-
-  const officialCharacterId =
-    CHARACTER_ASSIGNMENTS[
-      participant.id
-    ];
-
-
-  const officialCharacter =
-    characters.find(
-      item =>
-        item.id ===
-        officialCharacterId
-    );
-
-
-  if (!officialCharacter) {
-
-    throw new Error(
-      "Personaggio ufficiale non trovato."
-    );
-
-  }
-
-
-  const firebaseResult =
-    await vvGetOrCreatePlayer(
-      participant,
-      officialCharacter
-    );
-
-
-  /*
-    Se Firebase contiene già
-    un personaggio, usiamo SEMPRE quello.
-
-    Questo significa che cambiando telefono
-    il personaggio rimane identico.
-  */
-
-  const storedCharacterId =
-    firebaseResult.data.characterId;
-
-
-  const character =
-    characters.find(
-      item =>
-        item.id ===
-        storedCharacterId
-    );
-
-
-  if (!character) {
-
-    throw new Error(
-      "Il personaggio salvato su Firebase non esiste."
-    );
-
-  }
-
-
-  let greeting;
-
-
-  if (firebaseResult.firstAccess) {
-
-    greeting =
-      "Salve, " +
-      character.name +
-      ".";
-
-  }
-
-  else {
-
-    greeting =
-      (
-        character.gender === "F"
-          ?
-          "Bentornata, "
-          :
-          "Bentornato, "
-      ) +
-      character.name +
-      ".";
-
-  }
-
-
-  /* =========================================
-     MOSTRA L'APP
-     ========================================= */
-
-  document
-    .getElementById("loginSection")
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById("appSection")
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById("greeting")
-    .textContent =
-      greeting;
-
-
-  document
-    .getElementById("characterName")
-    .textContent =
-      character.name;
-
-
-  document
-    .getElementById("characterRole")
-    .textContent =
-      character.role;
-
-
-  document
-    .getElementById(
-      "characterDescription"
-    )
-    .textContent =
-      character.description;
-
-
-  document
-    .getElementById(
-      "characterAdvice"
-    )
-    .textContent =
-      character.advice;
-
-
-  document
-    .getElementById(
-      "realUserLabel"
-    )
-    .textContent =
-      "ID: " +
-      participant.name;
-
-
-  const initials =
-    character.name
-      .split(" ")
-      .map(
-        part =>
-          part[0]
-      )
-      .join("")
-      .slice(0,2)
-      .toUpperCase();
-
-
-  document
-    .getElementById(
-      "characterMonogram"
-    )
-    .textContent =
-      initials;
-
-
-  /* =========================================
-     NESSUN RUOLO SEGRETO NEL TEST
-     ========================================= */
-
-  const secretBox =
-    document.getElementById(
-      "secretRoleBox"
-    );
-
-  if (secretBox) {
-
-    secretBox
-      .classList
-      .add("hidden");
-
-    secretBox.style.display =
-      "none";
-
-  }
-
-
-  /* =========================================
-     HAVILAND RESTA DISPONIBILE AD ALBERTO
-     ========================================= */
-
-  const havilandNavBtn =
-    document.getElementById(
-      "havilandNavBtn"
-    );
-
-
-  const havilandMobileBtn =
-    document.getElementById(
-      "havilandMobileBtn"
-    );
-
-
-  const mobileNav =
-    document.getElementById(
-      "mobileNav"
-    );
-
-
-  if (participant.hasVoice) {
-
-    havilandNavBtn
-      .classList
-      .remove("hidden");
-
-
-    havilandMobileBtn
-      .classList
-      .remove("hidden");
-
-
-    mobileNav
-      .classList
-      .remove("two-items");
-
-
-    mobileNav
-      .classList
-      .add("three-items");
-
-  }
-
-
-  openTab("dossier");
-
-}
-
-
-/* =========================================
-   INVIO CON TASTO ENTER
-   ========================================= */
-
-document.addEventListener(
-  "keydown",
-  event => {
-
-    if (
-      event.key === "Enter" &&
-      !document
-        .getElementById(
-          "loginSection"
-        )
-        .classList
-        .contains("hidden")
-    ) {
-
-      login();
-
-    }
-
-  }
-);
-
-<\/script>
-`;
-
-
-    html = html.replace(
-      "</body>",
-      firebaseScript +
-      "</body>"
-    );
-
-
-    /* =========================================
-       APRE L'INTERFACCIA
-       ========================================= */
-
-    document.open();
-    document.write(html);
-    document.close();
-
-  }
-
-  catch (error) {
-
-    console.error(error);
-
-    document.body.innerHTML = `
-      <div style="
-        max-width:700px;
-        margin:60px auto;
-        padding:25px;
-        color:#eee;
-        background:#15100b;
-        font-family:Georgia,serif;
-      ">
-
-        <h2>
-          Villa Valenti — Test Firebase
-        </h2>
-
-        <p>
-          Non è stato possibile avviare
-          il test.
-        </p>
-
-        <p style="
-          color:#c99;
-          font-family:monospace;
-        ">
-          ${error.message}
-        </p>
-
-      </div>
-    `;
-
-  }
-
-})();
-</script>
-<script>
-/* ============================================================
-   VILLA VALENTI — FIREBASE MULTI-DISPOSITIVO
-   ============================================================ */
-
-const VV_DATABASE =
-  "https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
-
-const VV_ORGANIZER_CODE = "321023";
-
-
-async function vvRequest(path, options = {}) {
-
-  const response = await fetch(
-    VV_DATABASE + "/" + path + ".json",
-    {
-      cache: "no-store",
-      ...options
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      "Errore Firebase: " +
+      "Firebase HTTP " +
       response.status
     );
+
   }
 
+
   return response.json();
+
 }
 
 
-async function vvWrite(
+async function firebaseWrite(
   path,
   data,
   method = "PUT"
 ) {
 
-  return vvRequest(
-    path,
-    {
-      method: method,
+  return firebaseRequest(
 
-      headers: {
+    path,
+
+    {
+      method:method,
+
+      headers:{
         "Content-Type":
           "application/json"
       },
@@ -670,15 +1234,24 @@ async function vvWrite(
       body:
         JSON.stringify(data)
     }
+
   );
+
 }
 
 
-/* ============================================================
-   PRIMO ACCESSO / ACCESSI SUCCESSIVI
-   ============================================================ */
+/*
+  Il codice personale è l'identità.
 
-async function vvGetPlayer(
+  Se Firebase possiede già
+  un personaggio per questo codice,
+  viene sempre riutilizzato.
+
+  Se non esiste ancora,
+  viene salvato una volta sola.
+*/
+
+async function getOrCreatePlayer(
   participant,
   officialCharacter
 ) {
@@ -689,8 +1262,8 @@ async function vvGetPlayer(
     "/public";
 
 
-  let stored =
-    await vvRequest(path);
+  const stored =
+    await firebaseRequest(path);
 
 
   if (
@@ -699,7 +1272,9 @@ async function vvGetPlayer(
   ) {
 
     const lastSeen =
-      new Date().toISOString();
+      new Date()
+        .toISOString();
+
 
     const loginCount =
       Number(
@@ -707,30 +1282,41 @@ async function vvGetPlayer(
       ) + 1;
 
 
-    await vvWrite(
+    await firebaseWrite(
+
       path,
+
       {
-        lastSeen,
-        loginCount
+        lastSeen:
+          lastSeen,
+
+        loginCount:
+          loginCount
       },
+
       "PATCH"
+
     );
 
 
     return {
-      firstAccess: false,
 
-      data: {
+      firstAccess:false,
+
+      data:{
         ...stored,
-        lastSeen,
-        loginCount
+        lastSeen:lastSeen,
+        loginCount:loginCount
       }
+
     };
+
   }
 
 
   const now =
-    new Date().toISOString();
+    new Date()
+      .toISOString();
 
 
   const record = {
@@ -744,50 +1330,54 @@ async function vvGetPlayer(
     characterGender:
       officialCharacter.gender,
 
-    assigned: true,
+    assigned:true,
 
-    firstSeen: now,
+    firstSeen:now,
 
-    lastSeen: now,
+    lastSeen:now,
 
-    loginCount: 1
+    loginCount:1
+
   };
 
 
-  await vvWrite(
+  await firebaseWrite(
     path,
     record
   );
 
 
-  stored =
-    await vvRequest(path);
-
-
   return {
-    firstAccess: true,
-    data: stored || record
+
+    firstAccess:true,
+
+    data:record
+
   };
+
 }
 
 
-/* ============================================================
-   NUOVO LOGIN
-   Sovrascrive la funzione login precedente.
-   ============================================================ */
+/* =========================================
+   ACCESSO
+   ========================================= */
 
-login = async function() {
+async function login() {
 
   const input =
     document
-      .getElementById("codeInput")
+      .getElementById(
+        "codeInput"
+      )
       .value
       .trim();
 
 
   const error =
     document
-      .getElementById("error");
+      .getElementById(
+        "error"
+      );
 
 
   error.textContent = "";
@@ -795,9 +1385,11 @@ login = async function() {
 
   const participant =
     participants.find(
+
       person =>
         person.code &&
         person.code === input
+
     );
 
 
@@ -807,42 +1399,49 @@ login = async function() {
       "ACCESSO NEGATO · CODICE NON RICONOSCIUTO";
 
     return;
+
   }
 
 
-  currentParticipant =
-    participant;
-
-
   error.textContent =
-    "ACCESSO ALL'ARCHIVIO...";
+    "ACCESSO ALL'ARCHIVIO…";
 
 
   try {
 
-    await vvOpenCharacter(
+    currentParticipant =
+      participant;
+
+
+    await openCharacter(
       participant
     );
 
+
+    error.textContent = "";
+
   }
 
-  catch (err) {
+  catch (errorObject) {
 
-    console.error(err);
+    console.error(
+      errorObject
+    );
+
+
+    currentParticipant =
+      null;
+
 
     error.textContent =
-      "ERRORE DI COLLEGAMENTO CON L'ARCHIVIO";
+      "ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA";
 
-    currentParticipant = null;
   }
-};
+
+}
 
 
-/* ============================================================
-   APERTURA DOSSIER
-   ============================================================ */
-
-async function vvOpenCharacter(
+async function openCharacter(
   participant
 ) {
 
@@ -854,47 +1453,57 @@ async function vvOpenCharacter(
 
   const officialCharacter =
     characters.find(
+
       character =>
         character.id ===
         officialCharacterId
+
     );
 
 
   if (!officialCharacter) {
+
     throw new Error(
-      "Personaggio non trovato."
+      "Personaggio non trovato"
     );
+
   }
 
 
   const result =
-    await vvGetPlayer(
+    await getOrCreatePlayer(
+
       participant,
       officialCharacter
+
     );
 
 
   /*
-    Da questo momento il personaggio
-    salvato su Firebase ha la precedenza.
+    IMPORTANTISSIMO:
+    dopo la prima assegnazione
+    il personaggio arriva da Firebase,
+    quindi resta identico su ogni dispositivo.
   */
 
   const character =
     characters.find(
+
       item =>
         item.id ===
         result.data.characterId
+
     );
 
 
   if (!character) {
+
     throw new Error(
-      "Personaggio Firebase non valido."
+      "Personaggio Firebase non valido"
     );
+
   }
 
-
-  /* ---------------- SALUTO ---------------- */
 
   let greeting;
 
@@ -911,17 +1520,25 @@ async function vvOpenCharacter(
   else {
 
     greeting =
+
       (
         character.gender === "F"
-          ? "Bentornata, "
-          : "Bentornato, "
-      ) +
-      character.name +
+          ?
+            "Bentornata, "
+          :
+            "Bentornato, "
+      )
+
+      +
+
+      character.name
+
+      +
+
       ".";
+
   }
 
-
-  /* ---------------- INTERFACCIA ---------------- */
 
   document
     .getElementById(
@@ -992,7 +1609,8 @@ async function vvOpenCharacter(
     character.name
       .split(" ")
       .map(
-        part => part[0]
+        part =>
+          part[0]
       )
       .join("")
       .slice(0,2)
@@ -1007,23 +1625,18 @@ async function vvOpenCharacter(
       initials;
 
 
-  /* ========================================================
-     DOCUMENTO PERSONALE RISERVATO
-
-     Questa informazione NON viene mai scritta
-     nel Registro Villa né nel record Firebase pubblico.
-     ======================================================== */
-
   const secretBox =
-    document.getElementById(
-      "secretRoleBox"
-    );
+    document
+      .getElementById(
+        "secretRoleBox"
+      );
 
 
   const secretText =
-    document.getElementById(
-      "secretRole"
-    );
+    document
+      .getElementById(
+        "secretRole"
+      );
 
 
   secretBox
@@ -1033,6 +1646,12 @@ async function vvOpenCharacter(
 
   secretText.innerHTML = "";
 
+
+  /*
+    Il Registro Villa non riceve
+    alcuna informazione relativa
+    ai ruoli speciali.
+  */
 
   if (
     participant.id ===
@@ -1051,8 +1670,8 @@ async function vvOpenCharacter(
 
       <br><br>
 
-      Le istruzioni definitive saranno
-      disponibili qui nella versione
+      Le istruzioni definitive verranno
+      rese disponibili qui nella versione
       completa del gioco.
     `;
 
@@ -1060,8 +1679,8 @@ async function vvOpenCharacter(
     secretBox
       .classList
       .remove("hidden");
-  }
 
+  }
 
   else if (
     participant.id ===
@@ -1080,8 +1699,8 @@ async function vvOpenCharacter(
 
       <br><br>
 
-      Le istruzioni definitive saranno
-      disponibili qui nella versione
+      Le istruzioni definitive verranno
+      rese disponibili qui nella versione
       completa del gioco.
     `;
 
@@ -1089,498 +1708,544 @@ async function vvOpenCharacter(
     secretBox
       .classList
       .remove("hidden");
+
   }
 
 
-  /* ---------------- HAVILAND ---------------- */
+  const isOrganizer =
+    participant.code ===
+    ORGANIZER_CODE;
 
-  const desktopHaviland =
-    document.getElementById(
+
+  document
+    .getElementById(
       "havilandNavBtn"
+    )
+    .classList
+    .toggle(
+      "hidden",
+      !isOrganizer
     );
 
 
-  const mobileHaviland =
-    document.getElementById(
+  document
+    .getElementById(
       "havilandMobileBtn"
+    )
+    .classList
+    .toggle(
+      "hidden",
+      !isOrganizer
     );
 
 
-  const mobileNav =
-    document.getElementById(
+  document
+    .getElementById(
       "mobileNav"
+    )
+    .classList
+    .toggle(
+      "three",
+      isOrganizer
     );
 
 
-  if (participant.hasVoice) {
+  if (isOrganizer) {
 
-    desktopHaviland
-      .classList
-      .remove("hidden");
+    await loadRegistry();
 
-
-    mobileHaviland
-      .classList
-      .remove("hidden");
-
-
-    mobileNav
-      .classList
-      .remove("two-items");
-
-
-    mobileNav
-      .classList
-      .add("three-items");
-
-
-    await vvCreateRegistry();
-
-  }
-
-  else {
-
-    desktopHaviland
-      .classList
-      .add("hidden");
-
-
-    mobileHaviland
-      .classList
-      .add("hidden");
-
-
-    mobileNav
-      .classList
-      .remove("three-items");
-
-
-    mobileNav
-      .classList
-      .add("two-items");
   }
 
 
   openTab("dossier");
 
 
-  /*
-    Haviland pronuncia il saluto.
-  */
+  speakGreeting(
+    greeting
+  );
 
-  vvSpeak(greeting);
+}
+  function logout() {
+
+  currentParticipant = null;
+
+
+  document
+    .getElementById(
+      "appSection"
+    )
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById(
+      "loginSection"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "codeInput"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "error"
+    )
+    .textContent = "";
+
+
+  openTab("dossier");
+
 }
 
 
-/* ============================================================
-   VOCE HAVILAND
-   ============================================================ */
+/* =========================================
+   NAVIGAZIONE
+   ========================================= */
 
-function vvSpeak(text) {
+function openTab(tabName) {
+
+  /*
+    Haviland / Registro Villa
+    è accessibile solamente
+    con il codice organizzatore.
+  */
 
   if (
-    !("speechSynthesis" in window)
+    tabName === "haviland" &&
+    (
+      !currentParticipant ||
+      currentParticipant.code !==
+      ORGANIZER_CODE
+    )
   ) {
+
+    tabName = "dossier";
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".tab-page"
+    )
+    .forEach(
+      page => {
+
+        page
+          .classList
+          .add("hidden");
+
+      }
+    );
+
+
+  const page =
+    document
+      .getElementById(
+        "tab-" +
+        tabName
+      );
+
+
+  if (page) {
+
+    page
+      .classList
+      .remove("hidden");
+
+  }
+
+
+  document
+    .querySelectorAll(
+      ".nav-btn"
+    )
+    .forEach(
+      button => {
+
+        button
+          .classList
+          .toggle(
+            "active",
+            button.dataset.tab ===
+            tabName
+          );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(
+      ".mobile-nav button"
+    )
+    .forEach(
+      button => {
+
+        button
+          .classList
+          .toggle(
+            "active",
+            button.dataset.mobileTab ===
+            tabName
+          );
+
+      }
+    );
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =========================================
+   SALUTO VOCALE
+   ========================================= */
+
+/*
+  Questa è la voce temporanea del browser.
+
+  Il testo è già quello definitivo:
+  primo accesso:
+      "Salve, Nome."
+
+  accessi successivi:
+      "Bentornato, Nome."
+      "Bentornata, Nome."
+
+  Più avanti sostituiremo questa funzione
+  con la voce Haviland / Julian definitiva,
+  senza cambiare la logica Firebase.
+*/
+
+function speakGreeting(text) {
+
+  if (
+    !(
+      "speechSynthesis"
+      in window
+    )
+  ) {
+
     return;
+
   }
 
 
   try {
 
-    speechSynthesis.cancel();
+    window
+      .speechSynthesis
+      .cancel();
 
 
-    const voice =
+    const utterance =
       new SpeechSynthesisUtterance(
         text
       );
 
 
-    voice.lang =
+    utterance.lang =
       "it-IT";
 
 
-    voice.rate =
+    utterance.rate =
       0.86;
 
 
-    voice.pitch =
+    utterance.pitch =
       0.82;
 
 
-    voice.volume =
+    utterance.volume =
       1;
 
 
-    speechSynthesis.speak(
-      voice
-    );
+    window
+      .speechSynthesis
+      .speak(
+        utterance
+      );
 
   }
 
   catch (error) {
 
-    console.warn(
-      "Haviland:",
+    console.error(
+      "Errore voce:",
       error
     );
+
   }
+
 }
 
 
-/* ============================================================
+/* =========================================
    REGISTRO VILLA
-   ============================================================ */
+   ========================================= */
 
-async function vvCreateRegistry() {
+/*
+  IMPORTANTE:
 
-  /*
-    Solo Alberto.
-  */
+  Il registro mostra solamente:
+
+  - nome reale
+  - personaggio assegnato
+  - stato accesso
+
+  NON legge e NON mostra
+  Assassino, Complice o altri
+  ruoli segreti.
+*/
+
+async function loadRegistry() {
 
   if (
     !currentParticipant ||
     currentParticipant.code !==
-      VV_ORGANIZER_CODE
+    ORGANIZER_CODE
   ) {
+
     return;
+
   }
 
 
-  const panel =
-    document.querySelector(
-      "#tab-haviland .haviland-core"
-    );
-
-
-  if (!panel) {
-    return;
-  }
-
-
-  let registry =
-    document.getElementById(
-      "villaRegistry"
-    );
-
-
-  if (!registry) {
-
-    registry =
-      document.createElement(
-        "div"
+  const status =
+    document
+      .getElementById(
+        "registryStatus"
       );
 
 
-    registry.id =
-      "villaRegistry";
+  const rows =
+    document
+      .getElementById(
+        "registryRows"
+      );
 
 
-    registry.style.cssText = `
-      margin-top:32px;
-      padding-top:26px;
-      border-top:
-        1px solid
-        rgba(202,171,111,.28);
-      text-align:left;
-    `;
+  status.textContent =
+    "AGGIORNAMENTO REGISTRO…";
 
 
-    panel.appendChild(
-      registry
-    );
-  }
+  try {
+
+    const allPlayers =
+      await firebaseRequest(
+        "players"
+      ) || {};
 
 
-  registry.innerHTML = `
-
-    <div style="
-      color:#e5d1ae;
-      font-size:24px;
-      margin-bottom:6px;
-    ">
-      Registro Villa
-    </div>
-
-    <div style="
-      color:#8f806b;
-      font-size:13px;
-      margin-bottom:18px;
-    ">
-      Recupero dei registri
-      degli ospiti...
-    </div>
-
-  `;
+    rows.innerHTML = "";
 
 
-  const database =
-    await vvRequest(
-      "players"
-    ) || {};
+    /*
+      Solo i partecipanti che possiedono
+      effettivamente un codice personale
+      vengono mostrati.
 
+      Attualmente sono 19.
+    */
 
-  const guests =
-    participants.filter(
-      participant =>
-        participant.code
-    );
+    participants
 
-
-  const entered =
-    guests.filter(
-      participant =>
-        database[
+      .filter(
+        participant =>
           participant.code
-        ] &&
-        database[
-          participant.code
-        ].public &&
-        database[
-          participant.code
-        ].public.characterId
-    ).length;
+      )
+
+      .forEach(
+        participant => {
 
 
-  let html = `
-
-    <div style="
-      color:#e5d1ae;
-      font-size:24px;
-      margin-bottom:6px;
-    ">
-      Registro Villa
-    </div>
+          const playerNode =
+            allPlayers[
+              participant.code
+            ];
 
 
-    <div style="
-      color:#8f806b;
-      font-size:13px;
-      line-height:1.6;
-      margin-bottom:20px;
-    ">
-
-      Ospiti registrati:
-      <strong style="color:#c9b38d;">
-        ${entered} / ${guests.length}
-      </strong>
-
-      <br>
-
-      Il registro contiene esclusivamente
-      i dati di accesso e il personaggio
-      assegnato.
-
-    </div>
+          const record =
+            playerNode &&
+            playerNode.public
+              ?
+                playerNode.public
+              :
+                null;
 
 
-    <div style="
-      display:grid;
-      gap:10px;
-    ">
-  `;
+          const row =
+            document
+              .createElement(
+                "div"
+              );
 
 
-  guests.forEach(
-    participant => {
-
-      const entry =
-        database[
-          participant.code
-        ];
+          row.className =
+            "registry-row";
 
 
-      const data =
-        entry &&
-        entry.public
-          ? entry.public
-          : null;
+          const characterName =
+            record &&
+            record.characterName
+              ?
+                record.characterName
+              :
+                "—";
 
 
-      let characterName =
-        "Non ancora assegnato";
+          const accessStatus =
+            record &&
+            record.assigned
+              ?
+                `
+                  <span class="ok">
+                    ✓ Accesso effettuato
+                  </span>
+                `
+              :
+                `
+                  <span class="pending">
+                    ○ Non ancora assegnato
+                  </span>
+                `;
 
 
-      let status =
-        "○ Mai entrato";
+          row.innerHTML = `
+
+            <div>
+              <strong>
+                ${escapeHtml(
+                  participant.name
+                )}
+              </strong>
+            </div>
+
+            <div>
+              ${
+                escapeHtml(
+                  characterName
+                )
+              }
+            </div>
+
+            <div>
+              ${accessStatus}
+            </div>
+
+          `;
 
 
-      let accessCount =
-        "—";
+          rows
+            .appendChild(
+              row
+            );
 
-
-      if (
-        data &&
-        data.characterId
-      ) {
-
-        const character =
-          characters.find(
-            item =>
-              item.id ===
-              data.characterId
-          );
-
-
-        if (character) {
-
-          characterName =
-            character.name;
         }
 
-
-        status =
-          "✓ Accesso effettuato";
+      );
 
 
-        accessCount =
-          String(
-            data.loginCount || 1
-          );
-      }
+    status.textContent = "";
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Errore Registro Villa:",
+      error
+    );
 
 
-      html += `
+    status.textContent =
+      "IMPOSSIBILE CARICARE IL REGISTRO VILLA";
 
-        <div style="
-          padding:14px;
-          border:
-            1px solid
-            rgba(190,158,101,.20);
-          border-radius:9px;
-          background:
-            rgba(255,255,255,.025);
-        ">
+  }
 
-
-          <div style="
-            color:#dfcaab;
-            font-size:15px;
-            margin-bottom:6px;
-          ">
-
-            ${vvEscape(
-              participant.name
-            )}
-
-          </div>
-
-
-          <div style="
-            color:#95836a;
-            font-size:12px;
-            line-height:1.65;
-          ">
-
-            Personaggio:
-
-            <strong style="
-              color:#c8af84;
-            ">
-
-              ${vvEscape(
-                characterName
-              )}
-
-            </strong>
-
-            <br>
-
-            ${vvEscape(status)}
-
-            · Accessi:
-            ${vvEscape(accessCount)}
-
-          </div>
-
-        </div>
-      `;
-    }
-  );
-
-
-  html += `
-
-    </div>
-
-
-    <button
-      type="button"
-      onclick="vvCreateRegistry()"
-      style="
-        width:100%;
-        margin-top:18px;
-        border:
-          1px solid
-          rgba(194,158,96,.30);
-        border-radius:8px;
-        background:#211810;
-        color:#c9b38d;
-        padding:13px;
-        cursor:pointer;
-        font-family:
-          Georgia,
-          'Times New Roman',
-          serif;
-        letter-spacing:.7px;
-      "
-    >
-
-      AGGIORNA REGISTRO
-
-    </button>
-
-  `;
-
-
-  registry.innerHTML =
-    html;
 }
 
 
-/* ============================================================
-   ESCAPE HTML
-   ============================================================ */
+/*
+  Protezione dei testi inseriti
+  dinamicamente nell'HTML.
+*/
 
-function vvEscape(value) {
+function escapeHtml(value) {
 
   return String(value)
+    .replace(
+      /[&<>"']/g,
 
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
+      character => ({
 
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
 
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
+      })[character]
 
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-
-    .replaceAll(
-      "'",
-      "&#039;"
     );
+
 }
 
 
-/* ============================================================
-   IMPORTANTE:
-   logout() originale resta valido.
+/* =========================================
+   HAVILAND
+   ========================================= */
 
-   Non cancella Firebase.
-   ============================================================ */
+function havilandPlaceholder() {
+
+  alert(
+    "Haviland è pronto. " +
+    "La voce Julian e i comandi della serata " +
+    "verranno collegati nella versione finale."
+  );
+
+}
+
+
+/* =========================================
+   INVIO CODICE CON TASTO ENTER
+   ========================================= */
+
+document
+  .getElementById(
+    "codeInput"
+  )
+  .addEventListener(
+
+    "keydown",
+
+    function(event) {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        login();
+
+      }
+
+    }
+
+  );
 
 </script>
-  
+
 </body>
 </html>
