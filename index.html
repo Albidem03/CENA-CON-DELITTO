@@ -43,8 +43,8 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 .dossier-grid{display:grid;grid-template-columns:.85fr 1.35fr;gap:16px}
 .folder{background:linear-gradient(160deg,#bf9f69,#96733f);padding:16px;border-radius:6px}
 .portrait-card,.sheet{background:linear-gradient(#e4d6bb,#cfbb97);color:var(--ink);padding:20px;box-shadow:0 12px 30px rgba(0,0,0,.22)}
-.portrait{aspect-ratio:3/4;background:#efe7d8;display:grid;place-items:center;border:7px solid #eee1c5;overflow:hidden}
-.portrait img{width:100%;height:100%;object-fit:contain;object-position:center;display:block;background:#efe7d8}
+.portrait{background:#efe7d8;display:flex;align-items:center;justify-content:center;border:7px solid #eee1c5;overflow:hidden;padding:12px}
+.portrait img{width:100%;height:auto;max-height:none;object-fit:contain;object-position:center;display:block}
 .monogram{width:105px;height:105px;border:1px solid rgba(234,221,188,.45);border-radius:50%;display:grid;place-items:center;color:#d4c29e;font-size:35px}
 .char-name{font-size:32px;margin-top:16px} .char-role{font:700 12px "Courier New",monospace;color:#5c4127}
 .stack{display:grid;gap:14px}
