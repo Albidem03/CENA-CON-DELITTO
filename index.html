@@ -239,23 +239,40 @@ async function migrateGiuliaTesiniPoveglianoCode(){
    const oldRecord=await firebaseRequest(oldPath);
    const newRecord=await firebaseRequest(newPath);
 
-   if(!oldRecord){
+   if(oldRecord){
+     const mergedRecord={
+       ...oldRecord,
+       ...(newRecord||{}),
+       participantId:"giulia_tesini_povegliano",
+       participantName:"Giulia Tesini di Povegliano",
+       code:newCode,
+       migratedFrom:oldCode,
+       migratedAt:new Date().toISOString()
+     };
+
+     await firebaseWrite(newPath,mergedRecord);
+     await firebaseDelete(oldPath);
+
+     console.log("Firebase migrato: "+oldCode+" → "+newCode);
      return;
    }
 
-   const mergedRecord={
-     ...oldRecord,
-     ...(newRecord||{}),
-     migratedFrom:oldCode,
-     migratedAt:new Date().toISOString()
-   };
+   if(!newRecord){
+     await firebaseWrite(newPath,{
+       participantId:"giulia_tesini_povegliano",
+       participantName:"Giulia Tesini di Povegliano",
+       code:newCode,
+       assigned:false,
+       migrationReady:true,
+       migratedFrom:oldCode,
+       migratedAt:new Date().toISOString()
+     });
 
-   await firebaseWrite(newPath,mergedRecord);
-   await firebaseDelete(oldPath);
+     console.log("Firebase inizializzato per il nuovo codice "+newCode);
+   }
 
-   console.log("Firebase allineato: Giulia Tesini di Povegliano "+oldCode+" → "+newCode);
  }catch(error){
-   console.error("Migrazione codice Giulia non riuscita:",error);
+   console.error("Allineamento codice Giulia non riuscito:",error);
  }
 }
 
