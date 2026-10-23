@@ -129,7 +129,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const TEST_CODES=new Set(["321023", "290604", "240383", "141019", "190797", "949699", "140918", "900750", "170504", "122906", "347106", "319903", "248842", "265069", "111111", "220226", "150704", "535506", "240322", "230704"]);
+const TEST_CODES=new Set(["321023", "290604", "240383", "141019", "190797", "949699", "140918", "900750", "170504", "122906", "347106", "319903", "248842", "265069", "111111", "220225", "150704", "535506", "240322", "230704"]);
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -147,7 +147,7 @@ const participants=[
 {id:"gabriele_battini",name:"Gabriele Battini",code:"248842",gender:"M"},
 {id:"cristian_campesi",name:"Cristian Campesi",code:"265069",gender:"M"},
 {id:"vivald_keri",name:"Vivald Keri",code:"111111",gender:"M"},
-{id:"giulia_tesini_povegliano",name:"Giulia Tesini di Povegliano",code:"220226",gender:"F"},
+{id:"giulia_tesini_povegliano",name:"Giulia Tesini di Povegliano",code:"220225",gender:"F"},
 {id:"sonia_vanoni",name:"Sonia Vanoni",code:"150704",gender:"F"},
 {id:"andrea_raffi",name:"Andrea Raffi",code:"535506",gender:"M"},
 {id:"samuele_benatti",name:"Samuele Benatti",code:"240322",gender:"M"},
@@ -224,6 +224,42 @@ async function firebaseRequest(path,options={}){
  return response.json();
 }
 async function firebaseWrite(path,data,method="PUT"){return firebaseRequest(path,{method,headers:{"Content-Type":"application/json"},body:JSON.stringify(data)})}
+
+async function firebaseDelete(path){
+ return firebaseRequest(path,{method:"DELETE"});
+}
+
+async function migrateGiuliaTesiniPoveglianoCode(){
+ const oldCode="220226";
+ const newCode="220225";
+ const oldPath="players/"+oldCode+"/public";
+ const newPath="players/"+newCode+"/public";
+
+ try{
+   const oldRecord=await firebaseRequest(oldPath);
+   const newRecord=await firebaseRequest(newPath);
+
+   if(!oldRecord){
+     return;
+   }
+
+   const mergedRecord={
+     ...oldRecord,
+     ...(newRecord||{}),
+     migratedFrom:oldCode,
+     migratedAt:new Date().toISOString()
+   };
+
+   await firebaseWrite(newPath,mergedRecord);
+   await firebaseDelete(oldPath);
+
+   console.log("Firebase allineato: Giulia Tesini di Povegliano "+oldCode+" → "+newCode);
+ }catch(error){
+   console.error("Migrazione codice Giulia non riuscita:",error);
+ }
+}
+
+migrateGiuliaTesiniPoveglianoCode();
 
 async function getOrCreatePlayer(participant,officialCharacter){
  if(TEST_CODES.has(participant.code)){
