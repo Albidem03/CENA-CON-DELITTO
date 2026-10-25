@@ -134,8 +134,8 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
 <div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
-<button type="button" onclick="resetAudioTest40()" style="margin-top:8px;background:transparent;border:0;color:#6b5135;text-decoration:underline;cursor:pointer;font:700 11px 'Courier New',monospace">RESET TEST AUDIO</button>
-<div class="test-note">TEST AUDIO 40 ACCESSI: ogni codice fa 1° accesso = SALVE e 2° accesso = BENTORNATO/A con lo stesso personaggio di prova. Nessun personaggio viene bloccato o salvato come assegnazione definitiva.</div>
+<button type="button" onclick="resetFinalRoleTest()" style="margin-top:8px;background:transparent;border:0;color:#6b5135;text-decoration:underline;cursor:pointer;font:700 11px 'Courier New',monospace">RESET PROVA ASSASSINO / COMPLICE</button>
+<div class="test-note">PROVA FINALE ASSASSINO/COMPLICE: Alberto D\'Amico = ASSASSINO · Pietro Scolari = COMPLICE. Primo accesso = SALVE, secondo accesso = BENTORNATO. Dati salvati soltanto nell\'area Firebase di test.</div>
 </div></div></div>
 </section>
 
@@ -257,8 +257,8 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const PLAYER_ROOT="playersLive2026";
-const ASSIGNMENT_STATE_PATH="gameLive2026/assignmentState";
+const PLAYER_ROOT="testFinaleAssassinoComplice2026/players";
+const ASSIGNMENT_STATE_PATH="testFinaleAssassinoComplice2026/assignmentState";
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -339,7 +339,7 @@ function randomTwoDistinct(array){
  return [shuffled[0],shuffled[1]];
 }
 
-const LIVE_UNLOCK_PATH="gameTest/liveUnlocks";
+const LIVE_UNLOCK_PATH="testFinaleAssassinoComplice2026/liveUnlocks";
 const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
@@ -408,13 +408,28 @@ function createInitialAssignmentState(){
    };
  });
 
- const eligible=[...participants];
- const [assassin,accomplice]=randomTwoDistinct(eligible);
+ // TEST FINALE: Alberto = Ettore Valenti, Pietro = Ludovico Orsini.
+ // Manteniamo comunque una mappa 1:1 senza duplicati effettuando scambi.
+ function forceCharacter(participantId,wantedCharacterId){
+   const current=assignments[participantId];
+   if(!current)return;
+   const otherId=Object.keys(assignments).find(id=>assignments[id].characterId===wantedCharacterId);
+   if(otherId && otherId!==participantId){
+     const oldCharacterId=current.characterId;
+     assignments[participantId].characterId=wantedCharacterId;
+     assignments[otherId].characterId=oldCharacterId;
+   }else{
+     assignments[participantId].characterId=wantedCharacterId;
+   }
+ }
+ forceCharacter("alberto_damico","ettore_valenti");
+ forceCharacter("pietro_scolari","ludovico_orsini");
+
  return {
    version:2,
    createdAt:new Date().toISOString(),
    assignments,
-   specialRoles:{assassin:assassin.id,accomplice:accomplice.id}
+   specialRoles:{assassin:"alberto_damico",accomplice:"pietro_scolari"}
  };
 }
 
@@ -478,56 +493,7 @@ async function getRoleBundle(state,participant){
  };
 }
 
-
-/* ===== TEST AUDIO 40 ACCESSI — TEMPORANEO =====
-   20 primi accessi + 20 secondi accessi.
-   Nessuna assegnazione definitiva viene scritta su Firebase.
-*/
-const AUDIO_TEST_MODE=true;
-const AUDIO_BASE_PATH="";
-const AUDIO_TEST_MALE=["ettore_valenti","ludovico_orsini","corrado_de_marchi","leone_de_marchi","dorian_ferretti","tancredi_moreau","marcello_albrizzi","cesare_valli","adriano_conti","elia_neroni","ottavio_serra"];
-const AUDIO_TEST_FEMALE=["lavinia_valenti","celeste_valenti","ofelia_de_marchi","viola_neroni","eva_montorsi","bianca_albrizzi","emilia_riva","ginevra_ferretti","isabella_roversi"];
-
-function audioTestKey(participant){return "villaValentiAudio40_"+participant.code}
-function getAudioTestPlayer(participant){
-  const order=participant.gender==="F"?AUDIO_TEST_FEMALE:AUDIO_TEST_MALE;
-  const key=audioTestKey(participant);
-  let state=null;
-  try{state=JSON.parse(localStorage.getItem(key)||"null")}catch(e){}
-  if(!state || !state.characterId || Number(state.accesses||0)>=2){
-    const rk="villaValentiAudio40Rotation_"+participant.gender;
-    const rotation=Number(localStorage.getItem(rk)||"0");
-    state={characterId:order[rotation%order.length],accesses:0};
-    localStorage.setItem(rk,String(rotation+1));
-  }
-  const firstAccess=Number(state.accesses||0)===0;
-  state.accesses=Number(state.accesses||0)+1;
-  localStorage.setItem(key,JSON.stringify(state));
-  const character=characters.find(c=>c.id===state.characterId);
-  return {firstAccess,data:{characterId:character.id,characterName:character.name,characterGender:character.gender,assigned:false,testMode:true,audioTest:true,loginCount:state.accesses}};
-}
-function resetAudioTest40(){
-  Object.keys(localStorage).forEach(k=>{
-    if(k.startsWith("villaValentiAudio40_")||k.startsWith("villaValentiAudio40Rotation_"))localStorage.removeItem(k);
-  });
-  alert("TEST AUDIO RESETTATO. Il prossimo accesso di ogni codice sarà di nuovo SALVE.");
-}
-function greetingAudioPath(character,firstAccess){
-  if(firstAccess)return AUDIO_BASE_PATH+"salve_"+character.id+".mp3";
-  return AUDIO_BASE_PATH+(character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
-}
-function playGreetingAudio(character,firstAccess){
-  try{
-    if(window.__villaGreetingAudio){window.__villaGreetingAudio.pause();window.__villaGreetingAudio.currentTime=0}
-    const a=new Audio(greetingAudioPath(character,firstAccess));
-    window.__villaGreetingAudio=a;a.preload="auto";
-    a.play().catch(err=>{console.warn("Audio preregistrato non riprodotto:",err)});
-  }catch(e){console.error("Errore audio saluto:",e)}
-}
-/* ===== FINE TEST AUDIO 40 ACCESSI ===== */
-
 async function getOrCreatePlayer(participant){
- if(AUDIO_TEST_MODE)return getAudioTestPlayer(participant);
  const state=await ensureAssignmentState();
  const allocation=state.assignments&&state.assignments[participant.id];
  if(!allocation||!allocation.characterId)throw new Error("Personaggio non assegnato");
@@ -740,6 +706,22 @@ async function resetLiveUnlocks(){
  }
 }
 
+
+async function resetFinalRoleTest(){
+  const ok=confirm("Resettare SOLO la prova Alberto assassino / Pietro complice? I dati definitivi non verranno toccati.");
+  if(!ok)return;
+  try{
+    await firebaseDelete("testFinaleAssassinoComplice2026");
+    localStorage.removeItem("villaValentiAudio40_321023");
+    localStorage.removeItem("villaValentiAudio40_900750");
+    alert("PROVA RESETTATA. Puoi ricominciare dal primo accesso di Alberto o Pietro.");
+    location.reload();
+  }catch(e){
+    console.error(e);
+    alert("Reset non riuscito. Riprova.");
+  }
+}
+
 async function login(){
  const input=document.getElementById("codeInput").value.trim();
  const error=document.getElementById("error"); error.textContent="";
@@ -749,6 +731,31 @@ async function login(){
  try{currentParticipant=participant;await openCharacter(participant);error.textContent=""}
  catch(e){console.error(e);currentParticipant=null;error.textContent="ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA"}
 }
+
+
+/* ===== AUDIO ELEVENLABS — TEST SALUTO ===== */
+function greetingAudioPath(character,firstAccess){
+  if(firstAccess)return "salve_"+character.id+".mp3";
+  return (character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
+}
+function playGreetingAudio(character,firstAccess){
+  try{
+    if(window.__villaGreetingAudio){
+      window.__villaGreetingAudio.pause();
+      window.__villaGreetingAudio.currentTime=0;
+    }
+    const audio=new Audio(greetingAudioPath(character,firstAccess));
+    window.__villaGreetingAudio=audio;
+    audio.preload="auto";
+    audio.play().catch(err=>{
+      console.warn("Audio preregistrato non riprodotto:",err);
+      speakGreeting(firstAccess
+        ?"Salve, "+character.name+"."
+        :(character.gender==="F"?"Bentornata, ":"Bentornato, ")+character.name+".");
+    });
+  }catch(e){console.error("Errore audio saluto:",e)}
+}
+/* ===== FINE AUDIO ELEVENLABS ===== */
 
 async function openCharacter(participant){
  const result=await getOrCreatePlayer(participant);
@@ -766,7 +773,7 @@ async function openCharacter(participant){
  document.getElementById("characterRole").textContent=character.role;
  document.getElementById("characterDescription").textContent=character.description;
  document.getElementById("characterAdvice").textContent=character.advice;
- document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · ASSEGNAZIONE BLOCCATA";
+ document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · TEST RUOLI SEGRETI";
 
  const initials=character.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
  const monogram=document.getElementById("characterMonogram");
@@ -789,7 +796,7 @@ async function openCharacter(participant){
  if(isOrganizer)startRegistryLive();else stopRegistryLive();
  startLiveUnlocks();
  openTab("dossier");
- if(AUDIO_TEST_MODE)playGreetingAudio(character,result.firstAccess);else speakGreeting(spokenGreeting);
+ playGreetingAudio(character,result.firstAccess);
 }
 
 function logout(){
