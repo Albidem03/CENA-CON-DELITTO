@@ -66,7 +66,6 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 #codeInput{min-width:0;padding:15px;text-align:center;font:700 21px "Courier New",monospace;letter-spacing:7px;background:rgba(255,249,232,.56);border:1px solid #63492f}
 .enter-btn,.action-btn{border:1px solid #4c1111;background:linear-gradient(#7f1f1f,#591111);color:#f2e1c1;padding:12px 18px;cursor:pointer}
 .error{min-height:20px;margin-top:12px;color:#791d1d;font:700 13px "Courier New",monospace}
-.test-note{margin-top:12px;font:700 12px "Courier New",monospace;color:#5d4328;line-height:1.5}
 .app{width:min(1200px,100%);margin:auto;padding:18px}
 .topbar{position:sticky;top:8px;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 17px;border:1px solid var(--line);border-radius:12px;background:rgba(20,15,11,.96)}
 .brand strong{display:block;color:#e8d6b7} .brand span{font-size:11px;color:#8c7c67;text-transform:uppercase;letter-spacing:1px}
@@ -99,7 +98,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 .live-status{color:#b9d09d;font:11px "Courier New",monospace;letter-spacing:1px;margin-bottom:14px}
 .mobile-nav{display:none}
 
-/* REGIA LIVE — TEST */
+/* REGIA LIVE */
 .live-control{margin-top:26px;padding-top:24px;border-top:1px solid var(--line);text-align:left}
 .live-control h2{margin-bottom:6px}
 .live-control-copy{color:#938269;font-size:13px;line-height:1.55;margin-bottom:16px}
@@ -111,10 +110,15 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 .control-card button,.reset-live-btn{width:100%;border:1px solid #4c1111;background:linear-gradient(#7f1f1f,#591111);color:#f2e1c1;padding:10px 9px;border-radius:6px;cursor:pointer}
 .reset-live-btn{width:auto;margin-top:12px;background:#211810;border-color:rgba(194,158,96,.3);color:#c9b38d}
 .live-write-status{min-height:18px;margin-top:10px;color:#a99575;font:11px "Courier New",monospace}
-.clue-test-label{color:#7f1f1f;font:800 11px "Courier New",monospace;letter-spacing:1px;margin-bottom:8px}
-.personal-test{border:1px dashed #7d2424}
 .indizi-live-status{margin:0 0 14px;color:#9c8a70;font:11px "Courier New",monospace}
 .indizi-live-status.online{color:#7c683f}
+.conclusion-box{max-width:720px;margin:0 auto;border:1px solid var(--line);border-radius:12px;padding:26px;background:rgba(16,12,9,.96)}
+.conclusion-box .sheet{margin:0}
+.conclusion-input-row{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:18px}
+#conclusionGuess{min-width:0;padding:14px;border:1px solid #745735;background:rgba(255,249,232,.58);color:#221a13;font:700 16px "Courier New",monospace}
+.conclusion-feedback{margin-top:16px;padding:14px;border:1px solid rgba(88,62,34,.28);font-weight:700;line-height:1.55}
+.conclusion-feedback.correct{border-color:#52683d;color:#31451f;background:rgba(103,130,73,.12)}
+.conclusion-feedback.wrong{border-color:#7d2424;color:#6d1f1f;background:rgba(125,36,36,.08)}
 
 @media(max-width:860px){
 .layout{display:block}.sidebar{display:none}.dossier-grid{grid-template-columns:1fr}.app{padding:10px 10px 85px}
@@ -134,7 +138,6 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
 <div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
-<div class="test-note">MODALITÀ TEST FOTO COMPLETA: tutti i codici cambiano personaggio e ritratto a ogni nuovo accesso, restando nel proprio gruppo maschile/femminile.</div>
 </div></div></div>
 </section>
 
@@ -144,6 +147,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <aside class="sidebar">
 <button class="nav-btn active" data-tab="dossier" onclick="openTab('dossier')">▣ Dossier personale</button>
 <button class="nav-btn" data-tab="indizi" onclick="openTab('indizi')">⌕ Indizi</button>
+<button id="conclusionNavBtn" class="nav-btn hidden" data-tab="conclusione" onclick="openTab('conclusione')">✓ Conclusione</button>
 <button id="havilandNavBtn" class="nav-btn hidden" data-tab="haviland" onclick="openTab('haviland')">◉ Haviland / Regia</button>
 <div class="status">● SESSIONE ATTIVA<div id="realUserLabel" style="margin-top:7px"></div></div>
 </aside>
@@ -171,35 +175,49 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 </article>
 
 <article id="commonClue1" class="sheet hidden">
-<div class="clue-test-label">CONTENUTO DI PROVA</div>
 <div class="section-title">Indizio comune 1</div>
-<div class="paper-text">Documento di prova sbloccato in diretta dalla Regia.</div>
+<div id="commonClue1Text" class="paper-text">Documento riservato. Il contenuto verrà reso disponibile durante la serata.</div>
 </article>
 <article id="commonClue2" class="sheet hidden">
-<div class="clue-test-label">CONTENUTO DI PROVA</div>
 <div class="section-title">Indizio comune 2</div>
-<div class="paper-text">Secondo documento di prova sbloccato in diretta dalla Regia.</div>
+<div id="commonClue2Text" class="paper-text">Documento riservato. Il contenuto verrà reso disponibile durante la serata.</div>
 </article>
 <article id="commonClue3" class="sheet hidden">
-<div class="clue-test-label">CONTENUTO DI PROVA</div>
 <div class="section-title">Indizio comune 3</div>
-<div class="paper-text">Terzo documento di prova sbloccato in diretta dalla Regia.</div>
+<div id="commonClue3Text" class="paper-text">Documento riservato. Il contenuto verrà reso disponibile durante la serata.</div>
 </article>
 
-<article id="personalClue1" class="sheet personal-test hidden">
-<div class="clue-test-label">CONTENUTO PERSONALE DI PROVA</div>
+<article id="personalClue1" class="sheet hidden">
 <div class="section-title">Informazione personale 1</div>
-<div class="paper-text">Blocco personale di prova disponibile. Nella versione definitiva qui comparirà esclusivamente l'informazione destinata al personaggio collegato.</div>
+<div id="personalClue1Text" class="paper-text">Informazione personale riservata. Il contenuto verrà reso disponibile durante la serata.</div>
 </article>
-<article id="personalClue2" class="sheet personal-test hidden">
-<div class="clue-test-label">CONTENUTO PERSONALE DI PROVA</div>
+<article id="personalClue2" class="sheet hidden">
 <div class="section-title">Informazione personale 2</div>
-<div class="paper-text">Secondo blocco personale di prova disponibile.</div>
+<div id="personalClue2Text" class="paper-text">Informazione personale riservata. Il contenuto verrà reso disponibile durante la serata.</div>
 </article>
-<article id="personalClue3" class="sheet personal-test hidden">
-<div class="clue-test-label">CONTENUTO PERSONALE DI PROVA</div>
+<article id="personalClue3" class="sheet hidden">
 <div class="section-title">Informazione personale 3</div>
-<div class="paper-text">Terzo blocco personale di prova disponibile.</div>
+<div id="personalClue3Text" class="paper-text">Informazione personale riservata. Il contenuto verrà reso disponibile durante la serata.</div>
+</article>
+</div>
+</section>
+
+
+<section id="tab-conclusione" class="tab-page hidden">
+<div class="conclusion-box">
+<article class="sheet">
+<div class="section-title">Conclusione dell'indagine</div>
+<div class="paper-text">
+La Regia ha aperto la fase conclusiva. Inserisci <strong>nome e cognome del personaggio</strong> che ritieni essere l'assassino.
+Hai una sola risposta: una volta confermata non potrà essere modificata.
+</div>
+<div id="conclusionForm">
+<div class="conclusion-input-row">
+<input id="conclusionGuess" type="text" autocomplete="off" placeholder="Nome e cognome del personaggio">
+<button id="conclusionSubmitBtn" class="action-btn" type="button" onclick="submitConclusion()">CONFERMA</button>
+</div>
+</div>
+<div id="conclusionFeedback" class="conclusion-feedback hidden"></div>
 </article>
 </div>
 </section>
@@ -211,8 +229,8 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <button class="action-btn" onclick="havilandPlaceholder()">ATTIVA MICROFONO</button>
 
 <div class="live-control">
-<h2>Regia indizi — Test live</h2>
-<div class="live-control-copy">Questi pulsanti usano contenuti neutri di prova. Premendo SBLOCCA, il documento compare automaticamente nella sezione Indizi di tutti i dispositivi già collegati, senza uscire e rientrare.</div>
+<h2>Regia indizi — Live</h2>
+<div class="live-control-copy">I documenti vengono pubblicati in diretta nella sezione Indizi dei dispositivi collegati. Da qui puoi anche aprire o richiudere la fase Conclusione. I contenuti potranno essere aggiornati prima della serata senza cambiare il link.</div>
 <div id="liveControlConnection" class="live-status">● CONTROLLO LIVE</div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line)">Indizi comuni</div>
@@ -229,7 +247,11 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="control-card"><strong>Blocco personale 3</strong><div id="statePersonal3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal3')">SBLOCCA / BLOCCA</button></div>
 </div>
 
-<button class="reset-live-btn" onclick="resetLiveUnlocks()">RESET TEST INDIZI</button>
+<div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Conclusione</div>
+<div class="control-grid">
+<div class="control-card"><strong>Pannello conclusione</strong><div id="stateConclusion" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('conclusion')">SBLOCCA / BLOCCA</button></div>
+</div>
+<button class="reset-live-btn" onclick="resetLiveUnlocks()">AZZERA SBLOCCHI</button>
 <div id="liveWriteStatus" class="live-write-status"></div>
 </div>
 
@@ -241,6 +263,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <nav id="mobileNav" class="mobile-nav">
 <button class="active" data-mobile-tab="dossier" onclick="openTab('dossier')">DOSSIER</button>
 <button data-mobile-tab="indizi" onclick="openTab('indizi')">INDIZI</button>
+<button id="conclusionMobileBtn" class="hidden" data-mobile-tab="conclusione" onclick="openTab('conclusione')">CONCLUSIONE</button>
 <button id="havilandMobileBtn" class="hidden" data-mobile-tab="haviland" onclick="openTab('haviland')">REGIA</button>
 </nav></section>
 
@@ -256,7 +279,8 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const TEST_CODES=new Set(["321023", "290604", "240383", "141019", "190797", "949699", "140918", "900750", "170504", "122906", "347106", "319903", "248842", "265069", "111111", "220225", "150704", "535506", "240322", "230704"]);
+const PLAYER_ROOT="villaValentiDefinitivo2026/players";
+const ASSIGNMENT_STATE_PATH="villaValentiDefinitivo2026/private/assignmentState";
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -305,52 +329,196 @@ const characters=[
 ];
 
 const PORTRAITS=window.PORTRAITS||{};
-const MALE_TEST_ORDER=["ettore_valenti","ludovico_orsini","corrado_de_marchi","leone_de_marchi","dorian_ferretti","tancredi_moreau","marcello_albrizzi","cesare_valli","adriano_conti","elia_neroni","ottavio_serra"];
-const FEMALE_TEST_ORDER=["lavinia_valenti","celeste_valenti","ofelia_de_marchi","viola_neroni","eva_montorsi","bianca_albrizzi","emilia_riva","ginevra_ferretti","isabella_roversi"];
 
-const GAME_SEED="VILLA-VALENTI-2026-DOSSIER-V2";
-function hashString(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
-function seededRandom(seed){let value=seed>>>0;return function(){value+=0x6D2B79F5;let t=value;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
-function shuffleStable(array,seedText){const result=[...array];const random=seededRandom(hashString(GAME_SEED+"|"+seedText));for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}return result}
-
-function createCharacterAssignments(){
- const assignments={};
- const normalParticipants=participants.filter(p=>!p.forcedCharacter);
- const normalCharacters=characters.filter(c=>!c.modular);
- const maleParticipants=shuffleStable(normalParticipants.filter(p=>p.gender==="M"),"MALE-PARTICIPANTS");
- const femaleParticipants=shuffleStable(normalParticipants.filter(p=>p.gender==="F"),"FEMALE-PARTICIPANTS");
- const maleCharacters=shuffleStable(normalCharacters.filter(c=>c.gender==="M"),"MALE-CHARACTERS");
- const femaleCharacters=shuffleStable(normalCharacters.filter(c=>c.gender==="F"),"FEMALE-CHARACTERS");
- maleParticipants.forEach((p,i)=>assignments[p.id]=maleCharacters[i].id);
- femaleParticipants.forEach((p,i)=>assignments[p.id]=femaleCharacters[i].id);
- return assignments;
+/* MOTORE ASSEGNAZIONI DEFINITIVE
+   - combinazione casuale completa dei 20 partecipanti con i 20 personaggi
+   - corrispondenza M/F rispettata
+   - nessun doppione possibile
+   - 1 assassino + 1 complice scelti casualmente tra i 20 partecipanti
+   - assassino e complice vedono nome reale + personaggio dell'altro SOLO dopo il primo accesso di entrambi
+   - ogni giocatore scopre il proprio personaggio al primo accesso e poi resta bloccato
+   - tutto salvato su Firebase e valido anche cambiando dispositivo
+   - nessuna soluzione viene mostrata automaticamente: la fase Conclusione accetta soltanto un tentativo e restituisce corretto/errato */
+function secureRandomIndex(max){
+ if(max<=0)return 0;
+ if(window.crypto&&crypto.getRandomValues){
+   const limit=Math.floor(0x100000000/max)*max;
+   const buf=new Uint32Array(1);
+   do{crypto.getRandomValues(buf)}while(buf[0]>=limit);
+   return buf[0]%max;
+ }
+ return Math.floor(Math.random()*max);
 }
-const CHARACTER_ASSIGNMENTS=createCharacterAssignments();
-
-function createSpecialRoles(){
- const eligible=participants.filter(p=>!p.cannotBeSpecial);
- const shuffled=shuffleStable(eligible,"ASSASSINO-COMPLICE");
- return {assassin:shuffled[0].id,accomplice:shuffled[1].id};
+function secureShuffle(input){
+ const array=[...input];
+ for(let i=array.length-1;i>0;i--){
+   const j=secureRandomIndex(i+1);
+   [array[i],array[j]]=[array[j],array[i]];
+ }
+ return array;
 }
-const SPECIAL_ROLES=createSpecialRoles();
+function randomTwoDistinct(array){
+ const shuffled=secureShuffle(array);
+ return [shuffled[0],shuffled[1]];
+}
 
-const LIVE_UNLOCK_PATH="gameTest/liveUnlocks";
-const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,updatedAt:null};
+function chooseSpecialRolePair(mode="RANDOM"){
+ const males=participants.filter(p=>p.gender==="M");
+ const females=participants.filter(p=>p.gender==="F");
+ if(mode==="MM")return randomTwoDistinct(males);
+ if(mode==="FF")return randomTwoDistinct(females);
+ if(mode==="MF")return [males[secureRandomIndex(males.length)],females[secureRandomIndex(females.length)]];
+ if(mode==="FM")return [females[secureRandomIndex(females.length)],males[secureRandomIndex(males.length)]];
+ return randomTwoDistinct(participants);
+}
+
+
+/* ===== MOTORE NARRATIVO 380 =====
+   Ogni coppia di personaggi (190 coppie non ordinate) riceve un legame condiviso
+   con Angelina. L'orientamento assassino/complice produce 380 configurazioni
+   ordinate con compiti, pressioni e indizi coerenti. Non viene generata alcuna
+   soluzione automatica. La fase Conclusione non rivela mai il nome corretto. */
+const CHARACTER_NARRATIVE={
+ ettore_valenti:{group:"family",pressure:"una clausola patrimoniale che avrebbe ridimensionato la tua influenza sul patrimonio Valenti",capability:"conoscenza delle vecchie proprietà e dei vincoli familiari",trace:"una nota su una vecchia particella catastale annotata con una grafia molto tradizionale",cover:"sostieni che le questioni patrimoniali fossero già state chiarite mesi fa"},
+ ludovico_orsini:{group:"intimate",pressure:"una serie di accordi privati legati alla crisi del matrimonio e alla gestione di beni condivisi",capability:"accesso alla vita privata e agli spazi personali di Angelina",trace:"un frammento di corrispondenza con riferimenti a un incontro coniugale mai registrato",cover:"presenta il rapporto con Angelina come teso ma ancora sotto controllo"},
+ corrado_de_marchi:{group:"family",pressure:"una contestazione sulle proprietà della linea materna che Angelina stava per riaprire",capability:"conoscenza diretta delle dispute sui beni De Marchi",trace:"una copia incompleta di una mappa di proprietà con un confine evidenziato",cover:"insisti sul fatto che la disputa fosse soltanto teorica"},
+ leone_de_marchi:{group:"family",pressure:"un episodio della generazione precedente che avrebbe modificato la lettura di un vecchio passaggio ereditario",capability:"memoria dei fatti familiari precedenti alla gestione di Angelina",trace:"una data annotata accanto al nome di un notaio ormai in pensione",cover:"riduci tutto a vecchie storie familiari prive di importanza attuale"},
+ dorian_ferretti:{group:"business",pressure:"movimenti economici che Angelina aveva iniziato a confrontare con la contabilità ufficiale",capability:"conoscenza dei conti, dei contratti e dei flussi d'affari",trace:"una cifra cerchiata su una copia di fattura priva dell'allegato originale",cover:"spiega ogni anomalia come normale differenza di registrazione"},
+ tancredi_moreau:{group:"records",pressure:"una formulazione giuridica inserita in documenti che Angelina voleva far riesaminare da un professionista esterno",capability:"accesso a contratti, testamenti e strumenti legali",trace:"una sigla a margine di una bozza contrattuale non protocollata",cover:"afferma che tutte le bozze erano prive di efficacia giuridica"},
+ marcello_albrizzi:{group:"specialist",pressure:"informazioni tecniche e mediche che Angelina aveva collegato a una ricostruzione più ampia degli eventi",capability:"capacità di interpretare dati medici e dettagli fisici",trace:"un appunto tecnico con un orario corretto a penna",cover:"sottolinea che un dato tecnico isolato non dimostra nulla"},
+ cesare_valli:{group:"staff",pressure:"accessi alle stanze della villa che non coincidevano con le versioni ufficiali degli invitati",capability:"conoscenza delle chiavi, dei passaggi e delle routine della villa",trace:"un registro di servizio con una riga riscritta e un orario fuori sequenza",cover:"attribuisci le incongruenze al normale caos di una serata affollata"},
+ adriano_conti:{group:"intimate",pressure:"vecchie lettere e promesse che Angelina non voleva più lasciare nell'ombra",capability:"conoscenza di aspetti sentimentali che pochi altri conoscono",trace:"una busta senza mittente con una data precedente al matrimonio di Angelina",cover:"tratta il passato come definitivamente chiuso"},
+ elia_neroni:{group:"intimate",pressure:"un fatto dell'infanzia di Angelina che aveva assunto un significato nuovo dopo il ritrovamento del dossier",capability:"conoscenza della vita di Angelina prima della ricchezza e della villa",trace:"un soprannome d'infanzia scritto sul retro di un vecchio appunto",cover:"presenta i ricordi d'infanzia come dettagli innocui"},
+ ottavio_serra:{group:"specialist",pressure:"immagini e metadati che contraddicevano la cronologia raccontata da alcune persone",capability:"accesso a fotografie, riprese e sequenze temporali",trace:"un numero di fotogramma annotato accanto a un orario cancellato",cover:"ricorda a tutti che una fotografia può essere interpretata in molti modi"},
+ lavinia_valenti:{group:"family",pressure:"una scelta familiare di Angelina che avrebbe modificato equilibri e precedenze tra le sorelle",capability:"conoscenza delle rivalità e degli accordi interni ai Valenti",trace:"una bozza di lettera familiare con il tuo nome sottolineato due volte",cover:"presenta la rivalità con Angelina come normale conflitto tra sorelle"},
+ celeste_valenti:{group:"family",pressure:"una decisione di Angelina che avrebbe posto fine a una protezione economica e personale mantenuta per anni",capability:"accesso alla sfera più protetta della famiglia",trace:"un promemoria su un trasferimento mensile che doveva essere sospeso",cover:"mostrati sorpresa da qualsiasi cambiamento nelle decisioni di Angelina"},
+ ofelia_de_marchi:{group:"family",pressure:"documenti sull'eredità materna che confermavano che alcune quote non erano mai state chiarite",capability:"conoscenza delle rivendicazioni della famiglia De Marchi",trace:"una fotocopia di un atto con una percentuale corretta a mano",cover:"dichiara di aver sempre cercato soltanto trasparenza"},
+ viola_neroni:{group:"intimate",pressure:"confidenze che Angelina aveva improvvisamente smesso di condividere perché temeva una fuga di informazioni",capability:"conoscenza delle paure e delle abitudini emotive di Angelina",trace:"un messaggio incompleto salvato come bozza e mai inviato",cover:"sostieni che Angelina si fosse semplicemente chiusa in se stessa"},
+ eva_montorsi:{group:"staff",pressure:"una sequenza di spostamenti interni alla villa che Angelina aveva chiesto di ricostruire con precisione",capability:"conoscenza delle abitudini domestiche e delle aree di servizio",trace:"un elenco di camere con due orari aggiunti successivamente",cover:"spiega che durante gli eventi gli orari di servizio cambiano continuamente"},
+ bianca_albrizzi:{group:"records",pressure:"appuntamenti cancellati, telefonate e documenti che Angelina aveva iniziato a ricomporre in un'unica cronologia",capability:"accesso all'agenda, alla corrispondenza e ai documenti personali di Angelina",trace:"una pagina d'agenda strappata lasciando visibile metà di un appuntamento",cover:"attribuisci le cancellazioni ai frequenti cambi di programma di Angelina"},
+ emilia_riva:{group:"staff",pressure:"movimenti nelle zone di servizio che non corrispondevano alla disposizione ufficiale della serata",capability:"conoscenza pratica degli spostamenti durante eventi e preparativi",trace:"una lista di consegne con un passaggio aggiunto fuori ordine",cover:"sostieni che le deviazioni fossero dovute all'organizzazione dell'evento"},
+ ginevra_ferretti:{group:"business",pressure:"contatti professionali paralleli che Angelina aveva collegato a operazioni non dichiarate",capability:"conoscenza dell'ambiente lavorativo e dei rapporti esterni",trace:"un biglietto da visita con un numero privato scritto sul retro",cover:"descrivi quei contatti come normali relazioni professionali"},
+ isabella_roversi:{group:"specialist",pressure:"la provenienza di alcuni oggetti e documenti di famiglia che Angelina voleva sottoporre a una nuova verifica",capability:"capacità di catalogare, autenticare e ricostruire la provenienza degli oggetti",trace:"una scheda di catalogo con una provenienza modificata a matita",cover:"ricorda che le attribuzioni antiquarie possono cambiare dopo nuove verifiche"}
+};
+
+const PAIR_BRIDGES={
+ "business|business":"un'operazione economica parallela che utilizzava società e contatti esterni per tenere alcuni movimenti fuori dalla contabilità ordinaria",
+ "business|family":"un trasferimento di valore tra patrimonio familiare e attività professionali che non avrebbe dovuto comparire nei documenti ufficiali",
+ "business|intimate":"un favore economico nato da un rapporto personale e poi trasformato in un accordo che Angelina non aveva mai autorizzato",
+ "business|records":"una catena di contratti, appuntamenti e registrazioni contabili costruita per far apparire regolare un'operazione che non lo era",
+ "business|specialist":"una valutazione tecnica usata per giustificare un'operazione economica che Angelina aveva iniziato a contestare",
+ "business|staff":"il passaggio discreto di documenti e valori attraverso le aree della villa, lontano dai normali canali amministrativi",
+ "family|family":"un accordo riservato sull'eredità e sulla distribuzione di beni Valenti che avrebbe cambiato gli equilibri della famiglia",
+ "family|intimate":"una corrispondenza privata capace di modificare sia i rapporti affettivi sia gli equilibri patrimoniali della famiglia",
+ "family|records":"una modifica a documenti patrimoniali e familiari che Angelina aveva deciso di far verificare all'esterno",
+ "family|specialist":"la provenienza e il valore di un bene o documento di famiglia che era stato presentato in modo diverso dalla realtà",
+ "family|staff":"la sparizione temporanea di un documento dalla villa e la copertura degli accessi necessari a spostarlo",
+ "intimate|intimate":"un patto privato per impedire che Angelina rendesse pubbliche lettere, confidenze e promesse incompatibili tra loro",
+ "intimate|records":"messaggi, appuntamenti e documenti cancellati che mostravano una pressione congiunta esercitata su Angelina",
+ "intimate|specialist":"materiale privato — immagini, dati tecnici o oggetti — che Angelina stava per usare per dimostrare che una versione dei fatti era falsa",
+ "intimate|staff":"incontri riservati avvenuti in villa e coperti intervenendo su orari, accessi e movimenti nelle zone di servizio",
+ "records|records":"una catena coordinata di documenti, appuntamenti e annotazioni alterate per impedire a Angelina di ricostruire una cronologia completa",
+ "records|specialist":"un documento tecnico allegato al dossier che non coincideva con i registri e le versioni ufficiali conservate da Angelina",
+ "records|staff":"l'accesso non autorizzato allo studio e all'archivio di Angelina seguito dalla cancellazione di alcune tracce amministrative",
+ "specialist|specialist":"una prova materiale interpretata, catalogata o datata in modo concordato per farle raccontare una storia diversa da quella reale",
+ "specialist|staff":"una prova materiale spostata attraverso la villa e successivamente descritta o documentata in modo fuorviante",
+ "staff|staff":"una serie di accessi e spostamenti nelle aree riservate della villa nascosta modificando la normale sequenza di servizio"
+};
+
+function narrativeHash(value){
+ let h=2166136261;
+ for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,16777619)}
+ return h>>>0;
+}
+function pairBridge(metaA,metaB){
+ const key=[metaA.group,metaB.group].sort().join("|");
+ return PAIR_BRIDGES[key]||"un accordo riservato che Angelina aveva ricostruito mettendo insieme documenti e testimonianze provenienti da ambienti diversi";
+}
+function characterForParticipant(state,participantId){
+ const allocation=state.assignments&&state.assignments[participantId];
+ return allocation?characters.find(c=>c.id===allocation.characterId):null;
+}
+function buildNarrativePackage(state){
+ const assassinParticipant=participants.find(p=>p.id===state.specialRoles.assassin);
+ const accompliceParticipant=participants.find(p=>p.id===state.specialRoles.accomplice);
+ const assassinCharacter=characterForParticipant(state,state.specialRoles.assassin);
+ const accompliceCharacter=characterForParticipant(state,state.specialRoles.accomplice);
+ if(!assassinParticipant||!accompliceParticipant||!assassinCharacter||!accompliceCharacter)throw new Error("Configurazione narrativa incompleta");
+ const a=CHARACTER_NARRATIVE[assassinCharacter.id],b=CHARACTER_NARRATIVE[accompliceCharacter.id];
+ if(!a||!b)throw new Error("Metadati narrativi mancanti");
+ const bridge=pairBridge(a,b);
+ const unordered=[assassinCharacter.id,accompliceCharacter.id].sort().join("__");
+ const ordered=assassinCharacter.id+"__"+accompliceCharacter.id;
+ const variant=narrativeHash(unordered)%4;
+ const trigger=[
+   "Angelina aveva fissato per la mattina successiva un incontro fuori dalla villa per consegnare una copia del dossier.",
+   "Angelina aveva preparato una seconda copia del dossier e aveva lasciato intendere che non avrebbe più accettato pressioni.",
+   "Angelina aveva comunicato a una persona esterna che durante la cena avrebbe chiuso definitivamente la questione.",
+   "Angelina aveva raccolto abbastanza elementi da voler rendere ufficiale la vicenda subito dopo la serata."
+ ][variant];
+ const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" erano entrambi coinvolti in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" Per entrambi, impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
+ const sharedStory="Il dossier scomparso non riguardava un solo segreto. Angelina aveva unito due vicende in un unico fascicolo e aveva scritto che, considerate separatamente, potevano sembrare coincidenze; insieme dimostravano invece un accordo preciso. La parte centrale del fascicolo riguardava "+bridge+".";
+ const commonClues=[
+   "Tra le carte di Angelina manca un fascicolo centrale. Sul separatore rimasto nello studio si legge: «Non sono due questioni separate». Sotto, Angelina aveva annotato un riferimento a "+bridge+".",
+   "È stata recuperata una pagina incompleta del dossier. Contiene due tipi di traccia molto diversi: una riconducibile a "+a.capability+" e una a "+b.capability+". Angelina le aveva collegate con la stessa freccia rossa.",
+   "In una nota datata poco prima della cena Angelina scrive: «Per far funzionare tutto servivano due persone con accessi diversi. Una poteva creare l'occasione, l'altra poteva far sparire la traccia». Non sono indicati nomi."
+ ];
+ const personalClues={};
+ participants.forEach(p=>{
+   const ch=characterForParticipant(state,p.id);
+   if(!ch)return;
+   const observer=CHARACTER_NARRATIVE[ch.id];
+   if(p.id===state.specialRoles.assassin){
+     personalClues[p.id]=[
+       "La versione che devi sostenere è questa: "+a.cover+".",
+       "Sai che il punto più delicato del dossier è il collegamento tra "+a.pressure+" e la parte custodita dall'altra persona coinvolta.",
+       "Evita di spiegare spontaneamente come avresti potuto usare "+a.capability+". Rispondi solo a ciò che ti viene chiesto."
+     ];
+   }else if(p.id===state.specialRoles.accomplice){
+     personalClues[p.id]=[
+       "La versione che devi sostenere è questa: "+b.cover+".",
+       "Sai che il punto più delicato del dossier è il collegamento tra "+b.pressure+" e la parte custodita dall'altra persona coinvolta.",
+       "Evita di spiegare spontaneamente come avresti potuto usare "+b.capability+". Rispondi solo a ciò che ti viene chiesto."
+     ];
+   }else{
+     const observerLead=observer&&observer.capability?observer.capability:"la tua conoscenza di Angelina e della villa";
+     personalClues[p.id]=[
+       "Grazie a "+observerLead+", un dettaglio ti torna in mente: "+a.trace+". Non sai ancora che importanza abbia, ma Angelina sembrava averlo considerato significativo.",
+       "Ricordi anche un secondo elemento: "+b.trace+". È di natura diversa dal primo, eppure nel dossier Angelina li aveva messi nella stessa sequenza.",
+       "La tua impressione personale è che i due elementi abbiano senso soltanto se collegati a "+bridge+". Non hai però una prova sufficiente per accusare qualcuno."
+     ];
+   }
+ });
+ return {
+   version:1,
+   scenarioId:"VV-"+narrativeHash(ordered).toString(36).toUpperCase(),
+   pairKey:ordered,
+   commonMotive,
+   sharedStory,
+   assassinPrivate:"Hai deciso di agire direttamente perché "+a.pressure+". Il tuo vantaggio operativo era "+a.capability+". La collaborazione dell'altra persona era indispensabile perché il dossier collegava entrambe le vostre posizioni.",
+   accomplicePrivate:"Hai accettato di collaborare perché "+b.pressure+". Il tuo contributo era possibile grazie a "+b.capability+". Senza il tuo aiuto l'altra persona non avrebbe potuto gestire tutte le tracce lasciate dal dossier.",
+   commonClues,
+   personalClues
+ };
+}
+function narrativeForCurrentPlayer(narrative,participant){
+ if(!narrative||!participant)return ["Informazione personale non disponibile.","Informazione personale non disponibile.","Informazione personale non disponibile."];
+ return (narrative.personalClues&&narrative.personalClues[participant.id])||["Informazione personale non disponibile.","Informazione personale non disponibile.","Informazione personale non disponibile."];
+}
+/* ===== FINE MOTORE NARRATIVO 380 ===== */
+
+const LIVE_UNLOCK_PATH="villaValentiDefinitivo2026/liveUnlocks";
+const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,conclusion:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
 let liveUnlockLoading=false;
 
 let currentParticipant=null;
+let currentNarrative=null;
+let currentSpecialRole=null;
 let registryLiveTimer=null,registryLoading=false;
-
-function nextTestCharacter(participant){
- const order=participant.gender==="F"?FEMALE_TEST_ORDER:MALE_TEST_ORDER;
- const key="villaValentiTestPhotoIndex_"+participant.code;
- let index=Number(localStorage.getItem(key)||"-1");
- index=(index+1)%order.length;
- localStorage.setItem(key,String(index));
- return characters.find(c=>c.id===order[index]);
-}
+let secretPartnerTimer=null;
+let secretPartnerLoading=false;
 
 async function firebaseRequest(path,options={}){
  const response=await fetch(FIREBASE_DB+"/"+path+".json",{cache:"no-store",...options});
@@ -358,76 +526,228 @@ async function firebaseRequest(path,options={}){
  return response.json();
 }
 async function firebaseWrite(path,data,method="PUT"){return firebaseRequest(path,{method,headers:{"Content-Type":"application/json"},body:JSON.stringify(data)})}
+async function firebaseDelete(path){return firebaseRequest(path,{method:"DELETE"})}
 
-async function firebaseDelete(path){
- return firebaseRequest(path,{method:"DELETE"});
+async function firebaseReadWithEtag(path){
+ const response=await fetch(FIREBASE_DB+"/"+path+".json",{
+   cache:"no-store",
+   headers:{"X-Firebase-ETag":"true"}
+ });
+ if(!response.ok)throw new Error("Firebase HTTP "+response.status);
+ return {data:await response.json(),etag:response.headers.get("ETag")};
 }
 
-async function migrateGiuliaTesiniPoveglianoCode(){
- const oldCode="220226";
- const newCode="220225";
- const oldPath="players/"+oldCode+"/public";
- const newPath="players/"+newCode+"/public";
+async function firebasePutIfMatch(path,data,etag){
+ const response=await fetch(FIREBASE_DB+"/"+path+".json",{
+   method:"PUT",
+   cache:"no-store",
+   headers:{"Content-Type":"application/json","If-Match":etag},
+   body:JSON.stringify(data)
+ });
+ if(response.status===412)return {ok:false,conflict:true};
+ if(!response.ok)throw new Error("Firebase HTTP "+response.status);
+ return {ok:true,data:await response.json()};
+}
 
+function createInitialAssignmentState(mode="RANDOM"){
+ const maleParticipants=secureShuffle(participants.filter(p=>p.gender==="M"));
+ const femaleParticipants=secureShuffle(participants.filter(p=>p.gender==="F"));
+ const maleCharacters=secureShuffle(characters.filter(c=>c.gender==="M"));
+ const femaleCharacters=secureShuffle(characters.filter(c=>c.gender==="F"));
+ if(maleParticipants.length!==maleCharacters.length||femaleParticipants.length!==femaleCharacters.length){
+   throw new Error("Numero partecipanti/personaggi non compatibile");
+ }
+
+ const assignments={};
+ maleParticipants.forEach((participant,index)=>{
+   assignments[participant.id]={participantId:participant.id,participantCode:participant.code,participantGender:participant.gender,characterId:maleCharacters[index].id,locked:true};
+ });
+ femaleParticipants.forEach((participant,index)=>{
+   assignments[participant.id]={participantId:participant.id,participantCode:participant.code,participantGender:participant.gender,characterId:femaleCharacters[index].id,locked:true};
+ });
+
+ const [assassin,accomplice]=chooseSpecialRolePair(mode);
+ const state={
+   version:5,
+   createdAt:new Date().toISOString(),
+   assignments,
+   specialRoles:{assassin:assassin.id,accomplice:accomplice.id}
+ };
+ state.narrative=buildNarrativePackage(state);
+ return state;
+}
+
+async function ensureAssignmentState(){
+ for(let attempt=0;attempt<10;attempt++){
+   const snapshot=await firebaseReadWithEtag(ASSIGNMENT_STATE_PATH);
+   if(snapshot.data&&snapshot.data.version===5&&snapshot.data.assignments&&snapshot.data.specialRoles&&snapshot.data.narrative){
+     return snapshot.data;
+   }
+   if(snapshot.data){
+     throw new Error("Esiste una vecchia assegnazione non compatibile: serve reset organizzatore prima della pubblicazione");
+   }
+   const initial=createInitialAssignmentState("RANDOM");
+   const write=await firebasePutIfMatch(ASSIGNMENT_STATE_PATH,initial,snapshot.etag);
+   if(write.ok)return initial;
+   if(!write.conflict)throw new Error("Impossibile inizializzare le assegnazioni");
+ }
+ throw new Error("Assegnazioni occupate, riprova");
+}
+
+function getRoleBase(state,participant){
+ if(!state||!state.specialRoles)return {specialRole:null,partnerId:null,partnerLabel:null};
+ if(state.specialRoles.assassin===participant.id){
+   return {specialRole:"assassin",partnerId:state.specialRoles.accomplice,partnerLabel:"complice"};
+ }
+ if(state.specialRoles.accomplice===participant.id){
+   return {specialRole:"accomplice",partnerId:state.specialRoles.assassin,partnerLabel:"assassino"};
+ }
+ return {specialRole:null,partnerId:null,partnerLabel:null};
+}
+
+async function getRoleBundle(state,participant){
+ const base=getRoleBase(state,participant);
+ if(!base.specialRole)return {specialRole:null,partnerUnlocked:false,partner:null};
+
+ const partnerParticipant=participants.find(p=>p.id===base.partnerId);
+ const partnerAssignment=state.assignments&&state.assignments[base.partnerId];
+ const partnerCharacter=partnerAssignment&&characters.find(c=>c.id===partnerAssignment.characterId);
+ if(!partnerParticipant||!partnerCharacter)throw new Error("Identità del partner segreto non disponibile");
+
+ /* L'identità reciproca resta SIGILLATA finché anche il partner non ha effettuato
+    almeno il suo primo accesso. In questo modo chi entra per primo non può
+    anticipare all'altro che sarà assassino/complice. */
+ const partnerRecord=await firebaseRequest(PLAYER_ROOT+"/"+partnerParticipant.code+"/public");
+ const partnerUnlocked=!!(partnerRecord&&partnerRecord.firstSeen&&partnerRecord.assigned);
+
+ if(!partnerUnlocked){
+   return {specialRole:base.specialRole,partnerUnlocked:false,partner:null};
+ }
+
+ return {
+   specialRole:base.specialRole,
+   partnerUnlocked:true,
+   partner:{
+     participantId:partnerParticipant.id,
+     participantName:partnerParticipant.name,
+     characterId:partnerCharacter.id,
+     characterName:partnerCharacter.name,
+     label:base.partnerLabel
+   }
+ };
+}
+
+async function getOrCreatePlayer(participant){
+ const state=await ensureAssignmentState();
+ const allocation=state.assignments&&state.assignments[participant.id];
+ if(!allocation||!allocation.characterId)throw new Error("Personaggio non assegnato");
+ const character=characters.find(c=>c.id===allocation.characterId);
+ if(!character)throw new Error("Personaggio assegnato non valido");
+ const path=PLAYER_ROOT+"/"+participant.code+"/public";
+
+ for(let attempt=0;attempt<8;attempt++){
+   const snapshot=await firebaseReadWithEtag(path);
+   const stored=snapshot.data;
+   const now=new Date().toISOString();
+   if(stored&&stored.characterId){
+     if(stored.characterId!==character.id)throw new Error("Assegnazione giocatore non coerente");
+     const updated={...stored,lastSeen:now,loginCount:Number(stored.loginCount||1)+1};
+     const write=await firebasePutIfMatch(path,updated,snapshot.etag);
+     if(write.ok){
+       const roleBundle=await getRoleBundle(state,participant);
+       return {firstAccess:false,data:{...updated,...roleBundle},state};
+     }
+     if(write.conflict)continue;
+     throw new Error("Impossibile aggiornare accesso");
+   }
+
+   const record={
+     participantId:participant.id,
+     participantName:participant.name,
+     code:participant.code,
+     characterId:character.id,
+     characterName:character.name,
+     characterGender:character.gender,
+     assigned:true,
+     locked:true,
+     firstSeen:now,
+     lastSeen:now,
+     loginCount:1
+   };
+   const write=await firebasePutIfMatch(path,record,snapshot.etag);
+   if(write.ok){
+     const roleBundle=await getRoleBundle(state,participant);
+     return {firstAccess:true,data:{...record,...roleBundle},state};
+   }
+   if(!write.conflict)throw new Error("Impossibile registrare il primo accesso");
+ }
+ throw new Error("Conflitto durante l'accesso: riprova");
+}
+
+function stopSecretPartnerLive(){
+ if(secretPartnerTimer!==null){clearInterval(secretPartnerTimer);secretPartnerTimer=null}
+ secretPartnerLoading=false;
+}
+
+function renderSecretRole(roleBundle){
+ const secretBox=document.getElementById("secretRoleBox");
+ const secretText=document.getElementById("secretRole");
+ secretBox.classList.add("hidden");
+ secretText.innerHTML="";
+ if(!roleBundle||!roleBundle.specialRole)return;
+
+ const isAssassin=roleBundle.specialRole==="assassin";
+ const roleTitle=isAssassin?"ASSASSINO":"COMPLICE";
+ const partnerTitle=isAssassin?"complice":"assassino";
+
+ if(!roleBundle.partnerUnlocked||!roleBundle.partner){
+   secretText.innerHTML=
+     "<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
+     "Il tuo ruolo segreto è stato assegnato e rimane bloccato.<br><br>"+
+     "<strong>IDENTITÀ DEL "+partnerTitle.toUpperCase()+": SIGILLATA</strong><br>"+
+     "Attendi che il "+partnerTitle+" faccia il suo primo accesso. Anche il legame condiviso con Angelina resterà sigillato fino a quel momento.<br><br>"+
+     "Non mostrare questo documento agli altri partecipanti.";
+   secretBox.classList.remove("hidden");
+   return;
+ }
+
+ const privateText=currentNarrative?(isAssassin?currentNarrative.assassinPrivate:currentNarrative.accomplicePrivate):"";
+ const motive=currentNarrative?currentNarrative.commonMotive:"";
+ secretText.innerHTML=
+   "<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
+   "Il tuo "+partnerTitle+" è ora disponibile:<br><br>"+
+   "<strong>Nome vero:</strong> "+escapeHtml(roleBundle.partner.participantName)+"<br>"+
+   "<strong>Personaggio della storia:</strong> "+escapeHtml(roleBundle.partner.characterName)+"<br><br>"+
+   "<strong>LEGAME CON ANGELINA</strong><br>"+escapeHtml(motive)+"<br><br>"+
+   "<strong>LA TUA POSIZIONE</strong><br>"+escapeHtml(privateText)+"<br><br>"+
+   "Non mostrare questo documento agli altri partecipanti.";
+ secretBox.classList.remove("hidden");
+}
+
+async function refreshSecretPartner(silent=true){
+ if(!currentParticipant||secretPartnerLoading)return;
+ secretPartnerLoading=true;
  try{
-   const oldRecord=await firebaseRequest(oldPath);
-   const newRecord=await firebaseRequest(newPath);
-
-   if(oldRecord){
-     const mergedRecord={
-       ...oldRecord,
-       ...(newRecord||{}),
-       participantId:"giulia_tesini_povegliano",
-       participantName:"Giulia Tesini di Povegliano",
-       code:newCode,
-       migratedFrom:oldCode,
-       migratedAt:new Date().toISOString()
-     };
-
-     await firebaseWrite(newPath,mergedRecord);
-     await firebaseDelete(oldPath);
-
-     console.log("Firebase migrato: "+oldCode+" → "+newCode);
-     return;
-   }
-
-   if(!newRecord){
-     await firebaseWrite(newPath,{
-       participantId:"giulia_tesini_povegliano",
-       participantName:"Giulia Tesini di Povegliano",
-       code:newCode,
-       assigned:false,
-       migrationReady:true,
-       migratedFrom:oldCode,
-       migratedAt:new Date().toISOString()
-     });
-
-     console.log("Firebase inizializzato per il nuovo codice "+newCode);
-   }
-
- }catch(error){
-   console.error("Allineamento codice Giulia non riuscito:",error);
+   const state=await ensureAssignmentState();
+   const bundle=await getRoleBundle(state,currentParticipant);
+   currentSpecialRole=bundle.specialRole||null;
+   renderSecretRole(bundle);
+   renderConclusionAccess();
+   if(!bundle.specialRole||bundle.partnerUnlocked)stopSecretPartnerLive();
+ }catch(e){
+   if(!silent)console.error("Errore identità partner segreto:",e);
+ }finally{
+   secretPartnerLoading=false;
  }
 }
 
-migrateGiuliaTesiniPoveglianoCode();
-
-async function getOrCreatePlayer(participant,officialCharacter){
- if(TEST_CODES.has(participant.code)){
-   const testCharacter=nextTestCharacter(participant);
-   return {firstAccess:true,data:{characterId:testCharacter.id,characterName:testCharacter.name,characterGender:testCharacter.gender,assigned:true,testMode:true}};
- }
- const path="players/"+participant.code+"/public";
- const stored=await firebaseRequest(path);
- if(stored&&stored.characterId){
-   const lastSeen=new Date().toISOString(),loginCount=Number(stored.loginCount||1)+1;
-   await firebaseWrite(path,{lastSeen,loginCount},"PATCH");
-   return {firstAccess:false,data:{...stored,lastSeen,loginCount}};
- }
- const now=new Date().toISOString();
- const record={characterId:officialCharacter.id,characterName:officialCharacter.name,characterGender:officialCharacter.gender,assigned:true,firstSeen:now,lastSeen:now,loginCount:1};
- await firebaseWrite(path,record);
- return {firstAccess:true,data:record};
+function startSecretPartnerLive(roleBundle){
+ stopSecretPartnerLive();
+ if(!currentParticipant||!roleBundle||!roleBundle.specialRole||roleBundle.partnerUnlocked)return;
+ secretPartnerTimer=setInterval(()=>{
+   if(currentParticipant)refreshSecretPartner(true);
+   else stopSecretPartnerLive();
+ },1500);
 }
 
 function startRegistryLive(){
@@ -479,6 +799,18 @@ async function loadLiveUnlocks(silent=false){
 }
 
 function renderLiveUnlocks(){
+ if(currentNarrative){
+   const common=currentNarrative.commonClues||[];
+   for(let i=1;i<=3;i++){
+     const el=document.getElementById("commonClue"+i+"Text");
+     if(el)el.textContent=common[i-1]||"Documento non disponibile.";
+   }
+   const personal=narrativeForCurrentPlayer(currentNarrative,currentParticipant);
+   for(let i=1;i<=3;i++){
+     const el=document.getElementById("personalClue"+i+"Text");
+     if(el)el.textContent=personal[i-1]||"Informazione personale non disponibile.";
+   }
+ }
  const map=[
    ["common1","commonClue1","stateCommon1"],
    ["common2","commonClue2","stateCommon2"],
@@ -501,6 +833,7 @@ function renderLiveUnlocks(){
  });
  const empty=document.getElementById("noCluesBox");
  if(empty)empty.classList.toggle("hidden",any);
+ renderConclusionAccess();
 }
 
 async function toggleLiveUnlock(key){
@@ -528,10 +861,132 @@ async function resetLiveUnlocks(){
    await firebaseWrite(LIVE_UNLOCK_PATH,next);
    liveUnlockState=next;
    renderLiveUnlocks();
-   if(status)status.textContent="TEST RESETTATO · "+new Date().toLocaleTimeString("it-IT");
+   if(status)status.textContent="INDIZI AZZERATI · "+new Date().toLocaleTimeString("it-IT");
  }catch(e){
    console.error("Errore reset Regia:",e);
    if(status)status.textContent="ERRORE · RESET NON RIUSCITO";
+ }
+}
+
+
+function updateMobileNavLayout(){
+ const nav=document.getElementById("mobileNav");
+ if(!nav)return;
+ const visible=[...nav.querySelectorAll("button")].filter(button=>!button.classList.contains("hidden")).length;
+ nav.style.gridTemplateColumns="repeat("+Math.max(2,visible)+",1fr)";
+}
+function canCurrentPlayerUseConclusion(){
+ return !!(currentParticipant&&liveUnlockState.conclusion&&!currentSpecialRole);
+}
+function renderConclusionAccess(){
+ const allowed=canCurrentPlayerUseConclusion();
+ const desktop=document.getElementById("conclusionNavBtn");
+ const mobile=document.getElementById("conclusionMobileBtn");
+ if(desktop)desktop.classList.toggle("hidden",!allowed);
+ if(mobile)mobile.classList.toggle("hidden",!allowed);
+
+ const stateEl=document.getElementById("stateConclusion");
+ if(stateEl){
+   const on=!!liveUnlockState.conclusion;
+   stateEl.textContent=on?"SBLOCCATO":"BLOCCATO";
+   stateEl.classList.toggle("on",on);
+ }
+
+ const page=document.getElementById("tab-conclusione");
+ if(page&&!allowed&&!page.classList.contains("hidden"))openTab("dossier");
+ updateMobileNavLayout();
+ if(allowed)loadConclusionSubmission(true);
+}
+function normalizeConclusionGuess(value){
+ return String(value||"")
+   .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+   .toLowerCase()
+   .replace(/[’']/g," ")
+   .replace(/[^a-z0-9]+/g," ")
+   .trim()
+   .replace(/\s+/g," ");
+}
+function renderConclusionSubmission(record){
+ const form=document.getElementById("conclusionForm");
+ const feedback=document.getElementById("conclusionFeedback");
+ const input=document.getElementById("conclusionGuess");
+ const button=document.getElementById("conclusionSubmitBtn");
+ if(!form||!feedback||!input||!button)return;
+
+ if(!record||!record.submitted){
+   form.classList.remove("hidden");
+   input.disabled=false;
+   button.disabled=false;
+   feedback.className="conclusion-feedback hidden";
+   feedback.textContent="";
+   return;
+ }
+
+ input.disabled=true;
+ button.disabled=true;
+ form.classList.add("hidden");
+ feedback.className="conclusion-feedback "+(record.correct?"correct":"wrong");
+ feedback.textContent=record.correct
+   ?"Ottimo, ben fatto. Hai individuato correttamente l'assassino."
+   :"Mi dispiace. L'assassino e il complice l'hanno fatta franca.";
+}
+async function loadConclusionSubmission(silent=false){
+ if(!currentParticipant||!canCurrentPlayerUseConclusion())return;
+ try{
+   const record=await firebaseRequest(PLAYER_ROOT+"/"+currentParticipant.code+"/conclusion");
+   renderConclusionSubmission(record);
+ }catch(e){
+   if(!silent)console.error("Errore caricamento conclusione:",e);
+ }
+}
+async function submitConclusion(){
+ if(!currentParticipant||!canCurrentPlayerUseConclusion())return;
+
+ const input=document.getElementById("conclusionGuess");
+ const button=document.getElementById("conclusionSubmitBtn");
+ const feedback=document.getElementById("conclusionFeedback");
+ const guess=(input&&input.value||"").trim();
+
+ if(!guess){
+   if(feedback){
+     feedback.className="conclusion-feedback wrong";
+     feedback.textContent="Inserisci nome e cognome del personaggio prima di confermare.";
+   }
+   return;
+ }
+
+ if(button)button.disabled=true;
+ try{
+   const submissionPath=PLAYER_ROOT+"/"+currentParticipant.code+"/conclusion";
+   const snapshot=await firebaseReadWithEtag(submissionPath);
+
+   if(snapshot.data&&snapshot.data.submitted){
+     renderConclusionSubmission(snapshot.data);
+     return;
+   }
+
+   const state=await ensureAssignmentState();
+   const assassinCharacter=characterForParticipant(state,state.specialRoles.assassin);
+   if(!assassinCharacter)throw new Error("Assassino non disponibile");
+
+   const correct=normalizeConclusionGuess(guess)===normalizeConclusionGuess(assassinCharacter.name);
+   const record={submitted:true,correct,submittedAt:new Date().toISOString()};
+   const write=await firebasePutIfMatch(submissionPath,record,snapshot.etag);
+
+   if(!write.ok&&write.conflict){
+     const existing=await firebaseRequest(submissionPath);
+     renderConclusionSubmission(existing);
+     return;
+   }
+   if(!write.ok)throw new Error("Impossibile registrare la conclusione");
+   renderConclusionSubmission(record);
+ }catch(e){
+   console.error("Errore invio conclusione:",e);
+   if(button)button.disabled=false;
+   if(feedback){
+     feedback.className="conclusion-feedback wrong";
+     feedback.textContent="Non è stato possibile registrare la risposta. Riprova.";
+   }
  }
 }
 
@@ -545,23 +1000,49 @@ async function login(){
  catch(e){console.error(e);currentParticipant=null;error.textContent="ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA"}
 }
 
+
+/* ===== AUDIO ELEVENLABS ===== */
+function greetingAudioPath(character,firstAccess){
+  if(firstAccess)return "test-saluto/salve_"+character.id+".mp3";
+  return "test-saluto/"+(character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
+}
+function playGreetingAudio(character,firstAccess){
+  try{
+    if(window.__villaGreetingAudio){
+      window.__villaGreetingAudio.pause();
+      window.__villaGreetingAudio.currentTime=0;
+    }
+    const audio=new Audio(greetingAudioPath(character,firstAccess));
+    window.__villaGreetingAudio=audio;
+    audio.preload="auto";
+    audio.play().catch(err=>{
+      console.warn("Audio preregistrato non riprodotto:",err);
+      speakGreeting(firstAccess
+        ?"Salve, "+character.name+"."
+        :(character.gender==="F"?"Bentornata, ":"Bentornato, ")+character.name+".");
+    });
+  }catch(e){console.error("Errore audio saluto:",e)}
+}
+/* ===== FINE AUDIO ELEVENLABS ===== */
+
 async function openCharacter(participant){
- const officialCharacterId=CHARACTER_ASSIGNMENTS[participant.id];
- const officialCharacter=characters.find(c=>c.id===officialCharacterId);
- if(!officialCharacter)throw new Error("Personaggio non trovato");
- const result=await getOrCreatePlayer(participant,officialCharacter);
+ const result=await getOrCreatePlayer(participant);
+ currentNarrative=result.state&&result.state.narrative?result.state.narrative:null;
  const character=characters.find(c=>c.id===result.data.characterId);
  if(!character)throw new Error("Personaggio non valido");
 
- const greeting=result.firstAccess?"Salve, "+character.name+".":(character.gender==="F"?"Bentornata, ":"Bentornato, ")+character.name+".";
+ const spokenGreeting=result.firstAccess
+   ? "Salve, "+character.name+"."
+   : (character.gender==="F"?"Bentornata, ":"Bentornato, ")+character.name+".";
+
  document.getElementById("loginSection").classList.add("hidden");
  document.getElementById("appSection").classList.remove("hidden");
- document.getElementById("greeting").textContent=greeting;
+ document.getElementById("greeting").textContent=spokenGreeting;
  document.getElementById("characterName").textContent=character.name;
  document.getElementById("characterRole").textContent=character.role;
  document.getElementById("characterDescription").textContent=character.description;
  document.getElementById("characterAdvice").textContent=character.advice;
- document.getElementById("realUserLabel").textContent="ID: "+participant.name+(result.data.testMode?" · TEST":"");
+ document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · ASSEGNAZIONE BLOCCATA";
 
  const initials=character.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
  const monogram=document.getElementById("characterMonogram");
@@ -574,29 +1055,28 @@ async function openCharacter(participant){
    photo.removeAttribute("src"); photo.classList.add("hidden"); monogram.classList.remove("hidden"); monogram.textContent=initials;
  }
 
- const secretBox=document.getElementById("secretRoleBox"),secretText=document.getElementById("secretRole");
- secretBox.classList.add("hidden"); secretText.innerHTML="";
- if(!result.data.testMode && participant.id===SPECIAL_ROLES.assassin){
-   secretText.innerHTML="<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti.<br><br>Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
-   secretBox.classList.remove("hidden");
- } else if(!result.data.testMode && participant.id===SPECIAL_ROLES.accomplice){
-   secretText.innerHTML="<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti.<br><br>Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
-   secretBox.classList.remove("hidden");
- }
+ currentSpecialRole=result.data.specialRole||null;
+ renderSecretRole(result.data);
+ startSecretPartnerLive(result.data);
 
  const isOrganizer=participant.code===ORGANIZER_CODE;
  document.getElementById("havilandNavBtn").classList.toggle("hidden",!isOrganizer);
  document.getElementById("havilandMobileBtn").classList.toggle("hidden",!isOrganizer);
  document.getElementById("mobileNav").classList.toggle("three",isOrganizer);
- if(isOrganizer)startRegistryLive();else stopRegistryLive();
+ if(isOrganizer){startRegistryLive();}else stopRegistryLive();
+ renderConclusionAccess();
  startLiveUnlocks();
- openTab("dossier"); speakGreeting(greeting);
+ openTab("dossier");
+ playGreetingAudio(character,result.firstAccess);
 }
 
 function logout(){
  stopRegistryLive();
  stopLiveUnlocks();
+ stopSecretPartnerLive();
  currentParticipant=null;
+ currentNarrative=null;
+ currentSpecialRole=null;
  liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
  renderLiveUnlocks();
  document.getElementById("appSection").classList.add("hidden");
@@ -608,6 +1088,7 @@ function logout(){
 
 function openTab(tabName){
  if(tabName==="haviland"&&(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE))tabName="dossier";
+ if(tabName==="conclusione"&&!canCurrentPlayerUseConclusion())tabName="dossier";
  document.querySelectorAll(".tab-page").forEach(p=>p.classList.add("hidden"));
  const page=document.getElementById("tab-"+tabName);if(page)page.classList.remove("hidden");
  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tabName));
@@ -617,6 +1098,7 @@ function openTab(tabName){
    loadLiveUnlocks(true);
  }
  if(tabName==="indizi"&&currentParticipant)loadLiveUnlocks(true);
+ if(tabName==="conclusione"&&currentParticipant)loadConclusionSubmission(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -625,18 +1107,20 @@ function speakGreeting(text){
  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="it-IT";u.rate=.86;u.pitch=.82;u.volume=1;speechSynthesis.speak(u)}catch(e){console.error("Errore voce:",e)}
 }
 
+
+/* REGISTRO REGIA: mostra solo accesso e personaggio assegnato. I ruoli segreti non vengono mostrati. */
 async function loadRegistry(silent=false){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE||registryLoading)return;
  registryLoading=true;const status=document.getElementById("registryStatus"),rows=document.getElementById("registryRows");
  if(!silent)status.textContent="AGGIORNAMENTO REGISTRO…";
  try{
-   const allPlayers=await firebaseRequest("players")||{};
+   const allPlayers=await firebaseRequest(PLAYER_ROOT)||{};
    const fragment=document.createDocumentFragment();
    participants.filter(p=>p.code).forEach(p=>{
      const node=allPlayers[p.code],record=node&&node.public?node.public:null,row=document.createElement("div");
      row.className="registry-row";
      const characterName=record&&record.characterName?record.characterName:"—";
-     const accessStatus=record&&record.assigned?'<span class="ok">✓ Accesso effettuato</span>':'<span class="pending">○ Non ancora assegnato</span>';
+     const accessStatus=record&&record.assigned?'<span class="ok">✓ Accesso effettuato</span>':'<span class="pending">○ Non ha ancora effettuato l\'accesso</span>';
      row.innerHTML="<div><strong>"+escapeHtml(p.name)+"</strong></div><div>"+escapeHtml(characterName)+"</div><div>"+accessStatus+"</div>";
      fragment.appendChild(row);
    });
@@ -646,11 +1130,12 @@ async function loadRegistry(silent=false){
 }
 
 function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c])}
-function havilandPlaceholder(){alert("Haviland è pronto. La voce Julian e i comandi della serata verranno collegati nella versione finale.")}
+function havilandPlaceholder(){alert("Haviland è pronto. La voce Julian e i comandi della serata verranno collegati nelle prossime modifiche della Regia.")}
 
 document.addEventListener("visibilitychange",()=>{
  if(document.visibilityState==="visible"&&currentParticipant){
    loadLiveUnlocks(true);
+   refreshSecretPartner(true);
    if(currentParticipant.code===ORGANIZER_CODE)loadRegistry(true);
  }
 });
