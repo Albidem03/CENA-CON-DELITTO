@@ -134,13 +134,26 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
 <div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
-<button type="button" onclick="resetFinalRoleTest()" style="margin-top:8px;background:transparent;border:0;color:#6b5135;text-decoration:underline;cursor:pointer;font:700 11px 'Courier New',monospace">RESET PROVA ASSASSINO / COMPLICE</button>
+<div style="margin-top:14px;text-align:center">
+  <button type="button"
+          onclick="resetFinalRoleTest()"
+          style="width:100%;padding:12px 14px;border:1px solid #6b5135;background:#2b2117;color:#e8d6b7;border-radius:6px;cursor:pointer;font:700 12px 'Courier New',monospace;letter-spacing:.6px">
+    RESET PROVA ASSASSINO / COMPLICE
+  </button>
+</div>
+
 <div class="test-note">PROVA FINALE ASSASSINO/COMPLICE: Alberto D\'Amico = ASSASSINO · Pietro Scolari = COMPLICE. Primo accesso = SALVE, secondo accesso = BENTORNATO. Dati salvati soltanto nell\'area Firebase di test.</div>
 </div></div></div>
 </section>
 
 <section id="appSection" class="hidden"><div class="app">
-<header class="topbar"><div class="brand"><strong>Archivio Villa Valenti</strong><span>Accesso autenticato</span></div><button onclick="logout()">CHIUDI DOSSIER</button></header>
+<header class="topbar">
+<div class="brand"><strong>Archivio Villa Valenti</strong><span>Accesso autenticato</span></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+  <button onclick="resetFinalRoleTest()">RESET PROVA</button>
+  <button onclick="logout()">CHIUDI DOSSIER</button>
+</div>
+</header>
 <div class="layout">
 <aside class="sidebar">
 <button class="nav-btn active" data-tab="dossier" onclick="openTab('dossier')">▣ Dossier personale</button>
