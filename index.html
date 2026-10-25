@@ -43,7 +43,7 @@
   checkLatestVersion();
 })();
 </script>
-<title>TEST ISOLATO — Villa Valenti</title>
+<title>Villa Valenti — Archivio Riservato</title>
 <style>
 :root{--gold:#d0b77c;--line:rgba(188,157,104,.35);--ink:#221a13}
 *{box-sizing:border-box} html{scroll-behavior:smooth}
@@ -138,13 +138,6 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
 <div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
-<div style="margin-top:14px;padding:12px;border:1px dashed #7d2424;font:700 12px 'Courier New',monospace;line-height:1.5;color:#6d1f1f">
-TEST DEFINITIVO ISOLATO · Alberto = assassino · Pietro = complice.<br>
-Questa pagina usa dati separati dal gioco definitivo.
-<div style="margin-top:10px">
-<button type="button" class="action-btn" onclick="resetFullFinalTest()" style="width:100%">RESET TEST COMPLETO</button>
-</div>
-</div>
 </div></div></div>
 </section>
 
@@ -279,15 +272,15 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 (function(){
   const pageVersion=new URLSearchParams(window.location.search).get('v')||Date.now().toString(36);
   ['01','02','03','04'].forEach(function(n){
-    document.write('<script src="../portraits_'+n+'.js?v='+encodeURIComponent(pageVersion)+'"><\/script>');
+    document.write('<script src="portraits_'+n+'.js?v='+encodeURIComponent(pageVersion)+'"><\/script>');
   });
 })();
 </script>
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const PLAYER_ROOT="testDefinitivoCompleto2026/players";
-const ASSIGNMENT_STATE_PATH="testDefinitivoCompleto2026/private/assignmentState";
+const PLAYER_ROOT="villaValentiDefinitivo2026/players";
+const ASSIGNMENT_STATE_PATH="villaValentiDefinitivo2026/private/assignmentState";
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -370,9 +363,13 @@ function randomTwoDistinct(array){
 }
 
 function chooseSpecialRolePair(mode="RANDOM"){
- const byId=id=>participants.find(p=>p.id===id);
- /* TEST ISOLATO: coppia fissa per verificare tutte le funzioni senza toccare il definitivo. */
- return [byId("alberto_damico"),byId("pietro_scolari")];
+ const males=participants.filter(p=>p.gender==="M");
+ const females=participants.filter(p=>p.gender==="F");
+ if(mode==="MM")return randomTwoDistinct(males);
+ if(mode==="FF")return randomTwoDistinct(females);
+ if(mode==="MF")return [males[secureRandomIndex(males.length)],females[secureRandomIndex(females.length)]];
+ if(mode==="FM")return [females[secureRandomIndex(females.length)],males[secureRandomIndex(males.length)]];
+ return randomTwoDistinct(participants);
 }
 
 
@@ -510,7 +507,7 @@ function narrativeForCurrentPlayer(narrative,participant){
 }
 /* ===== FINE MOTORE NARRATIVO 380 ===== */
 
-const LIVE_UNLOCK_PATH="testDefinitivoCompleto2026/liveUnlocks";
+const LIVE_UNLOCK_PATH="villaValentiDefinitivo2026/liveUnlocks";
 const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,conclusion:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
@@ -993,21 +990,6 @@ async function submitConclusion(){
  }
 }
 
-async function resetFullFinalTest(){
- if(!confirm("Vuoi azzerare completamente SOLO il test isolato?"))return;
- const error=document.getElementById("error");
- try{
-   if(error)error.textContent="RESET TEST IN CORSO…";
-   await firebaseDelete("testDefinitivoCompleto2026");
-   try{localStorage.clear()}catch(e){}
-   if(error)error.textContent="TEST AZZERATO · PUOI RIPARTIRE DAL PRIMO ACCESSO";
-   alert("Test isolato azzerato. Il gioco definitivo non è stato toccato.");
- }catch(e){
-   console.error("Errore reset test:",e);
-   if(error)error.textContent="ERRORE RESET TEST";
- }
-}
-
 async function login(){
  const input=document.getElementById("codeInput").value.trim();
  const error=document.getElementById("error"); error.textContent="";
@@ -1021,8 +1003,8 @@ async function login(){
 
 /* ===== AUDIO ELEVENLABS ===== */
 function greetingAudioPath(character,firstAccess){
-  if(firstAccess)return "salve_"+character.id+".mp3";
-  return (character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
+  if(firstAccess)return "test-saluto/salve_"+character.id+".mp3";
+  return "test-saluto/"+(character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
 }
 function playGreetingAudio(character,firstAccess){
   try{
