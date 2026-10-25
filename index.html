@@ -151,7 +151,7 @@ const participants=[
 {id:"sonia_vanoni",name:"Sonia Vanoni",code:"150704",gender:"F"},
 {id:"andrea_raffi",name:"Andrea Raffi",code:"535506",gender:"M"},
 {id:"samuele_benatti",name:"Samuele Benatti",code:"240322",gender:"M"},
-{id:"emma_biasi",name:"Emma Biasi",code:"230704",gender:"F",forcedCharacter:"isabella_roversi",cannotBeSpecial:true}
+{id:"emma_biasi",name:"Emma Biasi",code:"230704",gender:"F"}
 ];
 
 const characters=[
@@ -174,7 +174,7 @@ const characters=[
 {id:"bianca_albrizzi",name:"Bianca Albrizzi",gender:"F",role:"Segretaria personale di Angelina",description:"Gestivi appuntamenti, telefonate e parte della documentazione privata di Angelina.",advice:"Presta particolare attenzione agli orari, agli incontri e agli eventuali documenti mancanti."},
 {id:"emilia_riva",name:"Emilia Riva",gender:"F",role:"Collaboratrice della villa",description:"Collabori spesso all'organizzazione degli eventi di Villa Valenti.",advice:"Fai attenzione agli spostamenti degli invitati e a ciò che accade nelle zone di servizio."},
 {id:"ginevra_ferretti",name:"Ginevra Ferretti",gender:"F",role:"Conoscente dell'ambiente lavorativo di Angelina",description:"Conosci sia l'ambiente professionale sia alcune persone della cerchia privata di Angelina.",advice:"Cerca collegamenti tra gli affari e i rapporti personali presenti nella villa."},
-{id:"isabella_roversi",name:"Isabella Roversi",gender:"F",modular:true,role:"Antiquaria e conoscente di Angelina",description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."}
+{id:"isabella_roversi",name:"Isabella Roversi",gender:"F",role:"Antiquaria e conoscente di Angelina",description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."}
 ];
 
 const PORTRAITS=window.PORTRAITS||{};
@@ -187,7 +187,7 @@ function seededRandom(seed){let value=seed>>>0;return function(){value+=0x6D2B79
 function shuffleStable(array,seedText){const result=[...array];const random=seededRandom(hashString(GAME_SEED+"|"+seedText));for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}return result}
 
 function createCharacterAssignments(){
- const assignments={emma_biasi:"isabella_roversi"};
+ const assignments={};
  const normalParticipants=participants.filter(p=>!p.forcedCharacter);
  const normalCharacters=characters.filter(c=>!c.modular);
  const maleParticipants=shuffleStable(normalParticipants.filter(p=>p.gender==="M"),"MALE-PARTICIPANTS");
