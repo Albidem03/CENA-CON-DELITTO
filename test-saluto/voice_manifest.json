@@ -1,0 +1,122 @@
+{
+  "ludovico_orsini": {
+    "name": "Ludovico Orsini",
+    "gender": "M",
+    "salve": "voices/salve_ludovico_orsini.mp3",
+    "bentornato": "voices/bentornato_ludovico_orsini.mp3"
+  },
+  "corrado_de_marchi": {
+    "name": "Corrado De Marchi",
+    "gender": "M",
+    "salve": "voices/salve_corrado_de_marchi.mp3",
+    "bentornato": "voices/bentornato_corrado_de_marchi.mp3"
+  },
+  "leone_de_marchi": {
+    "name": "Leone De Marchi",
+    "gender": "M",
+    "salve": "voices/salve_leone_de_marchi.mp3",
+    "bentornato": "voices/bentornato_leone_de_marchi.mp3"
+  },
+  "dorian_ferretti": {
+    "name": "Dorian Ferretti",
+    "gender": "M",
+    "salve": "voices/salve_dorian_ferretti.mp3",
+    "bentornato": "voices/bentornato_dorian_ferretti.mp3"
+  },
+  "tancredi_moreau": {
+    "name": "Tancredi Moreau",
+    "gender": "M",
+    "salve": "voices/salve_tancredi_moreau.mp3",
+    "bentornato": "voices/bentornato_tancredi_moreau.mp3"
+  },
+  "marcello_albrizzi": {
+    "name": "Marcello Albrizzi",
+    "gender": "M",
+    "salve": "voices/salve_marcello_albrizzi.mp3",
+    "bentornato": "voices/bentornato_marcello_albrizzi.mp3"
+  },
+  "cesare_valli": {
+    "name": "Cesare Valli",
+    "gender": "M",
+    "salve": "voices/salve_cesare_valli.mp3",
+    "bentornato": "voices/bentornato_cesare_valli.mp3"
+  },
+  "adriano_conti": {
+    "name": "Adriano Conti",
+    "gender": "M",
+    "salve": "voices/salve_adriano_conti.mp3",
+    "bentornato": "voices/bentornato_adriano_conti.mp3"
+  },
+  "elia_neroni": {
+    "name": "Elia Neroni",
+    "gender": "M",
+    "salve": "voices/salve_elia_neroni.mp3",
+    "bentornato": "voices/bentornato_elia_neroni.mp3"
+  },
+  "ottavio_serra": {
+    "name": "Ottavio Serra",
+    "gender": "M",
+    "salve": "voices/salve_ottavio_serra.mp3",
+    "bentornato": "voices/bentornato_ottavio_serra.mp3"
+  },
+  "lavinia_valenti": {
+    "name": "Lavinia Valenti",
+    "gender": "F",
+    "salve": "voices/salve_lavinia_valenti.mp3",
+    "bentornato": "voices/bentornata_lavinia_valenti.mp3"
+  },
+  "celeste_valenti": {
+    "name": "Celeste Valenti",
+    "gender": "F",
+    "salve": "voices/salve_celeste_valenti.mp3",
+    "bentornato": "voices/bentornata_celeste_valenti.mp3"
+  },
+  "ofelia_de_marchi": {
+    "name": "Ofelia De Marchi",
+    "gender": "F",
+    "salve": "voices/salve_ofelia_de_marchi.mp3",
+    "bentornato": "voices/bentornata_ofelia_de_marchi.mp3"
+  },
+  "viola_neroni": {
+    "name": "Viola Neroni",
+    "gender": "F",
+    "salve": "voices/salve_viola_neroni.mp3",
+    "bentornato": "voices/bentornata_viola_neroni.mp3"
+  },
+  "eva_montorsi": {
+    "name": "Eva Montorsi",
+    "gender": "F",
+    "salve": "voices/salve_eva_montorsi.mp3",
+    "bentornato": "voices/bentornata_eva_montorsi.mp3"
+  },
+  "bianca_albrizzi": {
+    "name": "Bianca Albrizzi",
+    "gender": "F",
+    "salve": "voices/salve_bianca_albrizzi.mp3",
+    "bentornato": "voices/bentornata_bianca_albrizzi.mp3"
+  },
+  "emilia_riva": {
+    "name": "Emilia Riva",
+    "gender": "F",
+    "salve": "voices/salve_emilia_riva.mp3",
+    "bentornato": "voices/bentornata_emilia_riva.mp3"
+  },
+  "ginevra_ferretti": {
+    "name": "Ginevra Ferretti",
+    "gender": "F",
+    "salve": "voices/salve_ginevra_ferretti.mp3",
+    "bentornato": "voices/bentornata_ginevra_ferretti.mp3"
+  },
+  "isabella_roversi": {
+    "name": "Isabella Roversi",
+    "gender": "F",
+    "salve": "voices/salve_isabella_roversi.mp3",
+    "bentornato": "voices/bentornata_isabella_roversi.mp3"
+  },
+  "ettore_valenti": {
+    "name": "Ettore Valenti",
+    "gender": "M",
+    "salve": "voices/salve_ettore_valenti.mp3",
+    "bentornato": "voices/bentornato_ettore_valenti.mp3"
+  }
+}
