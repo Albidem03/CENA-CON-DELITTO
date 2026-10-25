@@ -136,13 +136,23 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div id="error" class="error"></div>
 <div style="margin-top:14px;text-align:center">
   <button type="button"
-          onclick="resetFinalRoleTest()"
+          onclick="resetCombinationTest('RANDOM')"
           style="width:100%;padding:12px 14px;border:1px solid #6b5135;background:#2b2117;color:#e8d6b7;border-radius:6px;cursor:pointer;font:700 12px 'Courier New',monospace;letter-spacing:.6px">
-    RESET PROVA ASSASSINO / COMPLICE
+    RESET + NUOVA COPPIA CASUALE
   </button>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px">
+    <button type="button" class="action-btn" onclick="resetCombinationTest('MM')">TEST M → M</button>
+    <button type="button" class="action-btn" onclick="resetCombinationTest('FF')">TEST F → F</button>
+    <button type="button" class="action-btn" onclick="resetCombinationTest('MF')">TEST M → F</button>
+    <button type="button" class="action-btn" onclick="resetCombinationTest('FM')">TEST F → M</button>
+  </div>
 </div>
 
-<div class="test-note">PROVA FINALE ASSASSINO/COMPLICE: Alberto D\'Amico = ASSASSINO · Pietro Scolari = COMPLICE. Primo accesso = SALVE, secondo accesso = BENTORNATO. Dati salvati soltanto nell\'area Firebase di test.</div>
+<div class="test-note">
+TEST COMBINAZIONI: personaggi assegnati casualmente senza doppioni e rispettando il genere.
+Assassino e complice possono essere M+M, F+F, M+F o F+M.
+I testi narrativi e gli indizi di questa pagina sono esclusivamente tecnici/provvisori e NON appartengono alla soluzione definitiva.
+</div>
 </div></div></div>
 </section>
 
@@ -150,7 +160,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <header class="topbar">
 <div class="brand"><strong>Archivio Villa Valenti</strong><span>Accesso autenticato</span></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
-  <button onclick="resetFinalRoleTest()">RESET PROVA</button>
+  <button onclick="resetCombinationTest('RANDOM')">RESET PROVA</button>
   <button onclick="logout()">CHIUDI DOSSIER</button>
 </div>
 </header>
@@ -186,17 +196,17 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 
 <article id="commonClue1" class="sheet hidden">
 <div class="clue-test-label">CONTENUTO DI PROVA</div>
-<div class="section-title">Indizio comune 1</div>
+<div class="section-title">Indizio comune 1 — test dinamico</div>
 <div class="paper-text">Documento di prova sbloccato in diretta dalla Regia.</div>
 </article>
 <article id="commonClue2" class="sheet hidden">
 <div class="clue-test-label">CONTENUTO DI PROVA</div>
-<div class="section-title">Indizio comune 2</div>
+<div class="section-title">Indizio comune 2 — test dinamico</div>
 <div class="paper-text">Secondo documento di prova sbloccato in diretta dalla Regia.</div>
 </article>
 <article id="commonClue3" class="sheet hidden">
 <div class="clue-test-label">CONTENUTO DI PROVA</div>
-<div class="section-title">Indizio comune 3</div>
+<div class="section-title">Indizio comune 3 — test dinamico</div>
 <div class="paper-text">Terzo documento di prova sbloccato in diretta dalla Regia.</div>
 </article>
 
@@ -270,8 +280,8 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const PLAYER_ROOT="testFinaleAssassinoComplice2026/players";
-const ASSIGNMENT_STATE_PATH="testFinaleAssassinoComplice2026/assignmentState";
+const PLAYER_ROOT="testCombinazioniAssassinoComplice2026/players";
+const ASSIGNMENT_STATE_PATH="testCombinazioniAssassinoComplice2026/assignmentState";
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -321,11 +331,11 @@ const characters=[
 
 const PORTRAITS=window.PORTRAITS||{};
 
-/* ASSEGNAZIONE LIVE DEFINITIVA
+/* MOTORE COMBINAZIONI — TEST ISOLATO
    - combinazione casuale completa dei 20 partecipanti con i 20 personaggi
    - corrispondenza M/F rispettata
    - nessun doppione possibile
-   - 1 assassino + 1 complice, entrambi scelti solo tra i 20 partecipanti reali
+   - 1 assassino + 1 complice: RANDOM oppure test forzato MM / FF / MF / FM
    - assassino e complice vedono nome reale + personaggio dell'altro SOLO dopo il primo accesso di entrambi
    - ogni giocatore scopre il proprio personaggio al primo accesso e poi resta bloccato
    - tutto salvato su Firebase e valido anche cambiando dispositivo */
@@ -352,7 +362,110 @@ function randomTwoDistinct(array){
  return [shuffled[0],shuffled[1]];
 }
 
-const LIVE_UNLOCK_PATH="testFinaleAssassinoComplice2026/liveUnlocks";
+function chooseSpecialRolePair(mode="RANDOM"){
+ const males=participants.filter(p=>p.gender==="M");
+ const females=participants.filter(p=>p.gender==="F");
+ if(mode==="MM")return randomTwoDistinct(males);
+ if(mode==="FF")return randomTwoDistinct(females);
+ if(mode==="MF")return [males[secureRandomIndex(males.length)],females[secureRandomIndex(females.length)]];
+ if(mode==="FM")return [females[secureRandomIndex(females.length)],males[secureRandomIndex(males.length)]];
+ return randomTwoDistinct(participants);
+}
+
+function characterNarrativeCategory(character){
+ const id=character&&character.id||"";
+ if(["ettore_valenti","ludovico_orsini","corrado_de_marchi","leone_de_marchi","lavinia_valenti","celeste_valenti","ofelia_de_marchi"].includes(id))return "famiglia";
+ if(["dorian_ferretti","tancredi_moreau","ginevra_ferretti"].includes(id))return "affari";
+ if(["cesare_valli","eva_montorsi","bianca_albrizzi","emilia_riva"].includes(id))return "villa";
+ if(["adriano_conti","elia_neroni","viola_neroni"].includes(id))return "rapporti personali";
+ return "prove e documenti";
+}
+
+function testRelationshipTemplate(categoryA,categoryB){
+ const key=[categoryA,categoryB].sort().join("|");
+ const map={
+   "famiglia|famiglia":"un interesse familiare convergente legato a un contenuto riservato del Dossier Scomparso",
+   "affari|famiglia":"un documento capace di creare conseguenze sia patrimoniali sia professionali",
+   "famiglia|villa":"un interesse familiare reso possibile dalla conoscenza degli accessi e delle abitudini della villa",
+   "famiglia|rapporti personali":"una confidenza privata diventata una leva su una questione familiare",
+   "famiglia|prove e documenti":"una prova materiale o documentale collegata al passato della famiglia",
+   "affari|affari":"un conflitto economico-professionale che coinvolge informazioni contenute nel dossier",
+   "affari|villa":"un interesse professionale che richiede accesso discreto a spazi o documenti della villa",
+   "affari|rapporti personali":"un segreto personale con conseguenze economiche o professionali",
+   "affari|prove e documenti":"una prova documentale capace di compromettere un rapporto d'affari",
+   "rapporti personali|villa":"una motivazione privata resa praticabile dalla conoscenza degli spostamenti nella villa",
+   "prove e documenti|villa":"la possibilità di intervenire su una prova sfruttando accesso e conoscenza degli ambienti",
+   "villa|villa":"la conoscenza complementare degli ambienti, degli orari e delle procedure interne",
+   "rapporti personali|rapporti personali":"una pressione emotiva condivisa nata da confidenze e rapporti con Angelina",
+   "prove e documenti|rapporti personali":"una prova legata a un rapporto personale che qualcuno voleva impedire emergesse",
+   "prove e documenti|prove e documenti":"la gestione o manipolazione di elementi materiali e documentali compromettenti"
+ };
+ return map[key]||"due interessi differenti che convergono sul Dossier Scomparso";
+}
+
+function buildTestNarrative(assignments,assassinId,accompliceId){
+ const a=assignments[assassinId],c=assignments[accompliceId];
+ const assassinCharacter=characters.find(x=>x.id===a.characterId);
+ const accompliceCharacter=characters.find(x=>x.id===c.characterId);
+ const aCat=characterNarrativeCategory(assassinCharacter);
+ const cCat=characterNarrativeCategory(accompliceCharacter);
+ const pairType=assassinCharacter.gender+accompliceCharacter.gender;
+ const relationship=testRelationshipTemplate(aCat,cCat);
+ return {
+   pairType,
+   assassinCharacterId:assassinCharacter.id,
+   accompliceCharacterId:accompliceCharacter.id,
+   assassinCategory:aCat,
+   accompliceCategory:cCat,
+   relationship:
+     "TEST NON CANONICO — Il legame tra i due ruoli viene costruito automaticamente dalla combinazione estratta: "+relationship+". "+
+     "L'assassino conserva la responsabilità principale; il complice ha una motivazione autonoma per aiutarlo e coprire una parte delle tracce.",
+   common:[
+     "TEST NON CANONICO — Il primo elemento comune stabilisce che nella sequenza critica hanno agito due persone con funzioni differenti, senza identificarle direttamente.",
+     "TEST NON CANONICO — Il secondo elemento mette in relazione due aree narrative: "+aCat+" e "+cCat+". Deve restringere il campo senza rendere immediata la soluzione.",
+     "TEST NON CANONICO — Il terzo elemento collega cronologia, accesso e comportamento dei due ruoli; nella versione definitiva dovrà essere compatibile con tutti gli alibi."
+   ]
+ };
+}
+
+function buildPersonalTestClues(character,roleBundle,narrative){
+ const category=characterNarrativeCategory(character);
+ if(roleBundle&&roleBundle.specialRole==="assassin"){
+   return [
+     "TEST PERSONALE — Il tuo dossier da ASSASSINO riceve un dettaglio privato coerente con il tuo ambito narrativo: "+category+".",
+     "TEST PERSONALE — Qui verrà collocato un fatto che devi conoscere per sostenere il tuo comportamento senza contraddire la cronologia comune.",
+     "TEST PERSONALE — Questo blocco verificherà che il tuo movente principale resti distinto dalla motivazione del complice."
+   ];
+ }
+ if(roleBundle&&roleBundle.specialRole==="accomplice"){
+   return [
+     "TEST PERSONALE — Il tuo dossier da COMPLICE riceve un dettaglio privato coerente con il tuo ambito narrativo: "+category+".",
+     "TEST PERSONALE — Qui verrà collocata l'azione di copertura che compi senza trasformarti in un secondo assassino.",
+     "TEST PERSONALE — Questo blocco verificherà che la tua motivazione autonoma sia compatibile con il legame della coppia."
+   ];
+ }
+ return [
+   "TEST PERSONALE — "+character.name+" riceve un frammento coerente con il proprio ambito narrativo: "+category+".",
+   "TEST PERSONALE — Questo secondo frammento serve a confermare o smentire una parte della cronologia senza conoscere direttamente i due ruoli segreti.",
+   "TEST PERSONALE — Questo terzo frammento viene adattato alla combinazione corrente e dovrà contribuire alla soluzione senza creare una seconda soluzione valida."
+ ];
+}
+
+function applyTestNarrative(data,character){
+ const narrative=data&&data.testNarrative;
+ if(!narrative)return;
+ narrative.common.forEach((text,index)=>{
+   const el=document.querySelector("#commonClue"+(index+1)+" .paper-text");
+   if(el)el.textContent=text;
+ });
+ const personal=buildPersonalTestClues(character,data,narrative);
+ personal.forEach((text,index)=>{
+   const el=document.querySelector("#personalClue"+(index+1)+" .paper-text");
+   if(el)el.textContent=text;
+ });
+}
+
+const LIVE_UNLOCK_PATH="testCombinazioniAssassinoComplice2026/liveUnlocks";
 const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
@@ -392,7 +505,7 @@ async function firebasePutIfMatch(path,data,etag){
  return {ok:true,data:await response.json()};
 }
 
-function createInitialAssignmentState(){
+function createInitialAssignmentState(mode="RANDOM"){
  const maleParticipants=secureShuffle(participants.filter(p=>p.gender==="M"));
  const femaleParticipants=secureShuffle(participants.filter(p=>p.gender==="F"));
  const maleCharacters=secureShuffle(characters.filter(c=>c.gender==="M"));
@@ -421,41 +534,29 @@ function createInitialAssignmentState(){
    };
  });
 
- // TEST FINALE: Alberto = Ettore Valenti, Pietro = Ludovico Orsini.
- // Manteniamo comunque una mappa 1:1 senza duplicati effettuando scambi.
- function forceCharacter(participantId,wantedCharacterId){
-   const current=assignments[participantId];
-   if(!current)return;
-   const otherId=Object.keys(assignments).find(id=>assignments[id].characterId===wantedCharacterId);
-   if(otherId && otherId!==participantId){
-     const oldCharacterId=current.characterId;
-     assignments[participantId].characterId=wantedCharacterId;
-     assignments[otherId].characterId=oldCharacterId;
-   }else{
-     assignments[participantId].characterId=wantedCharacterId;
-   }
- }
- forceCharacter("alberto_damico","ettore_valenti");
- forceCharacter("pietro_scolari","ludovico_orsini");
+ const [assassin,accomplice]=chooseSpecialRolePair(mode);
+ const narrativeTest=buildTestNarrative(assignments,assassin.id,accomplice.id);
 
  return {
-   version:2,
+   version:3,
+   testMode:mode,
    createdAt:new Date().toISOString(),
    assignments,
-   specialRoles:{assassin:"alberto_damico",accomplice:"pietro_scolari"}
+   specialRoles:{assassin:assassin.id,accomplice:accomplice.id},
+   narrativeTest
  };
 }
 
 async function ensureAssignmentState(){
  for(let attempt=0;attempt<10;attempt++){
    const snapshot=await firebaseReadWithEtag(ASSIGNMENT_STATE_PATH);
-   if(snapshot.data&&snapshot.data.version===2&&snapshot.data.assignments&&snapshot.data.specialRoles){
+   if(snapshot.data&&snapshot.data.version===3&&snapshot.data.assignments&&snapshot.data.specialRoles){
      return snapshot.data;
    }
    if(snapshot.data){
      throw new Error("Esiste una vecchia assegnazione non compatibile: serve reset organizzatore prima della pubblicazione");
    }
-   const initial=createInitialAssignmentState();
+   const initial=createInitialAssignmentState("RANDOM");
    const write=await firebasePutIfMatch(ASSIGNMENT_STATE_PATH,initial,snapshot.etag);
    if(write.ok)return initial;
    if(!write.conflict)throw new Error("Impossibile inizializzare le assegnazioni");
@@ -476,7 +577,7 @@ function getRoleBase(state,participant){
 
 async function getRoleBundle(state,participant){
  const base=getRoleBase(state,participant);
- if(!base.specialRole)return {specialRole:null,partnerUnlocked:false,partner:null};
+ if(!base.specialRole)return {specialRole:null,partnerUnlocked:false,partner:null,testNarrative:state.narrativeTest||null};
 
  const partnerParticipant=participants.find(p=>p.id===base.partnerId);
  const partnerAssignment=state.assignments&&state.assignments[base.partnerId];
@@ -490,12 +591,13 @@ async function getRoleBundle(state,participant){
  const partnerUnlocked=!!(partnerRecord&&partnerRecord.firstSeen&&partnerRecord.assigned);
 
  if(!partnerUnlocked){
-   return {specialRole:base.specialRole,partnerUnlocked:false,partner:null};
+   return {specialRole:base.specialRole,partnerUnlocked:false,partner:null,testNarrative:state.narrativeTest||null};
  }
 
  return {
    specialRole:base.specialRole,
    partnerUnlocked:true,
+   testNarrative:state.narrativeTest||null,
    partner:{
      participantId:partnerParticipant.id,
      participantName:partnerParticipant.name,
@@ -581,11 +683,15 @@ function renderSecretRole(roleBundle){
    return;
  }
 
+ const relationshipText=roleBundle.testNarrative&&roleBundle.testNarrative.relationship
+   ? "<br><br><strong>LEGAME NARRATIVO DI PROVA:</strong><br>"+escapeHtml(roleBundle.testNarrative.relationship)
+   : "";
  secretText.innerHTML=
    "<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
    "Il tuo "+partnerTitle+" è ora disponibile:<br><br>"+
    "<strong>Nome vero:</strong> "+escapeHtml(roleBundle.partner.participantName)+"<br>"+
-   "<strong>Personaggio della storia:</strong> "+escapeHtml(roleBundle.partner.characterName)+"<br><br>"+
+   "<strong>Personaggio della storia:</strong> "+escapeHtml(roleBundle.partner.characterName)+
+   relationshipText+"<br><br>"+
    "Ora potete riconoscervi e collaborare. Non mostrare questo documento agli altri partecipanti.";
  secretBox.classList.remove("hidden");
 }
@@ -720,19 +826,31 @@ async function resetLiveUnlocks(){
 }
 
 
-async function resetFinalRoleTest(){
-  const ok=confirm("Resettare SOLO la prova Alberto assassino / Pietro complice? I dati definitivi non verranno toccati.");
-  if(!ok)return;
-  try{
-    await firebaseDelete("testFinaleAssassinoComplice2026");
-    localStorage.removeItem("villaValentiAudio40_321023");
-    localStorage.removeItem("villaValentiAudio40_900750");
-    alert("PROVA RESETTATA. Puoi ricominciare dal primo accesso di Alberto o Pietro.");
-    location.reload();
-  }catch(e){
-    console.error(e);
-    alert("Reset non riuscito. Riprova.");
-  }
+async function resetCombinationTest(mode="RANDOM"){
+ const labels={
+   RANDOM:"coppia completamente casuale",
+   MM:"assassino uomo + complice uomo",
+   FF:"assassina donna + complice donna",
+   MF:"assassino uomo + complice donna",
+   FM:"assassina donna + complice uomo"
+ };
+ const ok=confirm("Azzerare SOLO questa prova e creare una nuova configurazione: "+(labels[mode]||labels.RANDOM)+"?\\n\\nIl gioco definitivo non verrà toccato.");
+ if(!ok)return;
+ try{
+   stopRegistryLive();
+   stopLiveUnlocks();
+   stopSecretPartnerLive();
+   await firebaseDelete("testCombinazioniAssassinoComplice2026");
+   const initial=createInitialAssignmentState(mode);
+   await firebaseWrite(ASSIGNMENT_STATE_PATH,initial);
+   await firebaseWrite(LIVE_UNLOCK_PATH,{...DEFAULT_LIVE_UNLOCKS,updatedAt:new Date().toISOString(),updatedBy:"test-reset"});
+   participants.forEach(p=>localStorage.removeItem("villaValentiAudio40_"+p.code));
+   alert("PROVA AZZERATA E NUOVA CONFIGURAZIONE CREATA.\\nModalità: "+(labels[mode]||labels.RANDOM)+".\\nAccedi con i codici che vuoi testare.");
+   location.reload();
+ }catch(e){
+   console.error(e);
+   alert("Reset non riuscito. Riprova.");
+ }
 }
 
 async function login(){
@@ -786,7 +904,8 @@ async function openCharacter(participant){
  document.getElementById("characterRole").textContent=character.role;
  document.getElementById("characterDescription").textContent=character.description;
  document.getElementById("characterAdvice").textContent=character.advice;
- document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · TEST RUOLI SEGRETI";
+ applyTestNarrative(result.data,character);
+ document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · TEST COMBINAZIONI";
 
  const initials=character.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
  const monogram=document.getElementById("characterMonogram");
@@ -806,7 +925,7 @@ async function openCharacter(participant){
  document.getElementById("havilandNavBtn").classList.toggle("hidden",!isOrganizer);
  document.getElementById("havilandMobileBtn").classList.toggle("hidden",!isOrganizer);
  document.getElementById("mobileNav").classList.toggle("three",isOrganizer);
- if(isOrganizer)startRegistryLive();else stopRegistryLive();
+ if(isOrganizer){ensureCombinationTestPanel();loadCombinationTestPanel();startRegistryLive();}else stopRegistryLive();
  startLiveUnlocks();
  openTab("dossier");
  playGreetingAudio(character,result.firstAccess);
@@ -835,6 +954,7 @@ function openTab(tabName){
  if(tabName==="haviland"&&currentParticipant&&currentParticipant.code===ORGANIZER_CODE){
    loadRegistry(true);
    loadLiveUnlocks(true);
+   loadCombinationTestPanel();
  }
  if(tabName==="indizi"&&currentParticipant)loadLiveUnlocks(true);
  window.scrollTo({top:0,behavior:"smooth"});
@@ -843,6 +963,54 @@ function openTab(tabName){
 function speakGreeting(text){
  if(!("speechSynthesis" in window))return;
  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="it-IT";u.rate=.86;u.pitch=.82;u.volume=1;speechSynthesis.speak(u)}catch(e){console.error("Errore voce:",e)}
+}
+
+
+/* PANNELLO DIAGNOSTICO SOLO TEST.
+   Verrà rimosso nella versione definitiva: serve esclusivamente a verificare
+   rapidamente che MM, FF, MF e FM funzionino con qualsiasi assegnazione. */
+function ensureCombinationTestPanel(){
+ const host=document.querySelector("#tab-haviland .haviland");
+ if(!host||document.getElementById("combinationTestPanel"))return;
+ const panel=document.createElement("div");
+ panel.id="combinationTestPanel";
+ panel.className="live-control";
+ panel.innerHTML=`
+   <h2>Diagnostica combinazione — SOLO TEST</h2>
+   <div class="live-control-copy">Questo riquadro rivela i ruoli soltanto per collaudare il motore. Nella versione definitiva non esisterà.</div>
+   <div id="combinationTestInfo" class="sheet" style="text-align:left">Caricamento configurazione…</div>
+   <div class="control-grid" style="margin-top:12px">
+     <div class="control-card"><strong>Uomo → Uomo</strong><button onclick="resetCombinationTest('MM')">NUOVA MM</button></div>
+     <div class="control-card"><strong>Donna → Donna</strong><button onclick="resetCombinationTest('FF')">NUOVA FF</button></div>
+     <div class="control-card"><strong>Uomo → Donna</strong><button onclick="resetCombinationTest('MF')">NUOVA MF</button></div>
+     <div class="control-card"><strong>Donna → Uomo</strong><button onclick="resetCombinationTest('FM')">NUOVA FM</button></div>
+     <div class="control-card"><strong>Completamente casuale</strong><button onclick="resetCombinationTest('RANDOM')">NUOVA CASUALE</button></div>
+   </div>`;
+ host.appendChild(panel);
+}
+
+async function loadCombinationTestPanel(){
+ if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
+ ensureCombinationTestPanel();
+ const box=document.getElementById("combinationTestInfo");
+ if(!box)return;
+ try{
+   const state=await ensureAssignmentState();
+   const assassin=participants.find(p=>p.id===state.specialRoles.assassin);
+   const accomplice=participants.find(p=>p.id===state.specialRoles.accomplice);
+   const assassinCharacter=characters.find(c=>c.id===state.assignments[assassin.id].characterId);
+   const accompliceCharacter=characters.find(c=>c.id===state.assignments[accomplice.id].characterId);
+   const n=state.narrativeTest||{};
+   box.innerHTML=
+     '<div class="section-title">Configurazione corrente</div>'+
+     '<div class="paper-text"><strong>Modalità:</strong> '+escapeHtml(state.testMode||"RANDOM")+' · <strong>Tipo:</strong> '+escapeHtml(n.pairType||"—")+'<br><br>'+
+     '<strong>ASSASSINO TEST:</strong> '+escapeHtml(assassin.name)+' — '+escapeHtml(assassinCharacter.name)+'<br>'+
+     '<strong>COMPLICE TEST:</strong> '+escapeHtml(accomplice.name)+' — '+escapeHtml(accompliceCharacter.name)+'<br><br>'+
+     '<strong>Legame generato:</strong><br>'+escapeHtml(n.relationship||"—")+'</div>';
+ }catch(e){
+   console.error(e);
+   box.textContent="Impossibile leggere la configurazione di test.";
+ }
 }
 
 /* REGISTRO REGIA: mostra solo accesso e personaggio assegnato. I ruoli segreti non vengono mostrati. */
