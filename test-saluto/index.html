@@ -141,15 +141,15 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
     RESET + NUOVA COPPIA CASUALE
   </button>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px">
-    <button type="button" class="action-btn" onclick="resetCombinationTest('MM')">TEST M → M</button>
-    <button type="button" class="action-btn" onclick="resetCombinationTest('FF')">TEST F → F</button>
-    <button type="button" class="action-btn" onclick="resetCombinationTest('MF')">TEST M → F</button>
-    <button type="button" class="action-btn" onclick="resetCombinationTest('FM')">TEST F → M</button>
+    <button type="button" class="action-btn" onclick="resetCombinationTest('MM')">M→M · ALBERTO / PIETRO</button>
+    <button type="button" class="action-btn" onclick="resetCombinationTest('FF')">F→F · EMMA / GIULIA</button>
+    <button type="button" class="action-btn" onclick="resetCombinationTest('MF')">M→F · JULIAN / ELEONORA</button>
+    <button type="button" class="action-btn" onclick="resetCombinationTest('FM')">F→M · ELENA / VIVALD</button>
   </div>
 </div>
 
 <div class="test-note">
-TEST COMBINAZIONI: personaggi assegnati casualmente senza doppioni e rispettando il genere.
+TEST COMBINAZIONI: i personaggi restano assegnati casualmente senza doppioni e rispettando il genere; le quattro coppie assassino/complice dei pulsanti M/M, F/F, M/F e F/M sono invece fisse per rendere il test ripetibile.
 Assassino e complice possono essere M+M, F+F, M+F o F+M.
 I testi narrativi e gli indizi di questa pagina sono esclusivamente tecnici/provvisori e NON appartengono alla soluzione definitiva.
 </div>
@@ -363,12 +363,15 @@ function randomTwoDistinct(array){
 }
 
 function chooseSpecialRolePair(mode="RANDOM"){
- const males=participants.filter(p=>p.gender==="M");
- const females=participants.filter(p=>p.gender==="F");
- if(mode==="MM")return randomTwoDistinct(males);
- if(mode==="FF")return randomTwoDistinct(females);
- if(mode==="MF")return [males[secureRandomIndex(males.length)],females[secureRandomIndex(females.length)]];
- if(mode==="FM")return [females[secureRandomIndex(females.length)],males[secureRandomIndex(males.length)]];
+ const byId=id=>participants.find(p=>p.id===id);
+
+ // COPPIE FISSE PER IL TEST TECNICO
+ // Il primo partecipante è sempre l'assassino/a, il secondo è sempre il complice.
+ if(mode==="MM")return [byId("alberto_damico"),byId("pietro_scolari")];
+ if(mode==="MF")return [byId("julian_remelli"),byId("eleonora_pinto")];
+ if(mode==="FF")return [byId("emma_biasi"),byId("giulia_tesini_povegliano")];
+ if(mode==="FM")return [byId("elena_pelizzaro"),byId("vivald_keri")];
+
  return randomTwoDistinct(participants);
 }
 
@@ -829,12 +832,12 @@ async function resetLiveUnlocks(){
 async function resetCombinationTest(mode="RANDOM"){
  const labels={
    RANDOM:"coppia completamente casuale",
-   MM:"assassino uomo + complice uomo",
-   FF:"assassina donna + complice donna",
-   MF:"assassino uomo + complice donna",
-   FM:"assassina donna + complice uomo"
+   MM:"M→M · Alberto D'Amico assassino · Pietro Scolari complice",
+   FF:"F→F · Emma Biasi assassina · Giulia Tesini di Povegliano complice",
+   MF:"M→F · Julian Remelli assassino · Eleonora Pinto complice",
+   FM:"F→M · Elena Pelizzaro assassina · Vivald Keri complice"
  };
- const ok=confirm("Azzerare SOLO questa prova e creare una nuova configurazione: "+(labels[mode]||labels.RANDOM)+"?\\n\\nIl gioco definitivo non verrà toccato.");
+ const ok=confirm("Azzerare SOLO questa prova e creare una nuova configurazione?\\n\\n"+(labels[mode]||labels.RANDOM)+"\\n\\nIl gioco definitivo non verrà toccato.");
  if(!ok)return;
  try{
    stopRegistryLive();
@@ -845,7 +848,16 @@ async function resetCombinationTest(mode="RANDOM"){
    await firebaseWrite(ASSIGNMENT_STATE_PATH,initial);
    await firebaseWrite(LIVE_UNLOCK_PATH,{...DEFAULT_LIVE_UNLOCKS,updatedAt:new Date().toISOString(),updatedBy:"test-reset"});
    participants.forEach(p=>localStorage.removeItem("villaValentiAudio40_"+p.code));
-   alert("PROVA AZZERATA E NUOVA CONFIGURAZIONE CREATA.\\nModalità: "+(labels[mode]||labels.RANDOM)+".\\nAccedi con i codici che vuoi testare.");
+
+   const assassin=participants.find(p=>p.id===initial.specialRoles.assassin);
+   const accomplice=participants.find(p=>p.id===initial.specialRoles.accomplice);
+
+   alert(
+     "PROVA AZZERATA E CONFIGURAZIONE CREATA.\\n\\n"+
+     "ASSASSINO/A: "+(assassin?assassin.name:"—")+"\\n"+
+     "COMPLICE: "+(accomplice?accomplice.name:"—")+"\\n\\n"+
+     "Ora puoi effettuare gli accessi con i loro codici."
+   );
    location.reload();
  }catch(e){
    console.error(e);
@@ -980,10 +992,10 @@ function ensureCombinationTestPanel(){
    <div class="live-control-copy">Questo riquadro rivela i ruoli soltanto per collaudare il motore. Nella versione definitiva non esisterà.</div>
    <div id="combinationTestInfo" class="sheet" style="text-align:left">Caricamento configurazione…</div>
    <div class="control-grid" style="margin-top:12px">
-     <div class="control-card"><strong>Uomo → Uomo</strong><button onclick="resetCombinationTest('MM')">NUOVA MM</button></div>
-     <div class="control-card"><strong>Donna → Donna</strong><button onclick="resetCombinationTest('FF')">NUOVA FF</button></div>
-     <div class="control-card"><strong>Uomo → Donna</strong><button onclick="resetCombinationTest('MF')">NUOVA MF</button></div>
-     <div class="control-card"><strong>Donna → Uomo</strong><button onclick="resetCombinationTest('FM')">NUOVA FM</button></div>
+     <div class="control-card"><strong>Uomo → Uomo</strong><button onclick="resetCombinationTest('MM')">ALBERTO → PIETRO</button></div>
+     <div class="control-card"><strong>Donna → Donna</strong><button onclick="resetCombinationTest('FF')">EMMA → GIULIA</button></div>
+     <div class="control-card"><strong>Uomo → Donna</strong><button onclick="resetCombinationTest('MF')">JULIAN → ELEONORA</button></div>
+     <div class="control-card"><strong>Donna → Uomo</strong><button onclick="resetCombinationTest('FM')">ELENA → VIVALD</button></div>
      <div class="control-card"><strong>Completamente casuale</strong><button onclick="resetCombinationTest('RANDOM')">NUOVA CASUALE</button></div>
    </div>`;
  host.appendChild(panel);
