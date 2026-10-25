@@ -5,116 +5,1311 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#120d09">
 <title>Villa Valenti — Archivio Riservato</title>
+
 <style>
-:root{--gold:#d0b77c;--line:rgba(188,157,104,.35);--ink:#221a13}
-*{box-sizing:border-box} html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;color:#efe5d2;font-family:Georgia,"Times New Roman",serif;
-background:radial-gradient(circle at 10% 10%,rgba(93,62,28,.15),transparent 30%),
-radial-gradient(circle at 90% 0%,rgba(92,21,21,.14),transparent 26%),
-linear-gradient(135deg,#17110c,#0b0907 50%,#15100b);overflow-x:hidden}
-.hidden{display:none!important} button,input{font:inherit}
-.login-shell{min-height:100vh;display:grid;place-items:center;padding:22px}
-.login-dossier{width:min(760px,100%);border:1px solid rgba(213,180,123,.38);border-radius:16px;background:rgba(20,14,10,.97);box-shadow:0 24px 70px rgba(0,0,0,.55);overflow:hidden}
-.login-top{text-align:center;padding:38px 25px 22px;border-bottom:1px solid var(--line)}
-.crest{width:78px;height:78px;margin:0 auto 18px;border:1px solid rgba(215,183,124,.55);border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:28px}
-.eyebrow{color:#bda77f;font-size:11px;text-transform:uppercase;letter-spacing:3px}
-h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
-.subtitle{color:#99866b} .paper-wrap{padding:26px}
-.paper{padding:28px 24px;background:linear-gradient(#e6d6b7,#cfb991);color:var(--ink);box-shadow:0 12px 30px rgba(0,0,0,.25)}
-.paper-heading{font-family:"Courier New",monospace;font-weight:800;letter-spacing:2px;text-transform:uppercase}
-.paper-copy{font-family:"Courier New",monospace;line-height:1.6;margin:10px 0 22px}
-.code-row{display:grid;grid-template-columns:1fr auto;gap:10px}
-#codeInput{min-width:0;padding:15px;text-align:center;font:700 21px "Courier New",monospace;letter-spacing:7px;background:rgba(255,249,232,.56);border:1px solid #63492f}
-.enter-btn,.action-btn{border:1px solid #4c1111;background:linear-gradient(#7f1f1f,#591111);color:#f2e1c1;padding:12px 18px;cursor:pointer}
-.error{min-height:20px;margin-top:12px;color:#791d1d;font:700 13px "Courier New",monospace}
-.test-note{margin-top:12px;font:700 12px "Courier New",monospace;color:#5d4328;line-height:1.5}
-.app{width:min(1200px,100%);margin:auto;padding:18px}
-.topbar{position:sticky;top:8px;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px 17px;border:1px solid var(--line);border-radius:12px;background:rgba(20,15,11,.96)}
-.brand strong{display:block;color:#e8d6b7} .brand span{font-size:11px;color:#8c7c67;text-transform:uppercase;letter-spacing:1px}
-.topbar button{background:#211810;color:#c9b38d;border:1px solid rgba(194,158,96,.3);padding:9px 12px;border-radius:7px}
-.layout{display:grid;grid-template-columns:210px 1fr;gap:16px;margin-top:16px}
-.sidebar{border:1px solid var(--line);border-radius:12px;padding:16px;background:rgba(19,14,10,.94);align-self:start}
-.nav-btn{width:100%;border:0;background:transparent;color:#bbaa8f;text-align:left;padding:12px;border-radius:8px;margin-bottom:5px;cursor:pointer}
-.nav-btn.active{background:rgba(121,28,28,.25);color:#f0dfbd}
-.status{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;color:#8b7b65;font:11px "Courier New",monospace}
-.case{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:rgba(21,15,11,.92);margin-bottom:16px}
-.case small{color:#7e6f5d;letter-spacing:2px} .case-title{color:#e1cda9;font-size:18px}
-.stamp{border:2px solid #842323;color:#9d3434;padding:6px 9px;transform:rotate(-4deg);font:800 12px "Courier New",monospace}
-.dossier-grid{display:grid;grid-template-columns:.85fr 1.35fr;gap:16px}
-.folder{background:linear-gradient(160deg,#bf9f69,#96733f);padding:16px;border-radius:6px}
-.portrait-card,.sheet{background:linear-gradient(#e4d6bb,#cfbb97);color:var(--ink);padding:20px;box-shadow:0 12px 30px rgba(0,0,0,.22)}
-.portrait{background:#efe7d8;display:flex;align-items:center;justify-content:center;border:7px solid #eee1c5;overflow:hidden;padding:12px}
-.portrait img{width:100%;height:auto;max-height:none;object-fit:contain;object-position:center;display:block}
-.monogram{width:105px;height:105px;border:1px solid rgba(234,221,188,.45);border-radius:50%;display:grid;place-items:center;color:#d4c29e;font-size:35px}
-.char-name{font-size:32px;margin-top:16px} .char-role{font:700 12px "Courier New",monospace;color:#5c4127}
-.stack{display:grid;gap:14px}
-.section-title{font:800 12px "Courier New",monospace;letter-spacing:2px;text-transform:uppercase;border-bottom:1px solid rgba(88,62,34,.3);padding-bottom:8px;margin-bottom:12px}
-.paper-text{line-height:1.65} .secret{border:1px dashed #7d2424}
-.evidence,.haviland{border:1px solid var(--line);border-radius:12px;padding:26px;background:rgba(16,12,9,.96)}
-.evidence .sheet{max-width:500px} .haviland{text-align:center} .haviland h2{color:#e5d1ae}
-.haviland p{color:#9b8a70;line-height:1.6}
-.registry{margin-top:30px;padding-top:25px;border-top:1px solid var(--line);text-align:left}
-.registry-grid{display:grid;gap:8px}
-.registry-row{display:grid;grid-template-columns:1.25fr 1.25fr .8fr;gap:10px;padding:11px;border:1px solid rgba(188,157,104,.2);border-radius:8px;background:rgba(255,255,255,.025);font-size:13px}
-.ok{color:#b9d09d} .pending{color:#8f806b}
-.live-status{color:#b9d09d;font:11px "Courier New",monospace;letter-spacing:1px;margin-bottom:14px}
-.mobile-nav{display:none}
+:root{
+  --gold:#d0b77c;
+  --line:rgba(188,157,104,.35);
+  --ink:#221a13
+}
+
+*{
+  box-sizing:border-box
+}
+
+html{
+  scroll-behavior:smooth
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  color:#efe5d2;
+  font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(93,62,28,.15),transparent 30%),
+    radial-gradient(circle at 90% 0%,rgba(92,21,21,.14),transparent 26%),
+    linear-gradient(135deg,#17110c,#0b0907 50%,#15100b);
+  overflow-x:hidden
+}
+
+.hidden{
+  display:none!important
+}
+
+button,
+input{
+  font:inherit
+}
+
+.login-shell{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:22px
+}
+
+.login-dossier{
+  width:min(760px,100%);
+  border:1px solid rgba(213,180,123,.38);
+  border-radius:16px;
+  background:rgba(20,14,10,.97);
+  box-shadow:0 24px 70px rgba(0,0,0,.55);
+  overflow:hidden
+}
+
+.login-top{
+  text-align:center;
+  padding:38px 25px 22px;
+  border-bottom:1px solid var(--line)
+}
+
+.crest{
+  width:78px;
+  height:78px;
+  margin:0 auto 18px;
+  border:1px solid rgba(215,183,124,.55);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:var(--gold);
+  font-size:28px
+}
+
+.eyebrow{
+  color:#bda77f;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:3px
+}
+
+h1{
+  margin:8px 0;
+  color:#ead7b6;
+  font-weight:500;
+  font-size:clamp(30px,6vw,46px)
+}
+
+.subtitle{
+  color:#99866b
+}
+
+.paper-wrap{
+  padding:26px
+}
+
+.paper{
+  padding:28px 24px;
+  background:linear-gradient(#e6d6b7,#cfb991);
+  color:var(--ink);
+  box-shadow:0 12px 30px rgba(0,0,0,.25)
+}
+
+.paper-heading{
+  font-family:"Courier New",monospace;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase
+}
+
+.paper-copy{
+  font-family:"Courier New",monospace;
+  line-height:1.6;
+  margin:10px 0 22px
+}
+
+.code-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px
+}
+
+#codeInput{
+  min-width:0;
+  padding:15px;
+  text-align:center;
+  font:700 21px "Courier New",monospace;
+  letter-spacing:7px;
+  background:rgba(255,249,232,.56);
+  border:1px solid #63492f
+}
+
+.enter-btn,
+.action-btn{
+  border:1px solid #4c1111;
+  background:linear-gradient(#7f1f1f,#591111);
+  color:#f2e1c1;
+  padding:12px 18px;
+  cursor:pointer
+}
+
+.error{
+  min-height:20px;
+  margin-top:12px;
+  color:#791d1d;
+  font:700 13px "Courier New",monospace
+}
+
+.test-note{
+  margin-top:12px;
+  font:700 12px "Courier New",monospace;
+  color:#5d4328;
+  line-height:1.5
+}
+
+.app{
+  width:min(1200px,100%);
+  margin:auto;
+  padding:18px
+}
+
+.topbar{
+  position:sticky;
+  top:8px;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 17px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(20,15,11,.96)
+}
+
+.brand strong{
+  display:block;
+  color:#e8d6b7
+}
+
+.brand span{
+  font-size:11px;
+  color:#8c7c67;
+  text-transform:uppercase;
+  letter-spacing:1px
+}
+
+.topbar button{
+  background:#211810;
+  color:#c9b38d;
+  border:1px solid rgba(194,158,96,.3);
+  padding:9px 12px;
+  border-radius:7px
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:210px 1fr;
+  gap:16px;
+  margin-top:16px
+}
+
+.sidebar{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px;
+  background:rgba(19,14,10,.94);
+  align-self:start
+}
+
+.nav-btn{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#bbaa8f;
+  text-align:left;
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:5px;
+  cursor:pointer
+}
+
+.nav-btn.active{
+  background:rgba(121,28,28,.25);
+  color:#f0dfbd
+}
+
+.status{
+  border-top:1px solid var(--line);
+  margin-top:18px;
+  padding-top:14px;
+  color:#8b7b65;
+  font:11px "Courier New",monospace
+}
+
+.case{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 18px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(21,15,11,.92);
+  margin-bottom:16px
+}
+
+.case small{
+  color:#7e6f5d;
+  letter-spacing:2px
+}
+
+.case-title{
+  color:#e1cda9;
+  font-size:18px
+}
+
+.stamp{
+  border:2px solid #842323;
+  color:#9d3434;
+  padding:6px 9px;
+  transform:rotate(-4deg);
+  font:800 12px "Courier New",monospace
+}
+
+.dossier-grid{
+  display:grid;
+  grid-template-columns:.85fr 1.35fr;
+  gap:16px
+}
+
+.folder{
+  background:linear-gradient(160deg,#bf9f69,#96733f);
+  padding:16px;
+  border-radius:6px
+}
+
+.portrait-card,
+.sheet{
+  background:linear-gradient(#e4d6bb,#cfbb97);
+  color:var(--ink);
+  padding:20px;
+  box-shadow:0 12px 30px rgba(0,0,0,.22)
+}
+
+.portrait{
+  background:#efe7d8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:7px solid #eee1c5;
+  overflow:hidden;
+  padding:12px
+}
+
+.portrait img{
+  width:100%;
+  height:auto;
+  max-height:none;
+  object-fit:contain;
+  object-position:center;
+  display:block
+}
+
+.monogram{
+  width:105px;
+  height:105px;
+  border:1px solid rgba(234,221,188,.45);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  color:#d4c29e;
+  font-size:35px
+}
+
+.char-name{
+  font-size:32px;
+  margin-top:16px
+}
+
+.char-role{
+  font:700 12px "Courier New",monospace;
+  color:#5c4127
+}
+
+.stack{
+  display:grid;
+  gap:14px
+}
+
+.section-title{
+  font:800 12px "Courier New",monospace;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  border-bottom:1px solid rgba(88,62,34,.3);
+  padding-bottom:8px;
+  margin-bottom:12px
+}
+
+.paper-text{
+  line-height:1.65
+}
+
+.secret{
+  border:1px dashed #7d2424
+}
+
+.evidence,
+.haviland{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:26px;
+  background:rgba(16,12,9,.96)
+}
+
+.evidence .sheet{
+  max-width:650px;
+  margin-bottom:14px
+}
+
+.haviland{
+  text-align:center
+}
+
+.haviland h2{
+  color:#e5d1ae
+}
+
+.haviland p{
+  color:#9b8a70;
+  line-height:1.6
+}
+
+.registry{
+  margin-top:30px;
+  padding-top:25px;
+  border-top:1px solid var(--line);
+  text-align:left
+}
+
+.registry-grid{
+  display:grid;
+  gap:8px
+}
+
+.registry-row{
+  display:grid;
+  grid-template-columns:1.25fr 1.25fr .8fr;
+  gap:10px;
+  padding:11px;
+  border:1px solid rgba(188,157,104,.2);
+  border-radius:8px;
+  background:rgba(255,255,255,.025);
+  font-size:13px
+}
+
+.ok{
+  color:#b9d09d
+}
+
+.pending{
+  color:#8f806b
+}
+
+.live-status{
+  color:#b9d09d;
+  font:11px "Courier New",monospace;
+  letter-spacing:1px;
+  margin-bottom:14px
+}
+
+.mobile-nav{
+  display:none
+}
+
+/* REGIA LIVE */
+
+.live-control{
+  margin-top:26px;
+  padding-top:24px;
+  border-top:1px solid var(--line);
+  text-align:left
+}
+
+.live-control h2{
+  margin-bottom:6px
+}
+
+.live-control-copy{
+  color:#938269;
+  font-size:13px;
+  line-height:1.55;
+  margin-bottom:16px
+}
+
+.control-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px
+}
+
+.control-card{
+  border:1px solid rgba(188,157,104,.22);
+  border-radius:9px;
+  padding:14px;
+  background:rgba(255,255,255,.025)
+}
+
+.control-card strong{
+  display:block;
+  color:#e2ceaa;
+  margin-bottom:8px
+}
+
+.control-state{
+  font:700 11px "Courier New",monospace;
+  color:#8f806b;
+  margin-bottom:10px
+}
+
+.control-state.on{
+  color:#b9d09d
+}
+
+.control-card button,
+.reset-live-btn{
+  width:100%;
+  border:1px solid #4c1111;
+  background:linear-gradient(#7f1f1f,#591111);
+  color:#f2e1c1;
+  padding:10px 9px;
+  border-radius:6px;
+  cursor:pointer
+}
+
+.reset-live-btn{
+  width:auto;
+  margin-top:12px;
+  background:#211810;
+  border-color:rgba(194,158,96,.3);
+  color:#c9b38d
+}
+
+.live-write-status{
+  min-height:18px;
+  margin-top:10px;
+  color:#a99575;
+  font:11px "Courier New",monospace
+}
+
+.clue-test-label{
+  color:#7f1f1f;
+  font:800 11px "Courier New",monospace;
+  letter-spacing:1px;
+  margin-bottom:8px
+}
+
+.personal-test{
+  border:1px dashed #7d2424
+}
+
+.indizi-live-status{
+  margin:0 0 14px;
+  color:#9c8a70;
+  font:11px "Courier New",monospace
+}
+
+.indizi-live-status.online{
+  color:#7c683f
+}
+
 @media(max-width:860px){
-.layout{display:block} .sidebar{display:none} .dossier-grid{grid-template-columns:1fr} .app{padding:10px 10px 85px}
-.mobile-nav{display:grid;position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));grid-template-columns:repeat(2,1fr);z-index:50;background:rgba(18,13,9,.97);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.mobile-nav.three{grid-template-columns:repeat(3,1fr)} .mobile-nav button{border:0;background:transparent;color:#9f8c6f;padding:13px 5px}
-.mobile-nav button.active{background:rgba(118,28,28,.22);color:#ead8b7} .registry-row{grid-template-columns:1fr} .code-row{grid-template-columns:1fr}
+
+  .layout{
+    display:block
+  }
+
+  .sidebar{
+    display:none
+  }
+
+  .dossier-grid{
+    grid-template-columns:1fr
+  }
+
+  .app{
+    padding:10px 10px 85px
+  }
+
+  .mobile-nav{
+    display:grid;
+    position:fixed;
+    left:10px;
+    right:10px;
+    bottom:calc(10px + env(safe-area-inset-bottom));
+    grid-template-columns:repeat(2,1fr);
+    z-index:50;
+    background:rgba(18,13,9,.97);
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden
+  }
+
+  .mobile-nav.three{
+    grid-template-columns:repeat(3,1fr)
+  }
+
+  .mobile-nav button{
+    border:0;
+    background:transparent;
+    color:#9f8c6f;
+    padding:13px 5px
+  }
+
+  .mobile-nav button.active{
+    background:rgba(118,28,28,.22);
+    color:#ead8b7
+  }
+
+  .registry-row{
+    grid-template-columns:1fr
+  }
+
+  .code-row{
+    grid-template-columns:1fr
+  }
+
+  .control-grid{
+    grid-template-columns:1fr
+  }
+
 }
 </style>
 </head>
+
 <body>
+
 <section id="loginSection" class="login-shell">
+
 <div class="login-dossier">
-<div class="login-top"><div class="crest">VV</div><div class="eyebrow">Archivio Villa Valenti</div><h1>Accesso Riservato</h1><div class="subtitle">Cena con delitto · 31 ottobre 2026</div></div>
-<div class="paper-wrap"><div class="paper">
-<div class="paper-heading">Identificazione richiesta</div>
-<div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
-<div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
+
+<div class="login-top">
+
+<div class="crest">
+VV
+</div>
+
+<div class="eyebrow">
+Archivio Villa Valenti
+</div>
+
+<h1>
+Accesso Riservato
+</h1>
+
+<div class="subtitle">
+Cena con delitto · 31 ottobre 2026
+</div>
+
+</div>
+
+<div class="paper-wrap">
+
+<div class="paper">
+
+<div class="paper-heading">
+Identificazione richiesta
+</div>
+
+<div class="paper-copy">
+Inserisci il codice personale ricevuto con il tuo invito.
+<br>
+Il dossier assegnato resterà associato al tuo codice
+per l'intera serata, anche cambiando dispositivo.
+</div>
+
+<div class="code-row">
+
+<input
+id="codeInput"
+type="text"
+inputmode="numeric"
+maxlength="6"
+autocomplete="off"
+placeholder="000000"
+>
+
+<button
+class="enter-btn"
+onclick="login()"
+>
+APRI DOSSIER
+</button>
+
+</div>
+
 <div id="error" class="error"></div>
-<div class="test-note">MODALITÀ TEST FOTO COMPLETA: tutti i codici cambiano personaggio e ritratto a ogni nuovo accesso, restando nel proprio gruppo maschile/femminile.</div>
-</div></div></div>
+
+<div class="test-note">
+MODALITÀ TEST FOTO COMPLETA:
+tutti i codici cambiano personaggio e ritratto
+a ogni nuovo accesso,
+restando nel proprio gruppo maschile/femminile.
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </section>
 
-<section id="appSection" class="hidden"><div class="app">
-<header class="topbar"><div class="brand"><strong>Archivio Villa Valenti</strong><span>Accesso autenticato</span></div><button onclick="logout()">CHIUDI DOSSIER</button></header>
+
+<section id="appSection" class="hidden">
+
+<div class="app">
+
+<header class="topbar">
+
+<div class="brand">
+
+<strong>
+Archivio Villa Valenti
+</strong>
+
+<span>
+Accesso autenticato
+</span>
+
+</div>
+
+<button onclick="logout()">
+CHIUDI DOSSIER
+</button>
+
+</header>
+
+
 <div class="layout">
+
+
 <aside class="sidebar">
-<button class="nav-btn active" data-tab="dossier" onclick="openTab('dossier')">▣ Dossier personale</button>
-<button class="nav-btn" data-tab="indizi" onclick="openTab('indizi')">⌕ Indizi</button>
-<button id="havilandNavBtn" class="nav-btn hidden" data-tab="haviland" onclick="openTab('haviland')">◉ Haviland / Regia</button>
-<div class="status">● SESSIONE ATTIVA<div id="realUserLabel" style="margin-top:7px"></div></div>
+
+<button
+class="nav-btn active"
+data-tab="dossier"
+onclick="openTab('dossier')"
+>
+▣ Dossier personale
+</button>
+
+<button
+class="nav-btn"
+data-tab="indizi"
+onclick="openTab('indizi')"
+>
+⌕ Indizi
+</button>
+
+<button
+id="havilandNavBtn"
+class="nav-btn hidden"
+data-tab="haviland"
+onclick="openTab('haviland')"
+>
+◉ Haviland / Regia
+</button>
+
+<div class="status">
+
+● SESSIONE ATTIVA
+
+<div
+id="realUserLabel"
+style="margin-top:7px"
+></div>
+
+</div>
+
 </aside>
+
+
 <main>
-<div class="case"><div><small>FASCICOLO</small><div class="case-title">Il Dossier Scomparso</div></div><div class="stamp">RISERVATO</div></div>
 
-<section id="tab-dossier" class="tab-page">
+
+<div class="case">
+
+<div>
+
+<small>
+FASCICOLO
+</small>
+
+<div class="case-title">
+Il Dossier Scomparso
+</div>
+
+</div>
+
+<div class="stamp">
+RISERVATO
+</div>
+
+</div>
+
+
+<section
+id="tab-dossier"
+class="tab-page"
+>
+
 <div class="dossier-grid">
-<div class="folder"><article class="portrait-card">
-<div class="portrait"><img id="characterPhoto" class="hidden" alt="Ritratto personaggio"><div id="characterMonogram" class="monogram">VV</div></div>
-<div id="characterName" class="char-name"></div><div id="characterRole" class="char-role"></div>
-</article></div>
+
+<div class="folder">
+
+<article class="portrait-card">
+
+<div class="portrait">
+
+<img
+id="characterPhoto"
+class="hidden"
+alt="Ritratto personaggio"
+>
+
+<div
+id="characterMonogram"
+class="monogram"
+>
+VV
+</div>
+
+</div>
+
+<div
+id="characterName"
+class="char-name"
+></div>
+
+<div
+id="characterRole"
+class="char-role"
+></div>
+
+</article>
+
+</div>
+
+
 <div class="stack">
-<article class="sheet"><div class="section-title">Profilo</div><div id="greeting" class="paper-text" style="font-weight:700;margin-bottom:12px"></div><div id="characterDescription" class="paper-text"></div></article>
-<article class="sheet"><div class="section-title">Indicazioni di comportamento</div><div id="characterAdvice" class="paper-text"></div></article>
-<article id="secretRoleBox" class="sheet secret hidden"><div class="section-title">Documento personale riservato</div><div id="secretRole" class="paper-text"></div></article>
-</div></div></section>
 
-<section id="tab-indizi" class="tab-page hidden"><div class="evidence"><article class="sheet"><div class="section-title">Archivio indizi</div><div class="paper-text">Nessun nuovo documento è stato reso disponibile. Gli indizi compariranno qui durante la serata.</div></article></div></section>
+<article class="sheet">
 
-<section id="tab-haviland" class="tab-page hidden"><div class="haviland"><h2>Haviland — Regia Villa</h2><p>Pannello privato riservato all'organizzatore. Qui collegheremo i comandi vocali e gli annunci definitivi.</p><button class="action-btn" onclick="havilandPlaceholder()">ATTIVA MICROFONO</button>
-<div class="registry"><h2>Registro Villa</h2><div id="registryLiveStatus" class="live-status">● REGISTRO LIVE</div><div id="registryStatus">Caricamento registro…</div><div id="registryRows" class="registry-grid"></div></div>
-</div></section>
-</main></div></div>
-<nav id="mobileNav" class="mobile-nav">
-<button class="active" data-mobile-tab="dossier" onclick="openTab('dossier')">DOSSIER</button>
-<button data-mobile-tab="indizi" onclick="openTab('indizi')">INDIZI</button>
-<button id="havilandMobileBtn" class="hidden" data-mobile-tab="haviland" onclick="openTab('haviland')">REGIA</button>
-</nav></section>
+<div class="section-title">
+Profilo
+</div>
+
+<div
+id="greeting"
+class="paper-text"
+style="font-weight:700;margin-bottom:12px"
+></div>
+
+<div
+id="characterDescription"
+class="paper-text"
+></div>
+
+</article>
+
+
+<article class="sheet">
+
+<div class="section-title">
+Indicazioni di comportamento
+</div>
+
+<div
+id="characterAdvice"
+class="paper-text"
+></div>
+
+</article>
+
+
+<article
+id="secretRoleBox"
+class="sheet secret hidden"
+>
+
+<div class="section-title">
+Documento personale riservato
+</div>
+
+<div
+id="secretRole"
+class="paper-text"
+></div>
+
+</article>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section
+id="tab-indizi"
+class="tab-page hidden"
+>
+
+<div class="evidence">
+
+
+<div
+id="indiziLiveStatus"
+class="indizi-live-status"
+>
+● COLLEGAMENTO INDIZI LIVE
+</div>
+
+
+<article
+id="noCluesBox"
+class="sheet"
+>
+
+<div class="section-title">
+Archivio indizi
+</div>
+
+<div class="paper-text">
+Nessun nuovo documento è stato reso disponibile.
+Gli indizi compariranno qui durante la serata.
+</div>
+
+</article>
+
+
+<article
+id="commonClue1"
+class="sheet hidden"
+>
+
+<div class="clue-test-label">
+CONTENUTO DI PROVA
+</div>
+
+<div class="section-title">
+Indizio comune 1
+</div>
+
+<div class="paper-text">
+Documento di prova sbloccato in diretta dalla Regia.
+</div>
+
+</article>
+
+
+<article
+id="commonClue2"
+class="sheet hidden"
+>
+
+<div class="clue-test-label">
+CONTENUTO DI PROVA
+</div>
+
+<div class="section-title">
+Indizio comune 2
+</div>
+
+<div class="paper-text">
+Secondo documento di prova sbloccato in diretta dalla Regia.
+</div>
+
+</article>
+
+
+<article
+id="commonClue3"
+class="sheet hidden"
+>
+
+<div class="clue-test-label">
+CONTENUTO DI PROVA
+</div>
+
+<div class="section-title">
+Indizio comune 3
+</div>
+
+<div class="paper-text">
+Terzo documento di prova sbloccato in diretta dalla Regia.
+</div>
+
+</article>
+
+
+<article
+id="personalClue1"
+class="sheet personal-test hidden"
+>
+
+<div class="clue-test-label">
+CONTENUTO PERSONALE DI PROVA
+</div>
+
+<div class="section-title">
+Informazione personale 1
+</div>
+
+<div class="paper-text">
+Blocco personale di prova disponibile.
+</div>
+
+</article>
+
+
+<article
+id="personalClue2"
+class="sheet personal-test hidden"
+>
+
+<div class="clue-test-label">
+CONTENUTO PERSONALE DI PROVA
+</div>
+
+<div class="section-title">
+Informazione personale 2
+</div>
+
+<div class="paper-text">
+Secondo blocco personale di prova disponibile.
+</div>
+
+</article>
+
+
+<article
+id="personalClue3"
+class="sheet personal-test hidden"
+>
+
+<div class="clue-test-label">
+CONTENUTO PERSONALE DI PROVA
+</div>
+
+<div class="section-title">
+Informazione personale 3
+</div>
+
+<div class="paper-text">
+Terzo blocco personale di prova disponibile.
+</div>
+
+</article>
+
+
+</div>
+
+</section>
+
+
+<section
+id="tab-haviland"
+class="tab-page hidden"
+>
+
+<div class="haviland">
+
+
+<h2>
+Haviland — Regia Villa
+</h2>
+
+<p>
+Pannello privato riservato all'organizzatore.
+Qui collegheremo i comandi vocali e gli annunci definitivi.
+</p>
+
+<button
+class="action-btn"
+onclick="havilandPlaceholder()"
+>
+ATTIVA MICROFONO
+</button>
+
+
+<div class="live-control">
+
+<h2>
+Regia indizi — Test live
+</h2>
+
+<div class="live-control-copy">
+
+Questi pulsanti usano contenuti neutri di prova.
+
+Premendo SBLOCCA,
+il documento compare automaticamente
+nella sezione Indizi dei dispositivi già collegati,
+senza uscire e rientrare.
+
+</div>
+
+
+<div
+id="liveControlConnection"
+class="live-status"
+>
+● CONTROLLO LIVE
+</div>
+
+
+<div
+class="section-title"
+style="color:#cdb58d;border-color:var(--line)"
+>
+Indizi comuni
+</div>
+
+
+<div class="control-grid">
+
+
+<div class="control-card">
+
+<strong>
+Indizio comune 1
+</strong>
+
+<div
+id="stateCommon1"
+class="control-state"
+>
+BLOCCATO
+</div>
+
+<button
+onclick="toggleLiveUnlock('common1')"
+>
+SBLOCCA / BLOCCA
+</button>
+
+</div>
+
+
+<div class="control-card">
+
+<strong>
+Indizio comune 2
+</strong>
+
+<div
+id="stateCommon2"
+class="control-state"
+>
+BLOCCATO
+</div>
+
+<button
+onclick="toggleLiveUnlock('common2')"
+>
+SBLOCCA / BLOCCA
+</button>
+
+</div>
+
+
+<div class="control-card">
+
+<strong>
+Indizio comune 3
+</strong>
+
+<div
+id="stateCommon3"
+class="control-state"
+>
+BLOCCATO
+</div>
+
+<button
+onclick="toggleLiveUnlock('common3')"
+>
+SBLOCCA / BLOCCA
+</button>
+
+</div>
+
+
+</div>
+
+
+<div
+class="section-title"
+style="
+color:#cdb58d;
+border-color:var(--line);
+margin-top:20px
+"
+>
+Indizi personali
+</div>
+
+
+<div class="control-grid">
+
+
+<div class="control-card">
+
+<strong>
+Blocco personale 1
+</strong>
+
+<div
+id="statePersonal1"
+class="control-state"
+>
+BLOCCATO
+</div>
+
+<button
+onclick="toggleLiveUnlock('personal1')"
+>
+SBLOCCA / BLOCCA
+</button>
+
+</div>
+
+
+<div class="control-card">
+
+<strong>
+Blocco personale 2
+</strong>
+
+<div
+id="statePersonal2"
+class="control-state"
+>
+BLOCCATO
+</div>
+
+<button
+onclick="toggleLiveUnlock('personal2')"
+>
+SBLOCCA / BLOCCA
+</button>
+
+</div>
+
+
+<div class="control-card">
+
+<strong>
+Blocco personale 3
+</strong>
+
+<div
+id="statePersonal3"
+class="control-state"
+>
+BLOCCATO
+</div>
+
+<button
+onclick="toggleLiveUnlock('personal3')"
+>
+SBLOCCA / BLOCCA
+</button>
+
+</div>
+
+
+</div>
+
+
+<button
+class="reset-live-btn"
+onclick="resetLiveUnlocks()"
+>
+RESET TEST INDIZI
+</button>
+
+
+<div
+id="liveWriteStatus"
+class="live-write-status"
+></div>
+
+
+</div>
+
+
+<div class="registry">
+
+<h2>
+Registro Villa
+</h2>
+
+<div
+id="registryLiveStatus"
+class="live-status"
+>
+● REGISTRO LIVE
+</div>
+
+<div id="registryStatus">
+Caricamento registro…
+</div>
+
+<div
+id="registryRows"
+class="registry-grid"
+></div>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+</main>
+
+</div>
+
+</div>
+
+
+<nav
+id="mobileNav"
+class="mobile-nav"
+>
+
+<button
+class="active"
+data-mobile-tab="dossier"
+onclick="openTab('dossier')"
+>
+DOSSIER
+</button>
+
+<button
+data-mobile-tab="indizi"
+onclick="openTab('indizi')"
+>
+INDIZI
+</button>
+
+<button
+id="havilandMobileBtn"
+class="hidden"
+data-mobile-tab="haviland"
+onclick="openTab('haviland')"
+>
+REGIA
+</button>
+
+</nav>
+
+
+</section>
+
 
 <script src="portraits_01.js"></script>
 <script src="portraits_02.js"></script>
@@ -126,289 +1321,2392 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <script src="portraits_08.js"></script>
 <script src="portraits_09.js"></script>
 <script src="portraits_10.js"></script>
+
+
 <script>
-const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
+
+const FIREBASE_DB=
+"https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
+
 const ORGANIZER_CODE="321023";
-const TEST_CODES=new Set(["321023", "290604", "240383", "141019", "190797", "949699", "140918", "900750", "170504", "122906", "347106", "319903", "248842", "265069", "111111", "220225", "150704", "535506", "240322", "230704"]);
+
+
+const TEST_CODES=new Set([
+"321023",
+"290604",
+"240383",
+"141019",
+"190797",
+"949699",
+"140918",
+"900750",
+"170504",
+"122906",
+"347106",
+"319903",
+"248842",
+"265069",
+"111111",
+"220225",
+"150704",
+"535506",
+"240322",
+"230704"
+]);
+
 
 const participants=[
-{id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
-{id:"giulia_tesini_vigasio",name:"Giulia Tesini di Vigasio",code:"290604",gender:"F"},
-{id:"angela_viviani",name:"Angela Viviani",code:"240383",gender:"F"},
-{id:"eleonora_pinto",name:"Eleonora Pinto",code:"141019",gender:"F"},
-{id:"rocco_monaco",name:"Rocco Monaco",code:"190797",gender:"M"},
-{id:"alessia_remelli",name:"Alessia Remelli",code:"949699",gender:"F"},
-{id:"andrea_filippi",name:"Andrea Filippi",code:"140918",gender:"M"},
-{id:"pietro_scolari",name:"Pietro Scolari",code:"900750",gender:"M"},
-{id:"julian_remelli",name:"Julian Remelli",code:"170504",gender:"M"},
-{id:"elena_pelizzaro",name:"Elena Pelizzaro",code:"122906",gender:"F"},
-{id:"beatrice_remelli",name:"Beatrice Remelli",code:"347106",gender:"F"},
-{id:"gabriele_di_cristo",name:"Gabriele Di Cristo",code:"319903",gender:"M"},
-{id:"gabriele_battini",name:"Gabriele Battini",code:"248842",gender:"M"},
-{id:"cristian_campesi",name:"Cristian Campesi",code:"265069",gender:"M"},
-{id:"vivald_keri",name:"Vivald Keri",code:"111111",gender:"M"},
-{id:"giulia_tesini_povegliano",name:"Giulia Tesini di Povegliano",code:"220225",gender:"F"},
-{id:"sonia_vanoni",name:"Sonia Vanoni",code:"150704",gender:"F"},
-{id:"andrea_raffi",name:"Andrea Raffi",code:"535506",gender:"M"},
-{id:"samuele_benatti",name:"Samuele Benatti",code:"240322",gender:"M"},
-{id:"emma_biasi",name:"Emma Biasi",code:"230704",gender:"F"}
+
+{
+id:"alberto_damico",
+name:"Alberto D'Amico",
+code:"321023",
+gender:"M",
+hasVoice:true
+},
+
+{
+id:"giulia_tesini_vigasio",
+name:"Giulia Tesini di Vigasio",
+code:"290604",
+gender:"F"
+},
+
+{
+id:"angela_viviani",
+name:"Angela Viviani",
+code:"240383",
+gender:"F"
+},
+
+{
+id:"eleonora_pinto",
+name:"Eleonora Pinto",
+code:"141019",
+gender:"F"
+},
+
+{
+id:"rocco_monaco",
+name:"Rocco Monaco",
+code:"190797",
+gender:"M"
+},
+
+{
+id:"alessia_remelli",
+name:"Alessia Remelli",
+code:"949699",
+gender:"F"
+},
+
+{
+id:"andrea_filippi",
+name:"Andrea Filippi",
+code:"140918",
+gender:"M"
+},
+
+{
+id:"pietro_scolari",
+name:"Pietro Scolari",
+code:"900750",
+gender:"M"
+},
+
+{
+id:"julian_remelli",
+name:"Julian Remelli",
+code:"170504",
+gender:"M"
+},
+
+{
+id:"elena_pelizzaro",
+name:"Elena Pelizzaro",
+code:"122906",
+gender:"F"
+},
+
+{
+id:"beatrice_remelli",
+name:"Beatrice Remelli",
+code:"347106",
+gender:"F"
+},
+
+{
+id:"gabriele_di_cristo",
+name:"Gabriele Di Cristo",
+code:"319903",
+gender:"M"
+},
+
+{
+id:"gabriele_battini",
+name:"Gabriele Battini",
+code:"248842",
+gender:"M"
+},
+
+{
+id:"cristian_campesi",
+name:"Cristian Campesi",
+code:"265069",
+gender:"M"
+},
+
+{
+id:"vivald_keri",
+name:"Vivald Keri",
+code:"111111",
+gender:"M"
+},
+
+{
+id:"giulia_tesini_povegliano",
+name:"Giulia Tesini di Povegliano",
+code:"220225",
+gender:"F"
+},
+
+{
+id:"sonia_vanoni",
+name:"Sonia Vanoni",
+code:"150704",
+gender:"F"
+},
+
+{
+id:"andrea_raffi",
+name:"Andrea Raffi",
+code:"535506",
+gender:"M"
+},
+
+{
+id:"samuele_benatti",
+name:"Samuele Benatti",
+code:"240322",
+gender:"M"
+},
+
+{
+id:"emma_biasi",
+name:"Emma Biasi",
+code:"230704",
+gender:"F"
+}
+
 ];
+
 
 const characters=[
-{id:"ettore_valenti",name:"Ettore Valenti",gender:"M",role:"Zio paterno di Angelina",description:"Appartieni alla vecchia generazione dei Valenti e sei molto legato al patrimonio e al nome della famiglia.",advice:"Mostrati autorevole. Fai attenzione a tutto ciò che riguarda eredità, proprietà e decisioni familiari."},
-{id:"ludovico_orsini",name:"Ludovico Orsini",gender:"M",role:"Marito di Angelina",description:"Il tuo matrimonio con Angelina negli ultimi mesi è diventato molto più complicato di quanto gli altri sappiano.",advice:"Mantieni la calma. Difendi il tuo rapporto con Angelina senza raccontare immediatamente tutto."},
-{id:"corrado_de_marchi",name:"Corrado De Marchi",gender:"M",role:"Cugino materno di Angelina",description:"Hai avuto diversi contrasti con Angelina riguardo alcune proprietà della famiglia materna.",advice:"Mostrati cordiale, ma presta molta attenzione quando si parla di denaro e proprietà."},
-{id:"leone_de_marchi",name:"Leone De Marchi",gender:"M",role:"Zio materno di Angelina",description:"Conosci molti episodi della famiglia risalenti alla generazione precedente.",advice:"Parla poco e ascolta molto. Confronta ciò che gli altri raccontano con quello che ricordi."},
-{id:"dorian_ferretti",name:"Dorian Ferretti",gender:"M",role:"Socio d'affari di Angelina",description:"Hai gestito diversi affari con Angelina e recentemente sono nate tensioni riguardo alcuni conti.",advice:"Rimani professionale e cerca di separare gli affari dalle questioni personali."},
-{id:"tancredi_moreau",name:"Tancredi Moreau",gender:"M",role:"Avvocato della famiglia",description:"Conosci contratti, testamenti, proprietà e controversie riguardanti molti dei presenti.",advice:"Ascolta con attenzione e cerca contraddizioni. Presta particolare attenzione a documenti, eredità e questioni economiche."},
-{id:"marcello_albrizzi",name:"Marcello Albrizzi",gender:"M",role:"Medico e amico di famiglia",description:"Conosci Angelina da molti anni e possiedi competenze mediche che potrebbero diventare importanti.",advice:"Osserva dettagli fisici e comportamenti. Non arrivare troppo velocemente a una conclusione."},
-{id:"cesare_valli",name:"Cesare Valli",gender:"M",role:"Maggiordomo di Villa Valenti",description:"Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",advice:"Sii discreto. Osserva molto e parla soltanto quando ritieni necessario."},
-{id:"adriano_conti",name:"Adriano Conti",gender:"M",role:"Ex spasimante di Angelina",description:"In passato hai provato sentimenti importanti per Angelina e il vostro rapporto non è stato completamente dimenticato.",advice:"Evita di sembrare apertamente geloso, ma reagisci quando qualcuno mette in dubbio il vostro passato."},
-{id:"elia_neroni",name:"Elia Neroni",gender:"M",role:"Amico d'infanzia di Angelina",description:"Conosci Angelina da prima della villa, della ricchezza e degli affari.",advice:"Osserva soprattutto i comportamenti. Sei bravo a capire quando qualcuno non sta raccontando tutta la verità."},
-{id:"ottavio_serra",name:"Ottavio Serra",gender:"M",role:"Fotografo e documentarista della famiglia",description:"Da anni documenti feste, ricorrenze ed eventi della famiglia Valenti.",advice:"Osserva dettagli, posizioni e comportamenti."},
-{id:"lavinia_valenti",name:"Lavinia Valenti",gender:"F",role:"Sorella maggiore di Angelina",description:"Il rapporto con Angelina è sempre stato segnato da una certa rivalità.",advice:"Difendi il nome della famiglia, ma non lasciare che i vecchi contrasti diventino automaticamente un'accusa contro di te."},
-{id:"celeste_valenti",name:"Celeste Valenti",gender:"F",role:"Sorella minore di Angelina",description:"Sei sempre stata molto protetta dalla famiglia e soprattutto da Angelina.",advice:"Cerca di capire perché Angelina avesse recentemente cambiato atteggiamento nei tuoi confronti."},
-{id:"ofelia_de_marchi",name:"Ofelia De Marchi",gender:"F",role:"Cugina materna",description:"Da tempo sospetti che alcune questioni relative all'eredità materna non siano mai state chiarite completamente.",advice:"Fai domande sui vecchi documenti, sulle proprietà e sulla storia della famiglia."},
-{id:"viola_neroni",name:"Viola Neroni",gender:"F",role:"Migliore amica di Angelina",description:"Angelina si confidava spesso con te, ma nelle ultime settimane aveva iniziato a tenerti all'oscuro di qualcosa.",advice:"Cerca di capire perché Angelina abbia improvvisamente smesso di raccontarti tutto."},
-{id:"eva_montorsi",name:"Eva Montorsi",gender:"F",role:"Governante di Villa Valenti",description:"Lavori nella villa da molti anni e conosci bene le vere dinamiche della famiglia.",advice:"Confronta ciò che gli invitati dichiarano con ciò che hai visto personalmente negli anni."},
-{id:"bianca_albrizzi",name:"Bianca Albrizzi",gender:"F",role:"Segretaria personale di Angelina",description:"Gestivi appuntamenti, telefonate e parte della documentazione privata di Angelina.",advice:"Presta particolare attenzione agli orari, agli incontri e agli eventuali documenti mancanti."},
-{id:"emilia_riva",name:"Emilia Riva",gender:"F",role:"Collaboratrice della villa",description:"Collabori spesso all'organizzazione degli eventi di Villa Valenti.",advice:"Fai attenzione agli spostamenti degli invitati e a ciò che accade nelle zone di servizio."},
-{id:"ginevra_ferretti",name:"Ginevra Ferretti",gender:"F",role:"Conoscente dell'ambiente lavorativo di Angelina",description:"Conosci sia l'ambiente professionale sia alcune persone della cerchia privata di Angelina.",advice:"Cerca collegamenti tra gli affari e i rapporti personali presenti nella villa."},
-{id:"isabella_roversi",name:"Isabella Roversi",gender:"F",role:"Antiquaria e conoscente di Angelina",description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."}
+
+{
+id:"ettore_valenti",
+name:"Ettore Valenti",
+gender:"M",
+role:"Zio paterno di Angelina",
+description:
+"Appartieni alla vecchia generazione dei Valenti e sei molto legato al patrimonio e al nome della famiglia.",
+advice:
+"Mostrati autorevole. Fai attenzione a tutto ciò che riguarda eredità, proprietà e decisioni familiari."
+},
+
+{
+id:"ludovico_orsini",
+name:"Ludovico Orsini",
+gender:"M",
+role:"Marito di Angelina",
+description:
+"Il tuo matrimonio con Angelina negli ultimi mesi è diventato molto più complicato di quanto gli altri sappiano.",
+advice:
+"Mantieni la calma. Difendi il tuo rapporto con Angelina senza raccontare immediatamente tutto."
+},
+
+{
+id:"corrado_de_marchi",
+name:"Corrado De Marchi",
+gender:"M",
+role:"Cugino materno di Angelina",
+description:
+"Hai avuto diversi contrasti con Angelina riguardo alcune proprietà della famiglia materna.",
+advice:
+"Mostrati cordiale, ma presta molta attenzione quando si parla di denaro e proprietà."
+},
+
+{
+id:"leone_de_marchi",
+name:"Leone De Marchi",
+gender:"M",
+role:"Zio materno di Angelina",
+description:
+"Conosci molti episodi della famiglia risalenti alla generazione precedente.",
+advice:
+"Parla poco e ascolta molto. Confronta ciò che gli altri raccontano con quello che ricordi."
+},
+
+{
+id:"dorian_ferretti",
+name:"Dorian Ferretti",
+gender:"M",
+role:"Socio d'affari di Angelina",
+description:
+"Hai gestito diversi affari con Angelina e recentemente sono nate tensioni riguardo alcuni conti.",
+advice:
+"Rimani professionale e cerca di separare gli affari dalle questioni personali."
+},
+
+{
+id:"tancredi_moreau",
+name:"Tancredi Moreau",
+gender:"M",
+role:"Avvocato della famiglia",
+description:
+"Conosci contratti, testamenti, proprietà e controversie riguardanti molti dei presenti.",
+advice:
+"Ascolta con attenzione e cerca contraddizioni. Presta particolare attenzione a documenti, eredità e questioni economiche."
+},
+
+{
+id:"marcello_albrizzi",
+name:"Marcello Albrizzi",
+gender:"M",
+role:"Medico e amico di famiglia",
+description:
+"Conosci Angelina da molti anni e possiedi competenze mediche che potrebbero diventare importanti.",
+advice:
+"Osserva dettagli fisici e comportamenti. Non arrivare troppo velocemente a una conclusione."
+},
+
+{
+id:"cesare_valli",
+name:"Cesare Valli",
+gender:"M",
+role:"Maggiordomo di Villa Valenti",
+description:
+"Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",
+advice:
+"Sii discreto. Osserva molto e parla soltanto quando ritieni necessario."
+},
+
+{
+id:"adriano_conti",
+name:"Adriano Conti",
+gender:"M",
+role:"Ex spasimante di Angelina",
+description:
+"In passato hai provato sentimenti importanti per Angelina e il vostro rapporto non è stato completamente dimenticato.",
+advice:
+"Evita di sembrare apertamente geloso, ma reagisci quando qualcuno mette in dubbio il vostro passato."
+},
+
+{
+id:"elia_neroni",
+name:"Elia Neroni",
+gender:"M",
+role:"Amico d'infanzia di Angelina",
+description:
+"Conosci Angelina da prima della villa, della ricchezza e degli affari.",
+advice:
+"Osserva soprattutto i comportamenti. Sei bravo a capire quando qualcuno non sta raccontando tutta la verità."
+},
+
+{
+id:"ottavio_serra",
+name:"Ottavio Serra",
+gender:"M",
+role:"Fotografo e documentarista della famiglia",
+description:
+"Da anni documenti feste, ricorrenze ed eventi della famiglia Valenti.",
+advice:
+"Osserva dettagli, posizioni e comportamenti."
+},
+
+{
+id:"lavinia_valenti",
+name:"Lavinia Valenti",
+gender:"F",
+role:"Sorella maggiore di Angelina",
+description:
+"Il rapporto con Angelina è sempre stato segnato da una certa rivalità.",
+advice:
+"Difendi il nome della famiglia, ma non lasciare che i vecchi contrasti diventino automaticamente un'accusa contro di te."
+},
+
+{
+id:"celeste_valenti",
+name:"Celeste Valenti",
+gender:"F",
+role:"Sorella minore di Angelina",
+description:
+"Sei sempre stata molto protetta dalla famiglia e soprattutto da Angelina.",
+advice:
+"Cerca di capire perché Angelina avesse recentemente cambiato atteggiamento nei tuoi confronti."
+},
+
+{
+id:"ofelia_de_marchi",
+name:"Ofelia De Marchi",
+gender:"F",
+role:"Cugina materna",
+description:
+"Da tempo sospetti che alcune questioni relative all'eredità materna non siano mai state chiarite completamente.",
+advice:
+"Fai domande sui vecchi documenti, sulle proprietà e sulla storia della famiglia."
+},
+
+{
+id:"viola_neroni",
+name:"Viola Neroni",
+gender:"F",
+role:"Migliore amica di Angelina",
+description:
+"Angelina si confidava spesso con te, ma nelle ultime settimane aveva iniziato a tenerti all'oscuro di qualcosa.",
+advice:
+"Cerca di capire perché Angelina abbia improvvisamente smesso di raccontarti tutto."
+},
+
+{
+id:"eva_montorsi",
+name:"Eva Montorsi",
+gender:"F",
+role:"Governante di Villa Valenti",
+description:
+"Lavori nella villa da molti anni e conosci bene le vere dinamiche della famiglia.",
+advice:
+"Confronta ciò che gli invitati dichiarano con ciò che hai visto personalmente negli anni."
+},
+
+{
+id:"bianca_albrizzi",
+name:"Bianca Albrizzi",
+gender:"F",
+role:"Segretaria personale di Angelina",
+description:
+"Gestivi appuntamenti, telefonate e parte della documentazione privata di Angelina.",
+advice:
+"Presta particolare attenzione agli orari, agli incontri e agli eventuali documenti mancanti."
+},
+
+{
+id:"emilia_riva",
+name:"Emilia Riva",
+gender:"F",
+role:"Collaboratrice della villa",
+description:
+"Collabori spesso all'organizzazione degli eventi di Villa Valenti.",
+advice:
+"Fai attenzione agli spostamenti degli invitati e a ciò che accade nelle zone di servizio."
+},
+
+{
+id:"ginevra_ferretti",
+name:"Ginevra Ferretti",
+gender:"F",
+role:"Conoscente dell'ambiente lavorativo di Angelina",
+description:
+"Conosci sia l'ambiente professionale sia alcune persone della cerchia privata di Angelina.",
+advice:
+"Cerca collegamenti tra gli affari e i rapporti personali presenti nella villa."
+},
+
+{
+id:"isabella_roversi",
+name:"Isabella Roversi",
+gender:"F",
+role:"Antiquaria e conoscente di Angelina",
+description:
+"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",
+advice:
+"Presta attenzione agli oggetti della villa e alla loro provenienza."
+}
+
 ];
 
-const PORTRAITS=window.PORTRAITS||{};
-const MALE_TEST_ORDER=["ettore_valenti", "ludovico_orsini", "corrado_de_marchi", "leone_de_marchi", "dorian_ferretti", "tancredi_moreau", "marcello_albrizzi", "cesare_valli", "adriano_conti", "elia_neroni", "ottavio_serra"];
-const FEMALE_TEST_ORDER=["lavinia_valenti", "celeste_valenti", "ofelia_de_marchi", "viola_neroni", "eva_montorsi", "bianca_albrizzi", "emilia_riva", "ginevra_ferretti", "isabella_roversi"];
 
-const GAME_SEED="VILLA-VALENTI-2026-DOSSIER-V2";
-function hashString(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
-function seededRandom(seed){let value=seed>>>0;return function(){value+=0x6D2B79F5;let t=value;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
-function shuffleStable(array,seedText){const result=[...array];const random=seededRandom(hashString(GAME_SEED+"|"+seedText));for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}return result}
+const PORTRAITS=
+window.PORTRAITS||{};
+
+
+const MALE_TEST_ORDER=[
+
+"ettore_valenti",
+"ludovico_orsini",
+"corrado_de_marchi",
+"leone_de_marchi",
+"dorian_ferretti",
+"tancredi_moreau",
+"marcello_albrizzi",
+"cesare_valli",
+"adriano_conti",
+"elia_neroni",
+"ottavio_serra"
+
+];
+
+
+const FEMALE_TEST_ORDER=[
+
+"lavinia_valenti",
+"celeste_valenti",
+"ofelia_de_marchi",
+"viola_neroni",
+"eva_montorsi",
+"bianca_albrizzi",
+"emilia_riva",
+"ginevra_ferretti",
+"isabella_roversi"
+
+];
+
+
+const GAME_SEED=
+"VILLA-VALENTI-2026-DOSSIER-V2";
+
+
+function hashString(str){
+
+let h=2166136261;
+
+for(let i=0;i<str.length;i++){
+
+h^=str.charCodeAt(i);
+
+h=Math.imul(
+h,
+16777619
+);
+
+}
+
+return h>>>0;
+
+}
+
+
+function seededRandom(seed){
+
+let value=seed>>>0;
+
+return function(){
+
+value+=0x6D2B79F5;
+
+let t=value;
+
+t=Math.imul(
+t^(t>>>15),
+t|1
+);
+
+t^=
+t+
+Math.imul(
+t^(t>>>7),
+t|61
+);
+
+return(
+(t^(t>>>14))>>>0
+)/4294967296;
+
+}
+
+}
+
+
+function shuffleStable(
+array,
+seedText
+){
+
+const result=[
+...array
+];
+
+const random=
+seededRandom(
+hashString(
+GAME_SEED+
+"|"+
+seedText
+)
+);
+
+for(
+let i=result.length-1;
+i>0;
+i--
+){
+
+const j=
+Math.floor(
+random()*(i+1)
+);
+
+[
+result[i],
+result[j]
+]=[
+result[j],
+result[i]
+];
+
+}
+
+return result;
+
+}
+
 
 function createCharacterAssignments(){
- const assignments={};
- const normalParticipants=participants.filter(p=>!p.forcedCharacter);
- const normalCharacters=characters.filter(c=>!c.modular);
- const maleParticipants=shuffleStable(normalParticipants.filter(p=>p.gender==="M"),"MALE-PARTICIPANTS");
- const femaleParticipants=shuffleStable(normalParticipants.filter(p=>p.gender==="F"),"FEMALE-PARTICIPANTS");
- const maleCharacters=shuffleStable(normalCharacters.filter(c=>c.gender==="M"),"MALE-CHARACTERS");
- const femaleCharacters=shuffleStable(normalCharacters.filter(c=>c.gender==="F"),"FEMALE-CHARACTERS");
- maleParticipants.forEach((p,i)=>assignments[p.id]=maleCharacters[i].id);
- femaleParticipants.forEach((p,i)=>assignments[p.id]=femaleCharacters[i].id);
- return assignments;
+
+const assignments={};
+
+const normalParticipants=
+participants.filter(
+p=>!p.forcedCharacter
+);
+
+const normalCharacters=
+characters.filter(
+c=>!c.modular
+);
+
+const maleParticipants=
+shuffleStable(
+normalParticipants.filter(
+p=>p.gender==="M"
+),
+"MALE-PARTICIPANTS"
+);
+
+const femaleParticipants=
+shuffleStable(
+normalParticipants.filter(
+p=>p.gender==="F"
+),
+"FEMALE-PARTICIPANTS"
+);
+
+const maleCharacters=
+shuffleStable(
+normalCharacters.filter(
+c=>c.gender==="M"
+),
+"MALE-CHARACTERS"
+);
+
+const femaleCharacters=
+shuffleStable(
+normalCharacters.filter(
+c=>c.gender==="F"
+),
+"FEMALE-CHARACTERS"
+);
+
+maleParticipants.forEach(
+(p,i)=>
+assignments[p.id]=
+maleCharacters[i].id
+);
+
+femaleParticipants.forEach(
+(p,i)=>
+assignments[p.id]=
+femaleCharacters[i].id
+);
+
+return assignments;
+
 }
-const CHARACTER_ASSIGNMENTS=createCharacterAssignments();
+
+
+const CHARACTER_ASSIGNMENTS=
+createCharacterAssignments();
+
 
 function createSpecialRoles(){
- const eligible=participants.filter(p=>!p.cannotBeSpecial);
- const shuffled=shuffleStable(eligible,"ASSASSINO-COMPLICE");
- return {assassin:shuffled[0].id,accomplice:shuffled[1].id};
+
+const eligible=
+participants.filter(
+p=>!p.cannotBeSpecial
+);
+
+const shuffled=
+shuffleStable(
+eligible,
+"ASSASSINO-COMPLICE"
+);
+
+return{
+
+assassin:
+shuffled[0].id,
+
+accomplice:
+shuffled[1].id
+
+};
+
 }
-const SPECIAL_ROLES=createSpecialRoles();
+
+
+const SPECIAL_ROLES=
+createSpecialRoles();
+
+
 let currentParticipant=null;
-let registryLiveTimer=null,registryLoading=false;
 
-function nextTestCharacter(participant){
- const order=participant.gender==="F"?FEMALE_TEST_ORDER:MALE_TEST_ORDER;
- const key="villaValentiTestPhotoIndex_"+participant.code;
- let index=Number(localStorage.getItem(key)||"-1");
- index=(index+1)%order.length;
- localStorage.setItem(key,String(index));
- return characters.find(c=>c.id===order[index]);
+let registryLiveTimer=null;
+
+let registryLoading=false;
+
+
+/* ===========================
+   REGIA LIVE
+=========================== */
+
+
+const LIVE_UNLOCK_PATH=
+"gameTest/liveUnlocks";
+
+
+const DEFAULT_LIVE_UNLOCKS={
+
+common1:false,
+
+common2:false,
+
+common3:false,
+
+personal1:false,
+
+personal2:false,
+
+personal3:false,
+
+updatedAt:null
+
+};
+
+
+let liveUnlockState={
+...DEFAULT_LIVE_UNLOCKS
+};
+
+let liveUnlockTimer=null;
+
+let liveUnlockLoading=false;
+
+
+/* ===========================
+   TEST PERSONAGGI
+=========================== */
+
+
+function nextTestCharacter(
+participant
+){
+
+const order=
+participant.gender==="F"
+?
+FEMALE_TEST_ORDER
+:
+MALE_TEST_ORDER;
+
+const key=
+"villaValentiTestPhotoIndex_"+
+participant.code;
+
+let index=
+Number(
+localStorage.getItem(key)
+||
+"-1"
+);
+
+index=
+(index+1)
+%
+order.length;
+
+localStorage.setItem(
+key,
+String(index)
+);
+
+return characters.find(
+c=>c.id===order[index]
+);
+
 }
 
-async function firebaseRequest(path,options={}){
- const response=await fetch(FIREBASE_DB+"/"+path+".json",{cache:"no-store",...options});
- if(!response.ok)throw new Error("Firebase HTTP "+response.status);
- return response.json();
-}
-async function firebaseWrite(path,data,method="PUT"){return firebaseRequest(path,{method,headers:{"Content-Type":"application/json"},body:JSON.stringify(data)})}
 
-async function firebaseDelete(path){
- return firebaseRequest(path,{method:"DELETE"});
+/* ===========================
+   FIREBASE
+=========================== */
+
+
+async function firebaseRequest(
+path,
+options={}
+){
+
+const response=
+await fetch(
+
+FIREBASE_DB+
+"/"+
+path+
+".json",
+
+{
+cache:"no-store",
+...options
 }
+
+);
+
+if(!response.ok){
+
+throw new Error(
+"Firebase HTTP "+
+response.status
+);
+
+}
+
+return response.json();
+
+}
+
+
+async function firebaseWrite(
+path,
+data,
+method="PUT"
+){
+
+return firebaseRequest(
+path,
+{
+
+method,
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:
+JSON.stringify(data)
+
+}
+);
+
+}
+
+
+async function firebaseDelete(
+path
+){
+
+return firebaseRequest(
+path,
+{
+method:"DELETE"
+}
+);
+
+}
+
+
+/* ===========================
+   MIGRAZIONE GIULIA
+=========================== */
+
 
 async function migrateGiuliaTesiniPoveglianoCode(){
- const oldCode="220226";
- const newCode="220225";
- const oldPath="players/"+oldCode+"/public";
- const newPath="players/"+newCode+"/public";
 
- try{
-   const oldRecord=await firebaseRequest(oldPath);
-   const newRecord=await firebaseRequest(newPath);
+const oldCode=
+"220226";
 
-   if(oldRecord){
-     const mergedRecord={
-       ...oldRecord,
-       ...(newRecord||{}),
-       participantId:"giulia_tesini_povegliano",
-       participantName:"Giulia Tesini di Povegliano",
-       code:newCode,
-       migratedFrom:oldCode,
-       migratedAt:new Date().toISOString()
-     };
+const newCode=
+"220225";
 
-     await firebaseWrite(newPath,mergedRecord);
-     await firebaseDelete(oldPath);
+const oldPath=
+"players/"+
+oldCode+
+"/public";
 
-     console.log("Firebase migrato: "+oldCode+" → "+newCode);
-     return;
-   }
+const newPath=
+"players/"+
+newCode+
+"/public";
 
-   if(!newRecord){
-     await firebaseWrite(newPath,{
-       participantId:"giulia_tesini_povegliano",
-       participantName:"Giulia Tesini di Povegliano",
-       code:newCode,
-       assigned:false,
-       migrationReady:true,
-       migratedFrom:oldCode,
-       migratedAt:new Date().toISOString()
-     });
+try{
 
-     console.log("Firebase inizializzato per il nuovo codice "+newCode);
-   }
+const oldRecord=
+await firebaseRequest(
+oldPath
+);
 
- }catch(error){
-   console.error("Allineamento codice Giulia non riuscito:",error);
- }
+const newRecord=
+await firebaseRequest(
+newPath
+);
+
+if(oldRecord){
+
+const mergedRecord={
+
+...oldRecord,
+
+...(newRecord||{}),
+
+participantId:
+"giulia_tesini_povegliano",
+
+participantName:
+"Giulia Tesini di Povegliano",
+
+code:
+newCode,
+
+migratedFrom:
+oldCode,
+
+migratedAt:
+new Date().toISOString()
+
+};
+
+await firebaseWrite(
+newPath,
+mergedRecord
+);
+
+await firebaseDelete(
+oldPath
+);
+
+console.log(
+"Firebase migrato: "+
+oldCode+
+" → "+
+newCode
+);
+
+return;
+
 }
+
+if(!newRecord){
+
+await firebaseWrite(
+newPath,
+{
+
+participantId:
+"giulia_tesini_povegliano",
+
+participantName:
+"Giulia Tesini di Povegliano",
+
+code:
+newCode,
+
+assigned:false,
+
+migrationReady:true,
+
+migratedFrom:
+oldCode,
+
+migratedAt:
+new Date().toISOString()
+
+}
+);
+
+console.log(
+"Firebase inizializzato per il nuovo codice "+
+newCode
+);
+
+}
+
+}catch(error){
+
+console.error(
+"Allineamento codice Giulia non riuscito:",
+error
+);
+
+}
+
+}
+
 
 migrateGiuliaTesiniPoveglianoCode();
 
-async function getOrCreatePlayer(participant,officialCharacter){
- if(TEST_CODES.has(participant.code)){
-   const testCharacter=nextTestCharacter(participant);
-   return {firstAccess:true,data:{characterId:testCharacter.id,characterName:testCharacter.name,characterGender:testCharacter.gender,assigned:true,testMode:true}};
- }
- const path="players/"+participant.code+"/public";
- const stored=await firebaseRequest(path);
- if(stored&&stored.characterId){
-   const lastSeen=new Date().toISOString(),loginCount=Number(stored.loginCount||1)+1;
-   await firebaseWrite(path,{lastSeen,loginCount},"PATCH");
-   return {firstAccess:false,data:{...stored,lastSeen,loginCount}};
- }
- const now=new Date().toISOString();
- const record={characterId:officialCharacter.id,characterName:officialCharacter.name,characterGender:officialCharacter.gender,assigned:true,firstSeen:now,lastSeen:now,loginCount:1};
- await firebaseWrite(path,record);
- return {firstAccess:true,data:record};
+
+/* ===========================
+   GIOCATORE
+=========================== */
+
+
+async function getOrCreatePlayer(
+participant,
+officialCharacter
+){
+
+if(
+TEST_CODES.has(
+participant.code
+)
+){
+
+const testCharacter=
+nextTestCharacter(
+participant
+);
+
+return{
+
+firstAccess:true,
+
+data:{
+
+characterId:
+testCharacter.id,
+
+characterName:
+testCharacter.name,
+
+characterGender:
+testCharacter.gender,
+
+assigned:true,
+
+testMode:true
+
 }
+
+};
+
+}
+
+const path=
+"players/"+
+participant.code+
+"/public";
+
+const stored=
+await firebaseRequest(
+path
+);
+
+if(
+stored &&
+stored.characterId
+){
+
+const lastSeen=
+new Date().toISOString();
+
+const loginCount=
+Number(
+stored.loginCount||1
+)+1;
+
+await firebaseWrite(
+path,
+{
+lastSeen,
+loginCount
+},
+"PATCH"
+);
+
+return{
+
+firstAccess:false,
+
+data:{
+...stored,
+lastSeen,
+loginCount
+}
+
+};
+
+}
+
+const now=
+new Date().toISOString();
+
+const record={
+
+characterId:
+officialCharacter.id,
+
+characterName:
+officialCharacter.name,
+
+characterGender:
+officialCharacter.gender,
+
+assigned:true,
+
+firstSeen:
+now,
+
+lastSeen:
+now,
+
+loginCount:1
+
+};
+
+await firebaseWrite(
+path,
+record
+);
+
+return{
+
+firstAccess:true,
+
+data:
+record
+
+};
+
+}
+
+
+/* ===========================
+   REGISTRO LIVE
+=========================== */
+
 
 function startRegistryLive(){
- stopRegistryLive();
- if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
- loadRegistry();
- registryLiveTimer=setInterval(()=>{if(currentParticipant&&currentParticipant.code===ORGANIZER_CODE)loadRegistry(true);else stopRegistryLive()},1500);
+
+stopRegistryLive();
+
+if(
+!currentParticipant ||
+currentParticipant.code!==
+ORGANIZER_CODE
+)return;
+
+loadRegistry();
+
+registryLiveTimer=
+setInterval(
+()=>{
+
+if(
+currentParticipant &&
+currentParticipant.code===
+ORGANIZER_CODE
+){
+
+loadRegistry(true);
+
+}else{
+
+stopRegistryLive();
+
 }
-function stopRegistryLive(){if(registryLiveTimer!==null){clearInterval(registryLiveTimer);registryLiveTimer=null}}
+
+},
+1500
+);
+
+}
+
+
+function stopRegistryLive(){
+
+if(
+registryLiveTimer!==null
+){
+
+clearInterval(
+registryLiveTimer
+);
+
+registryLiveTimer=null;
+
+}
+
+}
+
+
+/* ===========================
+   INDIZI LIVE
+=========================== */
+
+
+function startLiveUnlocks(){
+
+stopLiveUnlocks();
+
+if(
+!currentParticipant
+)return;
+
+loadLiveUnlocks();
+
+liveUnlockTimer=
+setInterval(
+()=>{
+
+if(
+currentParticipant
+){
+
+loadLiveUnlocks(true);
+
+}else{
+
+stopLiveUnlocks();
+
+}
+
+},
+900
+);
+
+}
+
+
+function stopLiveUnlocks(){
+
+if(
+liveUnlockTimer!==null
+){
+
+clearInterval(
+liveUnlockTimer
+);
+
+liveUnlockTimer=null;
+
+}
+
+}
+
+
+async function loadLiveUnlocks(
+silent=false
+){
+
+if(
+!currentParticipant ||
+liveUnlockLoading
+)return;
+
+liveUnlockLoading=true;
+
+try{
+
+const data=
+await firebaseRequest(
+LIVE_UNLOCK_PATH
+);
+
+liveUnlockState={
+
+...DEFAULT_LIVE_UNLOCKS,
+
+...(data||{})
+
+};
+
+renderLiveUnlocks();
+
+
+const liveStatus=
+document.getElementById(
+"indiziLiveStatus"
+);
+
+if(liveStatus){
+
+liveStatus.textContent=
+"● INDIZI LIVE COLLEGATI · "+
+new Date().toLocaleTimeString(
+"it-IT"
+);
+
+liveStatus.classList.add(
+"online"
+);
+
+}
+
+
+const controlStatus=
+document.getElementById(
+"liveControlConnection"
+);
+
+if(
+controlStatus &&
+currentParticipant.code===
+ORGANIZER_CODE
+){
+
+controlStatus.textContent=
+"● CONTROLLO LIVE COLLEGATO · "+
+new Date().toLocaleTimeString(
+"it-IT"
+);
+
+}
+
+
+}catch(e){
+
+if(!silent){
+
+console.error(
+"Errore indizi live:",
+e
+);
+
+}
+
+const liveStatus=
+document.getElementById(
+"indiziLiveStatus"
+);
+
+if(liveStatus){
+
+liveStatus.textContent=
+"● COLLEGAMENTO INDIZI IN RIPRISTINO…";
+
+}
+
+const controlStatus=
+document.getElementById(
+"liveControlConnection"
+);
+
+if(
+controlStatus &&
+currentParticipant &&
+currentParticipant.code===
+ORGANIZER_CODE
+){
+
+controlStatus.textContent=
+"● CONTROLLO LIVE IN RIPRISTINO…";
+
+}
+
+}finally{
+
+liveUnlockLoading=false;
+
+}
+
+}
+
+
+function renderLiveUnlocks(){
+
+const map=[
+
+[
+"common1",
+"commonClue1",
+"stateCommon1"
+],
+
+[
+"common2",
+"commonClue2",
+"stateCommon2"
+],
+
+[
+"common3",
+"commonClue3",
+"stateCommon3"
+],
+
+[
+"personal1",
+"personalClue1",
+"statePersonal1"
+],
+
+[
+"personal2",
+"personalClue2",
+"statePersonal2"
+],
+
+[
+"personal3",
+"personalClue3",
+"statePersonal3"
+]
+
+];
+
+let any=false;
+
+map.forEach(
+([
+key,
+clueId,
+stateId
+])=>{
+
+const on=
+!!liveUnlockState[key];
+
+any=
+any||on;
+
+
+const clue=
+document.getElementById(
+clueId
+);
+
+if(clue){
+
+clue.classList.toggle(
+"hidden",
+!on
+);
+
+}
+
+
+const stateEl=
+document.getElementById(
+stateId
+);
+
+if(stateEl){
+
+stateEl.textContent=
+on
+?
+"SBLOCCATO"
+:
+"BLOCCATO";
+
+stateEl.classList.toggle(
+"on",
+on
+);
+
+}
+
+}
+);
+
+const empty=
+document.getElementById(
+"noCluesBox"
+);
+
+if(empty){
+
+empty.classList.toggle(
+"hidden",
+any
+);
+
+}
+
+}
+
+
+async function toggleLiveUnlock(
+key
+){
+
+if(
+!currentParticipant ||
+currentParticipant.code!==
+ORGANIZER_CODE
+)return;
+
+const status=
+document.getElementById(
+"liveWriteStatus"
+);
+
+if(status){
+
+status.textContent=
+"INVIO COMANDO…";
+
+}
+
+try{
+
+const next={
+
+...liveUnlockState,
+
+[key]:
+!liveUnlockState[key],
+
+updatedAt:
+new Date().toISOString(),
+
+updatedBy:
+currentParticipant.id
+
+};
+
+await firebaseWrite(
+LIVE_UNLOCK_PATH,
+next
+);
+
+liveUnlockState=
+next;
+
+renderLiveUnlocks();
+
+if(status){
+
+status.textContent=
+"COMANDO INVIATO · "+
+new Date().toLocaleTimeString(
+"it-IT"
+);
+
+}
+
+}catch(e){
+
+console.error(
+"Errore comando Regia:",
+e
+);
+
+if(status){
+
+status.textContent=
+"ERRORE · COMANDO NON INVIATO";
+
+}
+
+}
+
+}
+
+
+async function resetLiveUnlocks(){
+
+if(
+!currentParticipant ||
+currentParticipant.code!==
+ORGANIZER_CODE
+)return;
+
+const status=
+document.getElementById(
+"liveWriteStatus"
+);
+
+if(status){
+
+status.textContent=
+"RESET IN CORSO…";
+
+}
+
+try{
+
+const next={
+
+...DEFAULT_LIVE_UNLOCKS,
+
+updatedAt:
+new Date().toISOString(),
+
+updatedBy:
+currentParticipant.id
+
+};
+
+await firebaseWrite(
+LIVE_UNLOCK_PATH,
+next
+);
+
+liveUnlockState=
+next;
+
+renderLiveUnlocks();
+
+if(status){
+
+status.textContent=
+"TEST RESETTATO · "+
+new Date().toLocaleTimeString(
+"it-IT"
+);
+
+}
+
+}catch(e){
+
+console.error(
+"Errore reset Regia:",
+e
+);
+
+if(status){
+
+status.textContent=
+"ERRORE · RESET NON RIUSCITO";
+
+}
+
+}
+
+}
+
+
+/* ===========================
+   LOGIN
+=========================== */
+
 
 async function login(){
- const input=document.getElementById("codeInput").value.trim();
- const error=document.getElementById("error"); error.textContent="";
- const participant=participants.find(p=>p.code&&p.code===input);
- if(!participant){error.textContent="ACCESSO NEGATO · CODICE NON RICONOSCIUTO";return}
- error.textContent="ACCESSO ALL'ARCHIVIO…";
- try{currentParticipant=participant;await openCharacter(participant);error.textContent=""}
- catch(e){console.error(e);currentParticipant=null;error.textContent="ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA"}
+
+const input=
+document.getElementById(
+"codeInput"
+).value.trim();
+
+const error=
+document.getElementById(
+"error"
+);
+
+error.textContent="";
+
+const participant=
+participants.find(
+p=>
+p.code &&
+p.code===input
+);
+
+if(!participant){
+
+error.textContent=
+"ACCESSO NEGATO · CODICE NON RICONOSCIUTO";
+
+return;
+
 }
 
-async function openCharacter(participant){
- const officialCharacterId=CHARACTER_ASSIGNMENTS[participant.id];
- const officialCharacter=characters.find(c=>c.id===officialCharacterId);
- if(!officialCharacter)throw new Error("Personaggio non trovato");
- const result=await getOrCreatePlayer(participant,officialCharacter);
- const character=characters.find(c=>c.id===result.data.characterId);
- if(!character)throw new Error("Personaggio non valido");
+error.textContent=
+"ACCESSO ALL'ARCHIVIO…";
 
- const greeting=result.firstAccess?"Salve, "+character.name+".":(character.gender==="F"?"Bentornata, ":"Bentornato, ")+character.name+".";
- document.getElementById("loginSection").classList.add("hidden");
- document.getElementById("appSection").classList.remove("hidden");
- document.getElementById("greeting").textContent=greeting;
- document.getElementById("characterName").textContent=character.name;
- document.getElementById("characterRole").textContent=character.role;
- document.getElementById("characterDescription").textContent=character.description;
- document.getElementById("characterAdvice").textContent=character.advice;
- document.getElementById("realUserLabel").textContent="ID: "+participant.name+(result.data.testMode?" · TEST":"");
+try{
 
- const initials=character.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
- const monogram=document.getElementById("characterMonogram");
- const photo=document.getElementById("characterPhoto");
- const photoSrc=PORTRAITS[participant.id]&&PORTRAITS[participant.id][character.id];
- if(photoSrc){
-   photo.src=photoSrc; photo.alt="Ritratto di "+participant.name+" come "+character.name;
-   photo.classList.remove("hidden"); monogram.classList.add("hidden");
- } else {
-   photo.removeAttribute("src"); photo.classList.add("hidden"); monogram.classList.remove("hidden"); monogram.textContent=initials;
- }
+currentParticipant=
+participant;
 
- const secretBox=document.getElementById("secretRoleBox"),secretText=document.getElementById("secretRole");
- secretBox.classList.add("hidden"); secretText.innerHTML="";
- if(!result.data.testMode && participant.id===SPECIAL_ROLES.assassin){
-   secretText.innerHTML="<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti.<br><br>Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
-   secretBox.classList.remove("hidden");
- } else if(!result.data.testMode && participant.id===SPECIAL_ROLES.accomplice){
-   secretText.innerHTML="<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti.<br><br>Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
-   secretBox.classList.remove("hidden");
- }
+await openCharacter(
+participant
+);
 
- const isOrganizer=participant.code===ORGANIZER_CODE;
- document.getElementById("havilandNavBtn").classList.toggle("hidden",!isOrganizer);
- document.getElementById("havilandMobileBtn").classList.toggle("hidden",!isOrganizer);
- document.getElementById("mobileNav").classList.toggle("three",isOrganizer);
- if(isOrganizer)startRegistryLive();else stopRegistryLive();
- openTab("dossier"); speakGreeting(greeting);
+error.textContent="";
+
+}catch(e){
+
+console.error(e);
+
+currentParticipant=null;
+
+error.textContent=
+"ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA";
+
 }
+
+}
+
+
+/* ===========================
+   APERTURA DOSSIER
+=========================== */
+
+
+async function openCharacter(
+participant
+){
+
+const officialCharacterId=
+CHARACTER_ASSIGNMENTS[
+participant.id
+];
+
+const officialCharacter=
+characters.find(
+c=>
+c.id===
+officialCharacterId
+);
+
+if(!officialCharacter){
+
+throw new Error(
+"Personaggio non trovato"
+);
+
+}
+
+const result=
+await getOrCreatePlayer(
+participant,
+officialCharacter
+);
+
+const character=
+characters.find(
+c=>
+c.id===
+result.data.characterId
+);
+
+if(!character){
+
+throw new Error(
+"Personaggio non valido"
+);
+
+}
+
+
+const greeting=
+result.firstAccess
+?
+"Salve, "+
+character.name+
+"."
+:
+(
+character.gender==="F"
+?
+"Bentornata, "
+:
+"Bentornato, "
+)
++
+character.name+
+".";
+
+
+document.getElementById(
+"loginSection"
+).classList.add(
+"hidden"
+);
+
+document.getElementById(
+"appSection"
+).classList.remove(
+"hidden"
+);
+
+document.getElementById(
+"greeting"
+).textContent=
+greeting;
+
+document.getElementById(
+"characterName"
+).textContent=
+character.name;
+
+document.getElementById(
+"characterRole"
+).textContent=
+character.role;
+
+document.getElementById(
+"characterDescription"
+).textContent=
+character.description;
+
+document.getElementById(
+"characterAdvice"
+).textContent=
+character.advice;
+
+document.getElementById(
+"realUserLabel"
+).textContent=
+"ID: "+
+participant.name+
+(
+result.data.testMode
+?
+" · TEST"
+:
+""
+);
+
+
+const initials=
+character.name
+.split(" ")
+.map(
+p=>p[0]
+)
+.join("")
+.slice(0,2)
+.toUpperCase();
+
+
+const monogram=
+document.getElementById(
+"characterMonogram"
+);
+
+const photo=
+document.getElementById(
+"characterPhoto"
+);
+
+
+const photoSrc=
+PORTRAITS[
+participant.id
+]
+&&
+PORTRAITS[
+participant.id
+][
+character.id
+];
+
+
+if(photoSrc){
+
+photo.src=
+photoSrc;
+
+photo.alt=
+"Ritratto di "+
+participant.name+
+" come "+
+character.name;
+
+photo.classList.remove(
+"hidden"
+);
+
+monogram.classList.add(
+"hidden"
+);
+
+}else{
+
+photo.removeAttribute(
+"src"
+);
+
+photo.classList.add(
+"hidden"
+);
+
+monogram.classList.remove(
+"hidden"
+);
+
+monogram.textContent=
+initials;
+
+}
+
+
+const secretBox=
+document.getElementById(
+"secretRoleBox"
+);
+
+const secretText=
+document.getElementById(
+"secretRole"
+);
+
+secretBox.classList.add(
+"hidden"
+);
+
+secretText.innerHTML="";
+
+
+if(
+!result.data.testMode &&
+participant.id===
+SPECIAL_ROLES.assassin
+){
+
+secretText.innerHTML=
+"<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>"+
+"Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti."+
+"<br><br>"+
+"Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
+
+secretBox.classList.remove(
+"hidden"
+);
+
+}else if(
+!result.data.testMode &&
+participant.id===
+SPECIAL_ROLES.accomplice
+){
+
+secretText.innerHTML=
+"<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>"+
+"Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti."+
+"<br><br>"+
+"Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
+
+secretBox.classList.remove(
+"hidden"
+);
+
+}
+
+
+const isOrganizer=
+participant.code===
+ORGANIZER_CODE;
+
+
+document.getElementById(
+"havilandNavBtn"
+).classList.toggle(
+"hidden",
+!isOrganizer
+);
+
+document.getElementById(
+"havilandMobileBtn"
+).classList.toggle(
+"hidden",
+!isOrganizer
+);
+
+document.getElementById(
+"mobileNav"
+).classList.toggle(
+"three",
+isOrganizer
+);
+
+
+if(isOrganizer){
+
+startRegistryLive();
+
+}else{
+
+stopRegistryLive();
+
+}
+
+
+startLiveUnlocks();
+
+
+openTab(
+"dossier"
+);
+
+speakGreeting(
+greeting
+);
+
+}
+
+
+/* ===========================
+   LOGOUT
+=========================== */
+
 
 function logout(){
- stopRegistryLive();currentParticipant=null;
- document.getElementById("appSection").classList.add("hidden");
- document.getElementById("loginSection").classList.remove("hidden");
- document.getElementById("codeInput").value="";
- document.getElementById("error").textContent="";
- openTab("dossier");
+
+stopRegistryLive();
+
+stopLiveUnlocks();
+
+currentParticipant=null;
+
+liveUnlockState={
+...DEFAULT_LIVE_UNLOCKS
+};
+
+renderLiveUnlocks();
+
+document.getElementById(
+"appSection"
+).classList.add(
+"hidden"
+);
+
+document.getElementById(
+"loginSection"
+).classList.remove(
+"hidden"
+);
+
+document.getElementById(
+"codeInput"
+).value="";
+
+document.getElementById(
+"error"
+).textContent="";
+
+openTab(
+"dossier"
+);
+
 }
 
-function openTab(tabName){
- if(tabName==="haviland"&&(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE))tabName="dossier";
- document.querySelectorAll(".tab-page").forEach(p=>p.classList.add("hidden"));
- const page=document.getElementById("tab-"+tabName);if(page)page.classList.remove("hidden");
- document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tabName));
- document.querySelectorAll(".mobile-nav button").forEach(b=>b.classList.toggle("active",b.dataset.mobileTab===tabName));
- if(tabName==="haviland"&&currentParticipant&&currentParticipant.code===ORGANIZER_CODE)loadRegistry(true);
- window.scrollTo({top:0,behavior:"smooth"});
+
+/* ===========================
+   NAVIGAZIONE
+=========================== */
+
+
+function openTab(
+tabName
+){
+
+if(
+tabName==="haviland"
+&&
+(
+!currentParticipant
+||
+currentParticipant.code!==
+ORGANIZER_CODE
+)
+){
+
+tabName=
+"dossier";
+
 }
 
-function speakGreeting(text){
- if(!("speechSynthesis" in window))return;
- try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="it-IT";u.rate=.86;u.pitch=.82;u.volume=1;speechSynthesis.speak(u)}catch(e){console.error("Errore voce:",e)}
+
+document
+.querySelectorAll(
+".tab-page"
+)
+.forEach(
+p=>
+p.classList.add(
+"hidden"
+)
+);
+
+
+const page=
+document.getElementById(
+"tab-"+tabName
+);
+
+if(page){
+
+page.classList.remove(
+"hidden"
+);
+
 }
 
-async function loadRegistry(silent=false){
- if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE||registryLoading)return;
- registryLoading=true;const status=document.getElementById("registryStatus"),rows=document.getElementById("registryRows");
- if(!silent)status.textContent="AGGIORNAMENTO REGISTRO…";
- try{
-   const allPlayers=await firebaseRequest("players")||{};
-   const fragment=document.createDocumentFragment();
-   participants.filter(p=>p.code).forEach(p=>{
-     const node=allPlayers[p.code],record=node&&node.public?node.public:null,row=document.createElement("div");
-     row.className="registry-row";
-     const characterName=record&&record.characterName?record.characterName:"—";
-     const accessStatus=record&&record.assigned?'<span class="ok">✓ Accesso effettuato</span>':'<span class="pending">○ Non ancora assegnato</span>';
-     row.innerHTML="<div><strong>"+escapeHtml(p.name)+"</strong></div><div>"+escapeHtml(characterName)+"</div><div>"+accessStatus+"</div>";
-     fragment.appendChild(row);
-   });
-   rows.replaceChildren(fragment);status.textContent="";
- }catch(e){console.error("Errore Registro Villa:",e);status.textContent="IMPOSSIBILE CARICARE IL REGISTRO VILLA"}
- finally{registryLoading=false}
+
+document
+.querySelectorAll(
+".nav-btn"
+)
+.forEach(
+b=>
+b.classList.toggle(
+"active",
+b.dataset.tab===
+tabName
+)
+);
+
+
+document
+.querySelectorAll(
+".mobile-nav button"
+)
+.forEach(
+b=>
+b.classList.toggle(
+"active",
+b.dataset.mobileTab===
+tabName
+)
+);
+
+
+if(
+tabName==="haviland"
+&&
+currentParticipant
+&&
+currentParticipant.code===
+ORGANIZER_CODE
+){
+
+loadRegistry(true);
+
+loadLiveUnlocks(true);
+
 }
 
-function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c])}
-function havilandPlaceholder(){alert("Haviland è pronto. La voce Julian e i comandi della serata verranno collegati nella versione finale.")}
-document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible"&&currentParticipant&&currentParticipant.code===ORGANIZER_CODE)loadRegistry(true)});
-document.getElementById("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+
+if(
+tabName==="indizi"
+&&
+currentParticipant
+){
+
+loadLiveUnlocks(true);
+
+}
+
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+
+/* ===========================
+   VOCE
+=========================== */
+
+
+function speakGreeting(
+text
+){
+
+if(
+!("speechSynthesis" in window)
+)return;
+
+try{
+
+speechSynthesis.cancel();
+
+const u=
+new SpeechSynthesisUtterance(
+text
+);
+
+u.lang=
+"it-IT";
+
+u.rate=
+.86;
+
+u.pitch=
+.82;
+
+u.volume=
+1;
+
+speechSynthesis.speak(
+u
+);
+
+}catch(e){
+
+console.error(
+"Errore voce:",
+e
+);
+
+}
+
+}
+
+
+/* ===========================
+   REGISTRO
+=========================== */
+
+
+async function loadRegistry(
+silent=false
+){
+
+if(
+!currentParticipant
+||
+currentParticipant.code!==
+ORGANIZER_CODE
+||
+registryLoading
+)return;
+
+
+registryLoading=true;
+
+
+const status=
+document.getElementById(
+"registryStatus"
+);
+
+const rows=
+document.getElementById(
+"registryRows"
+);
+
+
+if(!silent){
+
+status.textContent=
+"AGGIORNAMENTO REGISTRO…";
+
+}
+
+
+try{
+
+const allPlayers=
+await firebaseRequest(
+"players"
+)
+||{};
+
+
+const fragment=
+document.createDocumentFragment();
+
+
+participants
+.filter(
+p=>p.code
+)
+.forEach(
+p=>{
+
+const node=
+allPlayers[
+p.code
+];
+
+const record=
+node &&
+node.public
+?
+node.public
+:
+null;
+
+
+const row=
+document.createElement(
+"div"
+);
+
+row.className=
+"registry-row";
+
+
+const characterName=
+record &&
+record.characterName
+?
+record.characterName
+:
+"—";
+
+
+const accessStatus=
+record &&
+record.assigned
+?
+'<span class="ok">✓ Accesso effettuato</span>'
+:
+'<span class="pending">○ Non ancora assegnato</span>';
+
+
+row.innerHTML=
+
+"<div><strong>"+
+escapeHtml(
+p.name
+)+
+"</strong></div>"+
+"<div>"+
+escapeHtml(
+characterName
+)+
+"</div>"+
+"<div>"+
+accessStatus+
+"</div>";
+
+
+fragment.appendChild(
+row
+);
+
+}
+);
+
+
+rows.replaceChildren(
+fragment
+);
+
+status.textContent="";
+
+
+}catch(e){
+
+console.error(
+"Errore Registro Villa:",
+e
+);
+
+status.textContent=
+"IMPOSSIBILE CARICARE IL REGISTRO VILLA";
+
+}finally{
+
+registryLoading=false;
+
+}
+
+}
+
+
+/* ===========================
+   UTILITY
+=========================== */
+
+
+function escapeHtml(
+value
+){
+
+return String(
+value
+).replace(
+/[&<>"']/g,
+c=>(
+{
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}
+)[c]
+);
+
+}
+
+
+function havilandPlaceholder(){
+
+alert(
+"Haviland è pronto. "+
+"La voce Julian e i comandi della serata "+
+"verranno collegati nella versione finale."
+);
+
+}
+
+
+/* ===========================
+   EVENTI
+=========================== */
+
+
+document.addEventListener(
+"visibilitychange",
+()=>{
+
+if(
+document.visibilityState===
+"visible"
+&&
+currentParticipant
+){
+
+loadLiveUnlocks(true);
+
+if(
+currentParticipant.code===
+ORGANIZER_CODE
+){
+
+loadRegistry(true);
+
+}
+
+}
+
+}
+);
+
+
+document
+.getElementById(
+"codeInput"
+)
+.addEventListener(
+"keydown",
+e=>{
+
+if(
+e.key===
+"Enter"
+){
+
+login();
+
+}
+
+}
+);
+
+
+renderLiveUnlocks();
+
 </script>
+
 </body>
 </html>
