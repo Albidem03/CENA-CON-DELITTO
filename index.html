@@ -4,6 +4,45 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#120d09">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script>
+/* AGGIORNAMENTO AUTOMATICO — stesso link, sempre ultima versione */
+(function(){
+  function hashText(str){
+    let h=2166136261;
+    for(let i=0;i<str.length;i++){
+      h^=str.charCodeAt(i);
+      h=Math.imul(h,16777619);
+    }
+    return (h>>>0).toString(36);
+  }
+
+  async function checkLatestVersion(){
+    try{
+      const checkUrl=new URL('index.html',window.location.href);
+      checkUrl.searchParams.set('__fresh',Date.now().toString());
+      const res=await fetch(checkUrl.toString(),{cache:'no-store'});
+      if(!res.ok)return;
+      const freshHtml=await res.text();
+      const latestVersion=hashText(freshHtml);
+      const currentUrl=new URL(window.location.href);
+      const currentVersion=currentUrl.searchParams.get('v');
+
+      if(currentVersion!==latestVersion){
+        currentUrl.searchParams.set('v',latestVersion);
+        currentUrl.searchParams.delete('__fresh');
+        window.location.replace(currentUrl.toString());
+      }
+    }catch(e){
+      /* Se il controllo rete fallisce, il sito continua normalmente. */
+    }
+  }
+
+  checkLatestVersion();
+})();
+</script>
 <title>Villa Valenti — Archivio Riservato</title>
 <style>
 :root{--gold:#d0b77c;--line:rgba(188,157,104,.35);--ink:#221a13}
@@ -86,122 +125,49 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 }
 </style>
 </head>
-
 <body>
-
 <section id="loginSection" class="login-shell">
 <div class="login-dossier">
-<div class="login-top">
-<div class="crest">VV</div>
-<div class="eyebrow">Archivio Villa Valenti</div>
-<h1>Accesso Riservato</h1>
-<div class="subtitle">Cena con delitto · 31 ottobre 2026</div>
-</div>
-
-<div class="paper-wrap">
-<div class="paper">
+<div class="login-top"><div class="crest">VV</div><div class="eyebrow">Archivio Villa Valenti</div><h1>Accesso Riservato</h1><div class="subtitle">Cena con delitto · 31 ottobre 2026</div></div>
+<div class="paper-wrap"><div class="paper">
 <div class="paper-heading">Identificazione richiesta</div>
-<div class="paper-copy">
-Inserisci il codice personale ricevuto con il tuo invito.
-<br>
-Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.
-</div>
-
-<div class="code-row">
-<input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000">
-<button class="enter-btn" onclick="login()">APRI DOSSIER</button>
-</div>
-
+<div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
+<div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
-
-<div class="test-note">
-MODALITÀ TEST FOTO COMPLETA: tutti i codici cambiano personaggio e ritratto a ogni nuovo accesso, restando nel proprio gruppo maschile/femminile.
-</div>
-
-</div>
-</div>
-</div>
+<div class="test-note">MODALITÀ TEST FOTO COMPLETA: tutti i codici cambiano personaggio e ritratto a ogni nuovo accesso, restando nel proprio gruppo maschile/femminile.</div>
+</div></div></div>
 </section>
 
-<section id="appSection" class="hidden">
-<div class="app">
-
-<header class="topbar">
-<div class="brand">
-<strong>Archivio Villa Valenti</strong>
-<span>Accesso autenticato</span>
-</div>
-<button onclick="logout()">CHIUDI DOSSIER</button>
-</header>
-
+<section id="appSection" class="hidden"><div class="app">
+<header class="topbar"><div class="brand"><strong>Archivio Villa Valenti</strong><span>Accesso autenticato</span></div><button onclick="logout()">CHIUDI DOSSIER</button></header>
 <div class="layout">
-
 <aside class="sidebar">
 <button class="nav-btn active" data-tab="dossier" onclick="openTab('dossier')">▣ Dossier personale</button>
 <button class="nav-btn" data-tab="indizi" onclick="openTab('indizi')">⌕ Indizi</button>
 <button id="havilandNavBtn" class="nav-btn hidden" data-tab="haviland" onclick="openTab('haviland')">◉ Haviland / Regia</button>
-<div class="status">
-● SESSIONE ATTIVA
-<div id="realUserLabel" style="margin-top:7px"></div>
-</div>
+<div class="status">● SESSIONE ATTIVA<div id="realUserLabel" style="margin-top:7px"></div></div>
 </aside>
-
 <main>
-
-<div class="case">
-<div>
-<small>FASCICOLO</small>
-<div class="case-title">Il Dossier Scomparso</div>
-</div>
-<div class="stamp">RISERVATO</div>
-</div>
+<div class="case"><div><small>FASCICOLO</small><div class="case-title">Il Dossier Scomparso</div></div><div class="stamp">RISERVATO</div></div>
 
 <section id="tab-dossier" class="tab-page">
 <div class="dossier-grid">
-
-<div class="folder">
-<article class="portrait-card">
-<div class="portrait">
-<img id="characterPhoto" class="hidden" alt="Ritratto personaggio">
-<div id="characterMonogram" class="monogram">VV</div>
-</div>
-<div id="characterName" class="char-name"></div>
-<div id="characterRole" class="char-role"></div>
-</article>
-</div>
-
+<div class="folder"><article class="portrait-card">
+<div class="portrait"><img id="characterPhoto" class="hidden" alt="Ritratto personaggio"><div id="characterMonogram" class="monogram">VV</div></div>
+<div id="characterName" class="char-name"></div><div id="characterRole" class="char-role"></div>
+</article></div>
 <div class="stack">
-
-<article class="sheet">
-<div class="section-title">Profilo</div>
-<div id="greeting" class="paper-text" style="font-weight:700;margin-bottom:12px"></div>
-<div id="characterDescription" class="paper-text"></div>
-</article>
-
-<article class="sheet">
-<div class="section-title">Indicazioni di comportamento</div>
-<div id="characterAdvice" class="paper-text"></div>
-</article>
-
-<article id="secretRoleBox" class="sheet secret hidden">
-<div class="section-title">Documento personale riservato</div>
-<div id="secretRole" class="paper-text"></div>
-</article>
-
-</div>
-</div>
-</section>
+<article class="sheet"><div class="section-title">Profilo</div><div id="greeting" class="paper-text" style="font-weight:700;margin-bottom:12px"></div><div id="characterDescription" class="paper-text"></div></article>
+<article class="sheet"><div class="section-title">Indicazioni di comportamento</div><div id="characterAdvice" class="paper-text"></div></article>
+<article id="secretRoleBox" class="sheet secret hidden"><div class="section-title">Documento personale riservato</div><div id="secretRole" class="paper-text"></div></article>
+</div></div></section>
 
 <section id="tab-indizi" class="tab-page hidden">
 <div class="evidence">
-
 <div id="indiziLiveStatus" class="indizi-live-status">● COLLEGAMENTO INDIZI LIVE</div>
-
 <article id="noCluesBox" class="sheet">
 <div class="section-title">Archivio indizi</div>
-<div class="paper-text">
-Nessun nuovo documento è stato reso disponibile. Gli indizi compariranno qui durante la serata.
-</div>
+<div class="paper-text">Nessun nuovo documento è stato reso disponibile. Gli indizi compariranno qui durante la serata.</div>
 </article>
 
 <article id="commonClue1" class="sheet hidden">
@@ -209,13 +175,11 @@ Nessun nuovo documento è stato reso disponibile. Gli indizi compariranno qui du
 <div class="section-title">Indizio comune 1</div>
 <div class="paper-text">Documento di prova sbloccato in diretta dalla Regia.</div>
 </article>
-
 <article id="commonClue2" class="sheet hidden">
 <div class="clue-test-label">CONTENUTO DI PROVA</div>
 <div class="section-title">Indizio comune 2</div>
 <div class="paper-text">Secondo documento di prova sbloccato in diretta dalla Regia.</div>
 </article>
-
 <article id="commonClue3" class="sheet hidden">
 <div class="clue-test-label">CONTENUTO DI PROVA</div>
 <div class="section-title">Indizio comune 3</div>
@@ -225,161 +189,74 @@ Nessun nuovo documento è stato reso disponibile. Gli indizi compariranno qui du
 <article id="personalClue1" class="sheet personal-test hidden">
 <div class="clue-test-label">CONTENUTO PERSONALE DI PROVA</div>
 <div class="section-title">Informazione personale 1</div>
-<div class="paper-text">
-Blocco personale di prova disponibile. Nella versione definitiva qui comparirà esclusivamente l'informazione destinata al personaggio collegato.
-</div>
+<div class="paper-text">Blocco personale di prova disponibile. Nella versione definitiva qui comparirà esclusivamente l'informazione destinata al personaggio collegato.</div>
 </article>
-
 <article id="personalClue2" class="sheet personal-test hidden">
 <div class="clue-test-label">CONTENUTO PERSONALE DI PROVA</div>
 <div class="section-title">Informazione personale 2</div>
 <div class="paper-text">Secondo blocco personale di prova disponibile.</div>
 </article>
-
 <article id="personalClue3" class="sheet personal-test hidden">
 <div class="clue-test-label">CONTENUTO PERSONALE DI PROVA</div>
 <div class="section-title">Informazione personale 3</div>
 <div class="paper-text">Terzo blocco personale di prova disponibile.</div>
 </article>
-
 </div>
 </section>
 
 <section id="tab-haviland" class="tab-page hidden">
 <div class="haviland">
-
 <h2>Haviland — Regia Villa</h2>
-
-<p>
-Pannello privato riservato all'organizzatore. Qui collegheremo i comandi vocali e gli annunci definitivi.
-</p>
-
+<p>Pannello privato riservato all'organizzatore. Qui collegheremo i comandi vocali e gli annunci definitivi.</p>
 <button class="action-btn" onclick="havilandPlaceholder()">ATTIVA MICROFONO</button>
 
 <div class="live-control">
-
 <h2>Regia indizi — Test live</h2>
-
-<div class="live-control-copy">
-Questi pulsanti usano contenuti neutri di prova. Premendo SBLOCCA, il documento compare automaticamente nella sezione Indizi di tutti i dispositivi già collegati, senza uscire e rientrare.
-</div>
-
+<div class="live-control-copy">Questi pulsanti usano contenuti neutri di prova. Premendo SBLOCCA, il documento compare automaticamente nella sezione Indizi di tutti i dispositivi già collegati, senza uscire e rientrare.</div>
 <div id="liveControlConnection" class="live-status">● CONTROLLO LIVE</div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line)">Indizi comuni</div>
-
 <div class="control-grid">
-<div class="control-card">
-<strong>Indizio comune 1</strong>
-<div id="stateCommon1" class="control-state">BLOCCATO</div>
-<button onclick="toggleLiveUnlock('common1')">SBLOCCA / BLOCCA</button>
+<div class="control-card"><strong>Indizio comune 1</strong><div id="stateCommon1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common1')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 2</strong><div id="stateCommon2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common2')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 3</strong><div id="stateCommon3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common3')">SBLOCCA / BLOCCA</button></div>
 </div>
 
-<div class="control-card">
-<strong>Indizio comune 2</strong>
-<div id="stateCommon2" class="control-state">BLOCCATO</div>
-<button onclick="toggleLiveUnlock('common2')">SBLOCCA / BLOCCA</button>
-</div>
-
-<div class="control-card">
-<strong>Indizio comune 3</strong>
-<div id="stateCommon3" class="control-state">BLOCCATO</div>
-<button onclick="toggleLiveUnlock('common3')">SBLOCCA / BLOCCA</button>
-</div>
-</div>
-
-<div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">
-Indizi personali
-</div>
-
+<div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Indizi personali</div>
 <div class="control-grid">
-
-<div class="control-card">
-<strong>Blocco personale 1</strong>
-<div id="statePersonal1" class="control-state">BLOCCATO</div>
-<button onclick="toggleLiveUnlock('personal1')">SBLOCCA / BLOCCA</button>
-</div>
-
-<div class="control-card">
-<strong>Blocco personale 2</strong>
-<div id="statePersonal2" class="control-state">BLOCCATO</div>
-<button onclick="toggleLiveUnlock('personal2')">SBLOCCA / BLOCCA</button>
-</div>
-
-<div class="control-card">
-<strong>Blocco personale 3</strong>
-<div id="statePersonal3" class="control-state">BLOCCATO</div>
-<button onclick="toggleLiveUnlock('personal3')">SBLOCCA / BLOCCA</button>
-</div>
-
+<div class="control-card"><strong>Blocco personale 1</strong><div id="statePersonal1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal1')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 2</strong><div id="statePersonal2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal2')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 3</strong><div id="statePersonal3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal3')">SBLOCCA / BLOCCA</button></div>
 </div>
 
 <button class="reset-live-btn" onclick="resetLiveUnlocks()">RESET TEST INDIZI</button>
-
 <div id="liveWriteStatus" class="live-write-status"></div>
-
 </div>
 
-<div class="registry">
-<h2>Registro Villa</h2>
-<div id="registryLiveStatus" class="live-status">● REGISTRO LIVE</div>
-<div id="registryStatus">Caricamento registro…</div>
-<div id="registryRows" class="registry-grid"></div>
-</div>
-
+<div class="registry"><h2>Registro Villa</h2><div id="registryLiveStatus" class="live-status">● REGISTRO LIVE</div><div id="registryStatus">Caricamento registro…</div><div id="registryRows" class="registry-grid"></div></div>
 </div>
 </section>
 
-</main>
-</div>
-</div>
-
+</main></div></div>
 <nav id="mobileNav" class="mobile-nav">
 <button class="active" data-mobile-tab="dossier" onclick="openTab('dossier')">DOSSIER</button>
 <button data-mobile-tab="indizi" onclick="openTab('indizi')">INDIZI</button>
 <button id="havilandMobileBtn" class="hidden" data-mobile-tab="haviland" onclick="openTab('haviland')">REGIA</button>
-</nav>
-
-</section>
-
-<script src="portraits_01.js"></script>
-<script src="portraits_02.js"></script>
-<script src="portraits_03.js"></script>
-<script src="portraits_04.js"></script>
-<script src="portraits_05.js"></script>
-<script src="portraits_06.js"></script>
-<script src="portraits_07.js"></script>
-<script src="portraits_08.js"></script>
-<script src="portraits_09.js"></script>
-<script src="portraits_10.js"></script>
+</nav></section>
 
 <script>
-
+/* CACHE-BUSTING RITRATTI — usa automaticamente la versione della pagina */
+(function(){
+  const pageVersion=new URLSearchParams(window.location.search).get('v')||Date.now().toString(36);
+  ['01','02','03','04'].forEach(function(n){
+    document.write('<script src="portraits_'+n+'.js?v='+encodeURIComponent(pageVersion)+'"><\/script>');
+  });
+})();
+</script>
+<script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-
-const TEST_CODES=new Set([
-"321023",
-"290604",
-"240383",
-"141019",
-"190797",
-"949699",
-"140918",
-"900750",
-"170504",
-"122906",
-"347106",
-"319903",
-"248842",
-"265069",
-"111111",
-"220225",
-"150704",
-"535506",
-"240322",
-"230704"
-]);
+const TEST_CODES=new Set(["321023", "290604", "240383", "141019", "190797", "949699", "140918", "900750", "170504", "122906", "347106", "319903", "248842", "265069", "111111", "220225", "150704", "535506", "240322", "230704"]);
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -428,1264 +305,357 @@ const characters=[
 ];
 
 const PORTRAITS=window.PORTRAITS||{};
-
-const MALE_TEST_ORDER=[
-"ettore_valenti",
-"ludovico_orsini",
-"corrado_de_marchi",
-"leone_de_marchi",
-"dorian_ferretti",
-"tancredi_moreau",
-"marcello_albrizzi",
-"cesare_valli",
-"adriano_conti",
-"elia_neroni",
-"ottavio_serra"
-];
-
-const FEMALE_TEST_ORDER=[
-"lavinia_valenti",
-"celeste_valenti",
-"ofelia_de_marchi",
-"viola_neroni",
-"eva_montorsi",
-"bianca_albrizzi",
-"emilia_riva",
-"ginevra_ferretti",
-"isabella_roversi"
-];
+const MALE_TEST_ORDER=["ettore_valenti","ludovico_orsini","corrado_de_marchi","leone_de_marchi","dorian_ferretti","tancredi_moreau","marcello_albrizzi","cesare_valli","adriano_conti","elia_neroni","ottavio_serra"];
+const FEMALE_TEST_ORDER=["lavinia_valenti","celeste_valenti","ofelia_de_marchi","viola_neroni","eva_montorsi","bianca_albrizzi","emilia_riva","ginevra_ferretti","isabella_roversi"];
 
 const GAME_SEED="VILLA-VALENTI-2026-DOSSIER-V2";
-
-function hashString(str){
-let h=2166136261;
-for(let i=0;i<str.length;i++){
-h^=str.charCodeAt(i);
-h=Math.imul(h,16777619);
-}
-return h>>>0;
-}
-
-function seededRandom(seed){
-let value=seed>>>0;
-return function(){
-value+=0x6D2B79F5;
-let t=value;
-t=Math.imul(t^(t>>>15),t|1);
-t^=t+Math.imul(t^(t>>>7),t|61);
-return((t^(t>>>14))>>>0)/4294967296;
-};
-}
-
-function shuffleStable(array,seedText){
-const result=[...array];
-const random=seededRandom(hashString(GAME_SEED+"|"+seedText));
-
-for(let i=result.length-1;i>0;i--){
-const j=Math.floor(random()*(i+1));
-[result[i],result[j]]=[result[j],result[i]];
-}
-
-return result;
-}
+function hashString(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function seededRandom(seed){let value=seed>>>0;return function(){value+=0x6D2B79F5;let t=value;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}}
+function shuffleStable(array,seedText){const result=[...array];const random=seededRandom(hashString(GAME_SEED+"|"+seedText));for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]]}return result}
 
 function createCharacterAssignments(){
-const assignments={};
-const normalParticipants=participants.filter(p=>!p.forcedCharacter);
-const normalCharacters=characters.filter(c=>!c.modular);
-
-const maleParticipants=shuffleStable(
-normalParticipants.filter(p=>p.gender==="M"),
-"MALE-PARTICIPANTS"
-);
-
-const femaleParticipants=shuffleStable(
-normalParticipants.filter(p=>p.gender==="F"),
-"FEMALE-PARTICIPANTS"
-);
-
-const maleCharacters=shuffleStable(
-normalCharacters.filter(c=>c.gender==="M"),
-"MALE-CHARACTERS"
-);
-
-const femaleCharacters=shuffleStable(
-normalCharacters.filter(c=>c.gender==="F"),
-"FEMALE-CHARACTERS"
-);
-
-maleParticipants.forEach((p,i)=>assignments[p.id]=maleCharacters[i].id);
-femaleParticipants.forEach((p,i)=>assignments[p.id]=femaleCharacters[i].id);
-
-return assignments;
+ const assignments={};
+ const normalParticipants=participants.filter(p=>!p.forcedCharacter);
+ const normalCharacters=characters.filter(c=>!c.modular);
+ const maleParticipants=shuffleStable(normalParticipants.filter(p=>p.gender==="M"),"MALE-PARTICIPANTS");
+ const femaleParticipants=shuffleStable(normalParticipants.filter(p=>p.gender==="F"),"FEMALE-PARTICIPANTS");
+ const maleCharacters=shuffleStable(normalCharacters.filter(c=>c.gender==="M"),"MALE-CHARACTERS");
+ const femaleCharacters=shuffleStable(normalCharacters.filter(c=>c.gender==="F"),"FEMALE-CHARACTERS");
+ maleParticipants.forEach((p,i)=>assignments[p.id]=maleCharacters[i].id);
+ femaleParticipants.forEach((p,i)=>assignments[p.id]=femaleCharacters[i].id);
+ return assignments;
 }
-
 const CHARACTER_ASSIGNMENTS=createCharacterAssignments();
 
 function createSpecialRoles(){
-const eligible=participants.filter(p=>!p.cannotBeSpecial);
-const shuffled=shuffleStable(eligible,"ASSASSINO-COMPLICE");
-
-return{
-assassin:shuffled[0].id,
-accomplice:shuffled[1].id
-};
+ const eligible=participants.filter(p=>!p.cannotBeSpecial);
+ const shuffled=shuffleStable(eligible,"ASSASSINO-COMPLICE");
+ return {assassin:shuffled[0].id,accomplice:shuffled[1].id};
 }
-
 const SPECIAL_ROLES=createSpecialRoles();
 
 const LIVE_UNLOCK_PATH="gameTest/liveUnlocks";
-
-const DEFAULT_LIVE_UNLOCKS={
-common1:false,
-common2:false,
-common3:false,
-personal1:false,
-personal2:false,
-personal3:false,
-updatedAt:null
-};
-
+const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
 let liveUnlockLoading=false;
 
 let currentParticipant=null;
-let registryLiveTimer=null;
-let registryLoading=false;
+let registryLiveTimer=null,registryLoading=false;
 
 function nextTestCharacter(participant){
-const order=participant.gender==="F"?FEMALE_TEST_ORDER:MALE_TEST_ORDER;
-const key="villaValentiTestPhotoIndex_"+participant.code;
-
-let index=Number(localStorage.getItem(key)||"-1");
-
-index=(index+1)%order.length;
-
-localStorage.setItem(key,String(index));
-
-return characters.find(c=>c.id===order[index]);
+ const order=participant.gender==="F"?FEMALE_TEST_ORDER:MALE_TEST_ORDER;
+ const key="villaValentiTestPhotoIndex_"+participant.code;
+ let index=Number(localStorage.getItem(key)||"-1");
+ index=(index+1)%order.length;
+ localStorage.setItem(key,String(index));
+ return characters.find(c=>c.id===order[index]);
 }
 
 async function firebaseRequest(path,options={}){
-const response=await fetch(
-FIREBASE_DB+"/"+path+".json",
-{
-cache:"no-store",
-...options
+ const response=await fetch(FIREBASE_DB+"/"+path+".json",{cache:"no-store",...options});
+ if(!response.ok)throw new Error("Firebase HTTP "+response.status);
+ return response.json();
 }
-);
-
-if(!response.ok){
-throw new Error("Firebase HTTP "+response.status);
-}
-
-return response.json();
-}
-
-async function firebaseWrite(path,data,method="PUT"){
-return firebaseRequest(
-path,
-{
-method,
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify(data)
-}
-);
-}
+async function firebaseWrite(path,data,method="PUT"){return firebaseRequest(path,{method,headers:{"Content-Type":"application/json"},body:JSON.stringify(data)})}
 
 async function firebaseDelete(path){
-return firebaseRequest(
-path,
-{
-method:"DELETE"
-}
-);
+ return firebaseRequest(path,{method:"DELETE"});
 }
 
 async function migrateGiuliaTesiniPoveglianoCode(){
+ const oldCode="220226";
+ const newCode="220225";
+ const oldPath="players/"+oldCode+"/public";
+ const newPath="players/"+newCode+"/public";
 
-const oldCode="220226";
-const newCode="220225";
+ try{
+   const oldRecord=await firebaseRequest(oldPath);
+   const newRecord=await firebaseRequest(newPath);
 
-const oldPath="players/"+oldCode+"/public";
-const newPath="players/"+newCode+"/public";
+   if(oldRecord){
+     const mergedRecord={
+       ...oldRecord,
+       ...(newRecord||{}),
+       participantId:"giulia_tesini_povegliano",
+       participantName:"Giulia Tesini di Povegliano",
+       code:newCode,
+       migratedFrom:oldCode,
+       migratedAt:new Date().toISOString()
+     };
 
-try{
+     await firebaseWrite(newPath,mergedRecord);
+     await firebaseDelete(oldPath);
 
-const oldRecord=await firebaseRequest(oldPath);
-const newRecord=await firebaseRequest(newPath);
+     console.log("Firebase migrato: "+oldCode+" → "+newCode);
+     return;
+   }
 
-if(oldRecord){
+   if(!newRecord){
+     await firebaseWrite(newPath,{
+       participantId:"giulia_tesini_povegliano",
+       participantName:"Giulia Tesini di Povegliano",
+       code:newCode,
+       assigned:false,
+       migrationReady:true,
+       migratedFrom:oldCode,
+       migratedAt:new Date().toISOString()
+     });
 
-const mergedRecord={
-...oldRecord,
-...(newRecord||{}),
-participantId:"giulia_tesini_povegliano",
-participantName:"Giulia Tesini di Povegliano",
-code:newCode,
-migratedFrom:oldCode,
-migratedAt:new Date().toISOString()
-};
+     console.log("Firebase inizializzato per il nuovo codice "+newCode);
+   }
 
-await firebaseWrite(newPath,mergedRecord);
-await firebaseDelete(oldPath);
-
-console.log("Firebase migrato: "+oldCode+" → "+newCode);
-
-return;
-}
-
-if(!newRecord){
-
-await firebaseWrite(
-newPath,
-{
-participantId:"giulia_tesini_povegliano",
-participantName:"Giulia Tesini di Povegliano",
-code:newCode,
-assigned:false,
-migrationReady:true,
-migratedFrom:oldCode,
-migratedAt:new Date().toISOString()
-}
-);
-
-console.log("Firebase inizializzato per il nuovo codice "+newCode);
-}
-
-}catch(error){
-
-console.error(
-"Allineamento codice Giulia non riuscito:",
-error
-);
-
-}
+ }catch(error){
+   console.error("Allineamento codice Giulia non riuscito:",error);
+ }
 }
 
 migrateGiuliaTesiniPoveglianoCode();
 
 async function getOrCreatePlayer(participant,officialCharacter){
-
-if(TEST_CODES.has(participant.code)){
-
-const testCharacter=nextTestCharacter(participant);
-
-return{
-firstAccess:true,
-data:{
-characterId:testCharacter.id,
-characterName:testCharacter.name,
-characterGender:testCharacter.gender,
-assigned:true,
-testMode:true
-}
-};
-}
-
-const path="players/"+participant.code+"/public";
-
-const stored=await firebaseRequest(path);
-
-if(stored&&stored.characterId){
-
-const lastSeen=new Date().toISOString();
-const loginCount=Number(stored.loginCount||1)+1;
-
-await firebaseWrite(
-path,
-{
-lastSeen,
-loginCount
-},
-"PATCH"
-);
-
-return{
-firstAccess:false,
-data:{
-...stored,
-lastSeen,
-loginCount
-}
-};
-}
-
-const now=new Date().toISOString();
-
-const record={
-characterId:officialCharacter.id,
-characterName:officialCharacter.name,
-characterGender:officialCharacter.gender,
-assigned:true,
-firstSeen:now,
-lastSeen:now,
-loginCount:1
-};
-
-await firebaseWrite(path,record);
-
-return{
-firstAccess:true,
-data:record
-};
+ if(TEST_CODES.has(participant.code)){
+   const testCharacter=nextTestCharacter(participant);
+   return {firstAccess:true,data:{characterId:testCharacter.id,characterName:testCharacter.name,characterGender:testCharacter.gender,assigned:true,testMode:true}};
+ }
+ const path="players/"+participant.code+"/public";
+ const stored=await firebaseRequest(path);
+ if(stored&&stored.characterId){
+   const lastSeen=new Date().toISOString(),loginCount=Number(stored.loginCount||1)+1;
+   await firebaseWrite(path,{lastSeen,loginCount},"PATCH");
+   return {firstAccess:false,data:{...stored,lastSeen,loginCount}};
+ }
+ const now=new Date().toISOString();
+ const record={characterId:officialCharacter.id,characterName:officialCharacter.name,characterGender:officialCharacter.gender,assigned:true,firstSeen:now,lastSeen:now,loginCount:1};
+ await firebaseWrite(path,record);
+ return {firstAccess:true,data:record};
 }
 
 function startRegistryLive(){
-
-stopRegistryLive();
-
-if(
-!currentParticipant||
-currentParticipant.code!==ORGANIZER_CODE
-)return;
-
-loadRegistry();
-
-registryLiveTimer=setInterval(
-()=>{
-if(
-currentParticipant&&
-currentParticipant.code===ORGANIZER_CODE
-){
-loadRegistry(true);
-}else{
-stopRegistryLive();
+ stopRegistryLive();
+ if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
+ loadRegistry();
+ registryLiveTimer=setInterval(()=>{if(currentParticipant&&currentParticipant.code===ORGANIZER_CODE)loadRegistry(true);else stopRegistryLive()},1500);
 }
-},
-1500
-);
-}
-
-function stopRegistryLive(){
-
-if(registryLiveTimer!==null){
-
-clearInterval(registryLiveTimer);
-
-registryLiveTimer=null;
-}
-}
+function stopRegistryLive(){if(registryLiveTimer!==null){clearInterval(registryLiveTimer);registryLiveTimer=null}}
 
 function startLiveUnlocks(){
-
-stopLiveUnlocks();
-
-if(!currentParticipant)return;
-
-loadLiveUnlocks();
-
-liveUnlockTimer=setInterval(
-()=>{
-if(currentParticipant){
-loadLiveUnlocks(true);
-}else{
-stopLiveUnlocks();
+ stopLiveUnlocks();
+ if(!currentParticipant)return;
+ loadLiveUnlocks();
+ liveUnlockTimer=setInterval(()=>{
+   if(currentParticipant)loadLiveUnlocks(true);
+   else stopLiveUnlocks();
+ },900);
 }
-},
-900
-);
-}
-
 function stopLiveUnlocks(){
-
-if(liveUnlockTimer!==null){
-
-clearInterval(liveUnlockTimer);
-
-liveUnlockTimer=null;
-}
+ if(liveUnlockTimer!==null){clearInterval(liveUnlockTimer);liveUnlockTimer=null}
 }
 
 async function loadLiveUnlocks(silent=false){
-
-if(
-!currentParticipant||
-liveUnlockLoading
-)return;
-
-liveUnlockLoading=true;
-
-try{
-
-const data=await firebaseRequest(LIVE_UNLOCK_PATH);
-
-liveUnlockState={
-...DEFAULT_LIVE_UNLOCKS,
-...(data||{})
-};
-
-renderLiveUnlocks();
-
-const liveStatus=document.getElementById("indiziLiveStatus");
-
-if(liveStatus){
-
-liveStatus.textContent=
-"● INDIZI LIVE COLLEGATI · "+
-new Date().toLocaleTimeString("it-IT");
-
-liveStatus.classList.add("online");
-}
-
-const controlStatus=
-document.getElementById("liveControlConnection");
-
-if(
-controlStatus&&
-currentParticipant.code===ORGANIZER_CODE
-){
-
-controlStatus.textContent=
-"● CONTROLLO LIVE COLLEGATO · "+
-new Date().toLocaleTimeString("it-IT");
-}
-
-}catch(e){
-
-if(!silent){
-console.error("Errore indizi live:",e);
-}
-
-const liveStatus=document.getElementById("indiziLiveStatus");
-
-if(liveStatus){
-liveStatus.textContent=
-"● COLLEGAMENTO INDIZI IN RIPRISTINO…";
-}
-
-const controlStatus=
-document.getElementById("liveControlConnection");
-
-if(
-controlStatus&&
-currentParticipant&&
-currentParticipant.code===ORGANIZER_CODE
-){
-
-controlStatus.textContent=
-"● CONTROLLO LIVE IN RIPRISTINO…";
-}
-
-}finally{
-
-liveUnlockLoading=false;
-
-}
+ if(!currentParticipant||liveUnlockLoading)return;
+ liveUnlockLoading=true;
+ try{
+   const data=await firebaseRequest(LIVE_UNLOCK_PATH);
+   liveUnlockState={...DEFAULT_LIVE_UNLOCKS,...(data||{})};
+   renderLiveUnlocks();
+   const liveStatus=document.getElementById("indiziLiveStatus");
+   if(liveStatus){
+     liveStatus.textContent="● INDIZI LIVE COLLEGATI · "+new Date().toLocaleTimeString("it-IT");
+     liveStatus.classList.add("online");
+   }
+   const controlStatus=document.getElementById("liveControlConnection");
+   if(controlStatus&&currentParticipant.code===ORGANIZER_CODE){
+     controlStatus.textContent="● CONTROLLO LIVE COLLEGATO · "+new Date().toLocaleTimeString("it-IT");
+   }
+ }catch(e){
+   if(!silent)console.error("Errore indizi live:",e);
+   const liveStatus=document.getElementById("indiziLiveStatus");
+   if(liveStatus)liveStatus.textContent="● COLLEGAMENTO INDIZI IN RIPRISTINO…";
+   const controlStatus=document.getElementById("liveControlConnection");
+   if(controlStatus&&currentParticipant&&currentParticipant.code===ORGANIZER_CODE)controlStatus.textContent="● CONTROLLO LIVE IN RIPRISTINO…";
+ }finally{
+   liveUnlockLoading=false;
+ }
 }
 
 function renderLiveUnlocks(){
-
-const map=[
-["common1","commonClue1","stateCommon1"],
-["common2","commonClue2","stateCommon2"],
-["common3","commonClue3","stateCommon3"],
-["personal1","personalClue1","statePersonal1"],
-["personal2","personalClue2","statePersonal2"],
-["personal3","personalClue3","statePersonal3"]
-];
-
-let any=false;
-
-map.forEach(
-([key,clueId,stateId])=>{
-
-const on=!!liveUnlockState[key];
-
-any=any||on;
-
-const clue=document.getElementById(clueId);
-
-if(clue){
-clue.classList.toggle("hidden",!on);
-}
-
-const stateEl=document.getElementById(stateId);
-
-if(stateEl){
-
-stateEl.textContent=
-on
-?
-"SBLOCCATO"
-:
-"BLOCCATO";
-
-stateEl.classList.toggle("on",on);
-}
-}
-);
-
-const empty=document.getElementById("noCluesBox");
-
-if(empty){
-empty.classList.toggle("hidden",any);
-}
+ const map=[
+   ["common1","commonClue1","stateCommon1"],
+   ["common2","commonClue2","stateCommon2"],
+   ["common3","commonClue3","stateCommon3"],
+   ["personal1","personalClue1","statePersonal1"],
+   ["personal2","personalClue2","statePersonal2"],
+   ["personal3","personalClue3","statePersonal3"]
+ ];
+ let any=false;
+ map.forEach(([key,clueId,stateId])=>{
+   const on=!!liveUnlockState[key];
+   any=any||on;
+   const clue=document.getElementById(clueId);
+   if(clue)clue.classList.toggle("hidden",!on);
+   const stateEl=document.getElementById(stateId);
+   if(stateEl){
+     stateEl.textContent=on?"SBLOCCATO":"BLOCCATO";
+     stateEl.classList.toggle("on",on);
+   }
+ });
+ const empty=document.getElementById("noCluesBox");
+ if(empty)empty.classList.toggle("hidden",any);
 }
 
 async function toggleLiveUnlock(key){
-
-if(
-!currentParticipant||
-currentParticipant.code!==ORGANIZER_CODE
-)return;
-
-const status=document.getElementById("liveWriteStatus");
-
-if(status){
-status.textContent="INVIO COMANDO…";
-}
-
-try{
-
-const next={
-...liveUnlockState,
-[key]:!liveUnlockState[key],
-updatedAt:new Date().toISOString(),
-updatedBy:currentParticipant.id
-};
-
-await firebaseWrite(
-LIVE_UNLOCK_PATH,
-next
-);
-
-liveUnlockState=next;
-
-renderLiveUnlocks();
-
-if(status){
-
-status.textContent=
-"COMANDO INVIATO · "+
-new Date().toLocaleTimeString("it-IT");
-}
-
-}catch(e){
-
-console.error(
-"Errore comando Regia:",
-e
-);
-
-if(status){
-status.textContent=
-"ERRORE · COMANDO NON INVIATO";
-}
-}
+ if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
+ const status=document.getElementById("liveWriteStatus");
+ if(status)status.textContent="INVIO COMANDO…";
+ try{
+   const next={...liveUnlockState,[key]:!liveUnlockState[key],updatedAt:new Date().toISOString(),updatedBy:currentParticipant.id};
+   await firebaseWrite(LIVE_UNLOCK_PATH,next);
+   liveUnlockState=next;
+   renderLiveUnlocks();
+   if(status)status.textContent="COMANDO INVIATO · "+new Date().toLocaleTimeString("it-IT");
+ }catch(e){
+   console.error("Errore comando Regia:",e);
+   if(status)status.textContent="ERRORE · COMANDO NON INVIATO";
+ }
 }
 
 async function resetLiveUnlocks(){
-
-if(
-!currentParticipant||
-currentParticipant.code!==ORGANIZER_CODE
-)return;
-
-const status=document.getElementById("liveWriteStatus");
-
-if(status){
-status.textContent="RESET IN CORSO…";
-}
-
-try{
-
-const next={
-...DEFAULT_LIVE_UNLOCKS,
-updatedAt:new Date().toISOString(),
-updatedBy:currentParticipant.id
-};
-
-await firebaseWrite(
-LIVE_UNLOCK_PATH,
-next
-);
-
-liveUnlockState=next;
-
-renderLiveUnlocks();
-
-if(status){
-
-status.textContent=
-"TEST RESETTATO · "+
-new Date().toLocaleTimeString("it-IT");
-}
-
-}catch(e){
-
-console.error(
-"Errore reset Regia:",
-e
-);
-
-if(status){
-status.textContent=
-"ERRORE · RESET NON RIUSCITO";
-}
-}
+ if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
+ const status=document.getElementById("liveWriteStatus");
+ if(status)status.textContent="RESET IN CORSO…";
+ try{
+   const next={...DEFAULT_LIVE_UNLOCKS,updatedAt:new Date().toISOString(),updatedBy:currentParticipant.id};
+   await firebaseWrite(LIVE_UNLOCK_PATH,next);
+   liveUnlockState=next;
+   renderLiveUnlocks();
+   if(status)status.textContent="TEST RESETTATO · "+new Date().toLocaleTimeString("it-IT");
+ }catch(e){
+   console.error("Errore reset Regia:",e);
+   if(status)status.textContent="ERRORE · RESET NON RIUSCITO";
+ }
 }
 
 async function login(){
-
-const input=
-document.getElementById("codeInput").value.trim();
-
-const error=
-document.getElementById("error");
-
-error.textContent="";
-
-const participant=
-participants.find(
-p=>
-p.code&&
-p.code===input
-);
-
-if(!participant){
-
-error.textContent=
-"ACCESSO NEGATO · CODICE NON RICONOSCIUTO";
-
-return;
-}
-
-error.textContent=
-"ACCESSO ALL'ARCHIVIO…";
-
-try{
-
-currentParticipant=
-participant;
-
-await openCharacter(
-participant
-);
-
-error.textContent="";
-
-}catch(e){
-
-console.error(e);
-
-currentParticipant=null;
-
-error.textContent=
-"ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA";
-
-}
+ const input=document.getElementById("codeInput").value.trim();
+ const error=document.getElementById("error"); error.textContent="";
+ const participant=participants.find(p=>p.code&&p.code===input);
+ if(!participant){error.textContent="ACCESSO NEGATO · CODICE NON RICONOSCIUTO";return}
+ error.textContent="ACCESSO ALL'ARCHIVIO…";
+ try{currentParticipant=participant;await openCharacter(participant);error.textContent=""}
+ catch(e){console.error(e);currentParticipant=null;error.textContent="ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA"}
 }
 
 async function openCharacter(participant){
+ const officialCharacterId=CHARACTER_ASSIGNMENTS[participant.id];
+ const officialCharacter=characters.find(c=>c.id===officialCharacterId);
+ if(!officialCharacter)throw new Error("Personaggio non trovato");
+ const result=await getOrCreatePlayer(participant,officialCharacter);
+ const character=characters.find(c=>c.id===result.data.characterId);
+ if(!character)throw new Error("Personaggio non valido");
 
-const officialCharacterId=
-CHARACTER_ASSIGNMENTS[
-participant.id
-];
+ const greeting=result.firstAccess?"Salve, "+character.name+".":(character.gender==="F"?"Bentornata, ":"Bentornato, ")+character.name+".";
+ document.getElementById("loginSection").classList.add("hidden");
+ document.getElementById("appSection").classList.remove("hidden");
+ document.getElementById("greeting").textContent=greeting;
+ document.getElementById("characterName").textContent=character.name;
+ document.getElementById("characterRole").textContent=character.role;
+ document.getElementById("characterDescription").textContent=character.description;
+ document.getElementById("characterAdvice").textContent=character.advice;
+ document.getElementById("realUserLabel").textContent="ID: "+participant.name+(result.data.testMode?" · TEST":"");
 
-const officialCharacter=
-characters.find(
-c=>c.id===officialCharacterId
-);
+ const initials=character.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
+ const monogram=document.getElementById("characterMonogram");
+ const photo=document.getElementById("characterPhoto");
+ const photoSrc=PORTRAITS[participant.id]&&PORTRAITS[participant.id][character.id];
+ if(photoSrc){
+   photo.src=photoSrc; photo.alt="Ritratto di "+participant.name+" come "+character.name;
+   photo.classList.remove("hidden"); monogram.classList.add("hidden");
+ } else {
+   photo.removeAttribute("src"); photo.classList.add("hidden"); monogram.classList.remove("hidden"); monogram.textContent=initials;
+ }
 
-if(!officialCharacter){
-throw new Error(
-"Personaggio non trovato"
-);
-}
+ const secretBox=document.getElementById("secretRoleBox"),secretText=document.getElementById("secretRole");
+ secretBox.classList.add("hidden"); secretText.innerHTML="";
+ if(!result.data.testMode && participant.id===SPECIAL_ROLES.assassin){
+   secretText.innerHTML="<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti.<br><br>Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
+   secretBox.classList.remove("hidden");
+ } else if(!result.data.testMode && participant.id===SPECIAL_ROLES.accomplice){
+   secretText.innerHTML="<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti.<br><br>Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
+   secretBox.classList.remove("hidden");
+ }
 
-const result=
-await getOrCreatePlayer(
-participant,
-officialCharacter
-);
-
-const character=
-characters.find(
-c=>
-c.id===
-result.data.characterId
-);
-
-if(!character){
-throw new Error(
-"Personaggio non valido"
-);
-}
-
-const greeting=
-result.firstAccess
-?
-"Salve, "+
-character.name+
-"."
-:
-(
-character.gender==="F"
-?
-"Bentornata, "
-:
-"Bentornato, "
-)
-+
-character.name+
-".";
-
-document.getElementById(
-"loginSection"
-).classList.add(
-"hidden"
-);
-
-document.getElementById(
-"appSection"
-).classList.remove(
-"hidden"
-);
-
-document.getElementById(
-"greeting"
-).textContent=
-greeting;
-
-document.getElementById(
-"characterName"
-).textContent=
-character.name;
-
-document.getElementById(
-"characterRole"
-).textContent=
-character.role;
-
-document.getElementById(
-"characterDescription"
-).textContent=
-character.description;
-
-document.getElementById(
-"characterAdvice"
-).textContent=
-character.advice;
-
-document.getElementById(
-"realUserLabel"
-).textContent=
-"ID: "+
-participant.name+
-(
-result.data.testMode
-?
-" · TEST"
-:
-""
-);
-
-const initials=
-character.name
-.split(" ")
-.map(p=>p[0])
-.join("")
-.slice(0,2)
-.toUpperCase();
-
-const monogram=
-document.getElementById(
-"characterMonogram"
-);
-
-const photo=
-document.getElementById(
-"characterPhoto"
-);
-
-const photoSrc=
-PORTRAITS[
-participant.id
-]
-&&
-PORTRAITS[
-participant.id
-][
-character.id
-];
-
-if(photoSrc){
-
-photo.src=
-photoSrc;
-
-photo.alt=
-"Ritratto di "+
-participant.name+
-" come "+
-character.name;
-
-photo.classList.remove(
-"hidden"
-);
-
-monogram.classList.add(
-"hidden"
-);
-}else{
-
-photo.removeAttribute(
-"src"
-);
-
-photo.classList.add(
-"hidden"
-);
-
-monogram.classList.remove(
-"hidden"
-);
-
-monogram.textContent=
-initials;
-}
-
-const secretBox=
-document.getElementById(
-"secretRoleBox"
-);
-
-const secretText=
-document.getElementById(
-"secretRole"
-);
-
-secretBox.classList.add(
-"hidden"
-);
-
-secretText.innerHTML="";
-
-if(
-!result.data.testMode&&
-participant.id===
-SPECIAL_ROLES.assassin
-){
-
-secretText.innerHTML=
-"<strong>DOCUMENTO PERSONALE RISERVATO</strong>"+
-"<br><br>"+
-"Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti."+
-"<br><br>"+
-"Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
-
-secretBox.classList.remove(
-"hidden"
-);
-
-}else if(
-!result.data.testMode&&
-participant.id===
-SPECIAL_ROLES.accomplice
-){
-
-secretText.innerHTML=
-"<strong>DOCUMENTO PERSONALE RISERVATO</strong>"+
-"<br><br>"+
-"Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti."+
-"<br><br>"+
-"Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
-
-secretBox.classList.remove(
-"hidden"
-);
-
-}
-
-const isOrganizer=
-participant.code===
-ORGANIZER_CODE;
-
-document.getElementById(
-"havilandNavBtn"
-).classList.toggle(
-"hidden",
-!isOrganizer
-);
-
-document.getElementById(
-"havilandMobileBtn"
-).classList.toggle(
-"hidden",
-!isOrganizer
-);
-
-document.getElementById(
-"mobileNav"
-).classList.toggle(
-"three",
-isOrganizer
-);
-
-if(isOrganizer){
-startRegistryLive();
-}else{
-stopRegistryLive();
-}
-
-startLiveUnlocks();
-
-openTab("dossier");
-
-speakGreeting(greeting);
+ const isOrganizer=participant.code===ORGANIZER_CODE;
+ document.getElementById("havilandNavBtn").classList.toggle("hidden",!isOrganizer);
+ document.getElementById("havilandMobileBtn").classList.toggle("hidden",!isOrganizer);
+ document.getElementById("mobileNav").classList.toggle("three",isOrganizer);
+ if(isOrganizer)startRegistryLive();else stopRegistryLive();
+ startLiveUnlocks();
+ openTab("dossier"); speakGreeting(greeting);
 }
 
 function logout(){
-
-stopRegistryLive();
-stopLiveUnlocks();
-
-currentParticipant=null;
-
-liveUnlockState={
-...DEFAULT_LIVE_UNLOCKS
-};
-
-renderLiveUnlocks();
-
-document.getElementById(
-"appSection"
-).classList.add(
-"hidden"
-);
-
-document.getElementById(
-"loginSection"
-).classList.remove(
-"hidden"
-);
-
-document.getElementById(
-"codeInput"
-).value="";
-
-document.getElementById(
-"error"
-).textContent="";
-
-openTab("dossier");
+ stopRegistryLive();
+ stopLiveUnlocks();
+ currentParticipant=null;
+ liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
+ renderLiveUnlocks();
+ document.getElementById("appSection").classList.add("hidden");
+ document.getElementById("loginSection").classList.remove("hidden");
+ document.getElementById("codeInput").value="";
+ document.getElementById("error").textContent="";
+ openTab("dossier");
 }
 
 function openTab(tabName){
-
-if(
-tabName==="haviland"
-&&
-(
-!currentParticipant
-||
-currentParticipant.code!==ORGANIZER_CODE
-)
-){
-
-tabName="dossier";
-}
-
-document
-.querySelectorAll(
-".tab-page"
-)
-.forEach(
-p=>
-p.classList.add(
-"hidden"
-)
-);
-
-const page=
-document.getElementById(
-"tab-"+tabName
-);
-
-if(page){
-page.classList.remove(
-"hidden"
-);
-}
-
-document
-.querySelectorAll(
-".nav-btn"
-)
-.forEach(
-b=>
-b.classList.toggle(
-"active",
-b.dataset.tab===tabName
-)
-);
-
-document
-.querySelectorAll(
-".mobile-nav button"
-)
-.forEach(
-b=>
-b.classList.toggle(
-"active",
-b.dataset.mobileTab===tabName
-)
-);
-
-if(
-tabName==="haviland"
-&&
-currentParticipant
-&&
-currentParticipant.code===ORGANIZER_CODE
-){
-
-loadRegistry(true);
-
-loadLiveUnlocks(true);
-}
-
-if(
-tabName==="indizi"
-&&
-currentParticipant
-){
-
-loadLiveUnlocks(true);
-}
-
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+ if(tabName==="haviland"&&(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE))tabName="dossier";
+ document.querySelectorAll(".tab-page").forEach(p=>p.classList.add("hidden"));
+ const page=document.getElementById("tab-"+tabName);if(page)page.classList.remove("hidden");
+ document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tabName));
+ document.querySelectorAll(".mobile-nav button").forEach(b=>b.classList.toggle("active",b.dataset.mobileTab===tabName));
+ if(tabName==="haviland"&&currentParticipant&&currentParticipant.code===ORGANIZER_CODE){
+   loadRegistry(true);
+   loadLiveUnlocks(true);
+ }
+ if(tabName==="indizi"&&currentParticipant)loadLiveUnlocks(true);
+ window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function speakGreeting(text){
-
-if(
-!("speechSynthesis" in window)
-)return;
-
-try{
-
-speechSynthesis.cancel();
-
-const u=
-new SpeechSynthesisUtterance(
-text
-);
-
-u.lang="it-IT";
-u.rate=.86;
-u.pitch=.82;
-u.volume=1;
-
-speechSynthesis.speak(u);
-
-}catch(e){
-
-console.error(
-"Errore voce:",
-e
-);
-
-}
+ if(!("speechSynthesis" in window))return;
+ try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="it-IT";u.rate=.86;u.pitch=.82;u.volume=1;speechSynthesis.speak(u)}catch(e){console.error("Errore voce:",e)}
 }
 
 async function loadRegistry(silent=false){
-
-if(
-!currentParticipant
-||
-currentParticipant.code!==ORGANIZER_CODE
-||
-registryLoading
-)return;
-
-registryLoading=true;
-
-const status=
-document.getElementById(
-"registryStatus"
-);
-
-const rows=
-document.getElementById(
-"registryRows"
-);
-
-if(!silent){
-
-status.textContent=
-"AGGIORNAMENTO REGISTRO…";
+ if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE||registryLoading)return;
+ registryLoading=true;const status=document.getElementById("registryStatus"),rows=document.getElementById("registryRows");
+ if(!silent)status.textContent="AGGIORNAMENTO REGISTRO…";
+ try{
+   const allPlayers=await firebaseRequest("players")||{};
+   const fragment=document.createDocumentFragment();
+   participants.filter(p=>p.code).forEach(p=>{
+     const node=allPlayers[p.code],record=node&&node.public?node.public:null,row=document.createElement("div");
+     row.className="registry-row";
+     const characterName=record&&record.characterName?record.characterName:"—";
+     const accessStatus=record&&record.assigned?'<span class="ok">✓ Accesso effettuato</span>':'<span class="pending">○ Non ancora assegnato</span>';
+     row.innerHTML="<div><strong>"+escapeHtml(p.name)+"</strong></div><div>"+escapeHtml(characterName)+"</div><div>"+accessStatus+"</div>";
+     fragment.appendChild(row);
+   });
+   rows.replaceChildren(fragment);status.textContent="";
+ }catch(e){console.error("Errore Registro Villa:",e);status.textContent="IMPOSSIBILE CARICARE IL REGISTRO VILLA"}
+ finally{registryLoading=false}
 }
 
-try{
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c])}
+function havilandPlaceholder(){alert("Haviland è pronto. La voce Julian e i comandi della serata verranno collegati nella versione finale.")}
 
-const allPlayers=
-await firebaseRequest(
-"players"
-)
-||{};
-
-const fragment=
-document.createDocumentFragment();
-
-participants
-.filter(p=>p.code)
-.forEach(
-p=>{
-
-const node=
-allPlayers[
-p.code
-];
-
-const record=
-node&&node.public
-?
-node.public
-:
-null;
-
-const row=
-document.createElement(
-"div"
-);
-
-row.className=
-"registry-row";
-
-const characterName=
-record&&record.characterName
-?
-record.characterName
-:
-"—";
-
-const accessStatus=
-record&&record.assigned
-?
-'<span class="ok">✓ Accesso effettuato</span>'
-:
-'<span class="pending">○ Non ancora assegnato</span>';
-
-row.innerHTML=
-"<div><strong>"+
-escapeHtml(
-p.name
-)+
-"</strong></div>"+
-"<div>"+
-escapeHtml(
-characterName
-)+
-"</div>"+
-"<div>"+
-accessStatus+
-"</div>";
-
-fragment.appendChild(
-row
-);
-
-}
-);
-
-rows.replaceChildren(
-fragment
-);
-
-status.textContent="";
-
-}catch(e){
-
-console.error(
-"Errore Registro Villa:",
-e
-);
-
-status.textContent=
-"IMPOSSIBILE CARICARE IL REGISTRO VILLA";
-
-}finally{
-
-registryLoading=false;
-
-}
-}
-
-function escapeHtml(value){
-
-return String(
-value
-).replace(
-/[&<>"']/g,
-c=>(
-{
-"&":"&amp;",
-"<":"&lt;",
-">":"&gt;",
-'"':"&quot;",
-"'":"&#039;"
-}
-)[c]
-);
-}
-
-function havilandPlaceholder(){
-
-alert(
-"Haviland è pronto. "+
-"La voce Julian e i comandi della serata "+
-"verranno collegati nella versione finale."
-);
-}
-
-document.addEventListener(
-"visibilitychange",
-()=>{
-
-if(
-document.visibilityState==="visible"
-&&
-currentParticipant
-){
-
-loadLiveUnlocks(true);
-
-if(
-currentParticipant.code===ORGANIZER_CODE
-){
-
-loadRegistry(true);
-}
-
-}
-}
-);
-
-document
-.getElementById(
-"codeInput"
-)
-.addEventListener(
-"keydown",
-e=>{
-
-if(e.key==="Enter"){
-login();
-}
-}
-);
-
+document.addEventListener("visibilitychange",()=>{
+ if(document.visibilityState==="visible"&&currentParticipant){
+   loadLiveUnlocks(true);
+   if(currentParticipant.code===ORGANIZER_CODE)loadRegistry(true);
+ }
+});
+document.getElementById("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
 renderLiveUnlocks();
-
 </script>
 </body>
 </html>
