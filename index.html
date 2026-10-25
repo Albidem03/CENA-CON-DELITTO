@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#120d09">
-<title>Villa Valenti — Archivio Riservato</title>
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<meta
+name="theme-color"
+content="#120d09"
+>
+
+<title>
+Villa Valenti — Archivio Riservato
+</title>
 
 <style>
+
 :root{
   --gold:#d0b77c;
   --line:rgba(188,157,104,.35);
@@ -26,10 +39,25 @@ body{
   min-height:100vh;
   color:#efe5d2;
   font-family:Georgia,"Times New Roman",serif;
+
   background:
-    radial-gradient(circle at 10% 10%,rgba(93,62,28,.15),transparent 30%),
-    radial-gradient(circle at 90% 0%,rgba(92,21,21,.14),transparent 26%),
-    linear-gradient(135deg,#17110c,#0b0907 50%,#15100b);
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(93,62,28,.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 0%,
+      rgba(92,21,21,.14),
+      transparent 26%
+    ),
+    linear-gradient(
+      135deg,
+      #17110c,
+      #0b0907 50%,
+      #15100b
+    );
+
   overflow-x:hidden
 }
 
@@ -41,6 +69,11 @@ button,
 input{
   font:inherit
 }
+
+
+/* ===========================
+   LOGIN
+=========================== */
 
 .login-shell{
   min-height:100vh;
@@ -157,6 +190,11 @@ h1{
   line-height:1.5
 }
 
+
+/* ===========================
+   APP
+=========================== */
+
 .app{
   width:min(1200px,100%);
   margin:auto;
@@ -235,6 +273,11 @@ h1{
   color:#8b7b65;
   font:11px "Courier New",monospace
 }
+
+
+/* ===========================
+   DOSSIER
+=========================== */
 
 .case{
   display:flex;
@@ -347,6 +390,11 @@ h1{
   border:1px dashed #7d2424
 }
 
+
+/* ===========================
+   INDIZI / REGIA
+=========================== */
+
 .evidence,
 .haviland{
   border:1px solid var(--line);
@@ -415,7 +463,10 @@ h1{
   display:none
 }
 
-/* REGIA LIVE */
+
+/* ===========================
+   REGIA LIVE
+=========================== */
 
 .live-control{
   margin-top:26px;
@@ -511,43 +562,10 @@ h1{
   color:#7c683f
 }
 
-/* FIX MIRATO FOTO CON BANDA NERA */
 
-.portrait.fix-beatrice-lavinia,
-.portrait.fix-emma-celeste{
-  position:relative;
-  overflow:hidden
-}
-
-.portrait.fix-beatrice-lavinia{
-  aspect-ratio:4/5
-}
-
-.portrait.fix-beatrice-lavinia img{
-  position:absolute;
-  left:12px;
-  right:12px;
-  top:12px;
-  width:calc(100% - 24px);
-  height:auto;
-  transform:scale(1.72);
-  transform-origin:top center
-}
-
-.portrait.fix-emma-celeste{
-  aspect-ratio:4/5
-}
-
-.portrait.fix-emma-celeste img{
-  position:absolute;
-  left:12px;
-  right:12px;
-  top:12px;
-  width:calc(100% - 24px);
-  height:auto;
-  transform:scale(1.30);
-  transform-origin:top center
-}
+/* ===========================
+   MOBILE
+=========================== */
 
 @media(max-width:860px){
 
@@ -610,22 +628,47 @@ h1{
   }
 
 }
+
 </style>
 </head>
 
 <body>
 
-<section id="loginSection" class="login-shell">
+
+<!-- ===========================
+     LOGIN
+=========================== -->
+
+<section
+id="loginSection"
+class="login-shell"
+>
+
 <div class="login-dossier">
 
 <div class="login-top">
-<div class="crest">VV</div>
-<div class="eyebrow">Archivio Villa Valenti</div>
-<h1>Accesso Riservato</h1>
-<div class="subtitle">Cena con delitto · 31 ottobre 2026</div>
+
+<div class="crest">
+VV
 </div>
 
+<div class="eyebrow">
+Archivio Villa Valenti
+</div>
+
+<h1>
+Accesso Riservato
+</h1>
+
+<div class="subtitle">
+Cena con delitto · 31 ottobre 2026
+</div>
+
+</div>
+
+
 <div class="paper-wrap">
+
 <div class="paper">
 
 <div class="paper-heading">
@@ -638,6 +681,7 @@ Inserisci il codice personale ricevuto con il tuo invito.
 Il dossier assegnato resterà associato al tuo codice
 per l'intera serata, anche cambiando dispositivo.
 </div>
+
 
 <div class="code-row">
 
@@ -659,7 +703,12 @@ APRI DOSSIER
 
 </div>
 
-<div id="error" class="error"></div>
+
+<div
+id="error"
+class="error"
+></div>
+
 
 <div class="test-note">
 MODALITÀ TEST FOTO COMPLETA:
@@ -669,21 +718,39 @@ restando nel proprio gruppo maschile/femminile.
 </div>
 
 </div>
+
 </div>
 
 </div>
+
 </section>
 
 
-<section id="appSection" class="hidden">
+
+<!-- ===========================
+     APP
+=========================== -->
+
+<section
+id="appSection"
+class="hidden"
+>
 
 <div class="app">
+
 
 <header class="topbar">
 
 <div class="brand">
-<strong>Archivio Villa Valenti</strong>
-<span>Accesso autenticato</span>
+
+<strong>
+Archivio Villa Valenti
+</strong>
+
+<span>
+Accesso autenticato
+</span>
+
 </div>
 
 <button onclick="logout()">
@@ -695,6 +762,7 @@ CHIUDI DOSSIER
 
 <div class="layout">
 
+
 <aside class="sidebar">
 
 <button
@@ -705,6 +773,7 @@ onclick="openTab('dossier')"
 ▣ Dossier personale
 </button>
 
+
 <button
 class="nav-btn"
 data-tab="indizi"
@@ -712,6 +781,7 @@ onclick="openTab('indizi')"
 >
 ⌕ Indizi
 </button>
+
 
 <button
 id="havilandNavBtn"
@@ -722,7 +792,9 @@ onclick="openTab('haviland')"
 ◉ Haviland / Regia
 </button>
 
+
 <div class="status">
+
 ● SESSIONE ATTIVA
 
 <div
@@ -735,12 +807,17 @@ style="margin-top:7px"
 </aside>
 
 
+
 <main>
+
 
 <div class="case">
 
 <div>
-<small>FASCICOLO</small>
+
+<small>
+FASCICOLO
+</small>
 
 <div class="case-title">
 Il Dossier Scomparso
@@ -755,12 +832,18 @@ RISERVATO
 </div>
 
 
+
+<!-- ===========================
+     DOSSIER
+=========================== -->
+
 <section
 id="tab-dossier"
 class="tab-page"
 >
 
 <div class="dossier-grid">
+
 
 <div class="folder">
 
@@ -783,10 +866,12 @@ VV
 
 </div>
 
+
 <div
 id="characterName"
 class="char-name"
 ></div>
+
 
 <div
 id="characterRole"
@@ -799,6 +884,7 @@ class="char-role"
 
 
 <div class="stack">
+
 
 <article class="sheet">
 
@@ -850,6 +936,7 @@ class="paper-text"
 
 </article>
 
+
 </div>
 
 </div>
@@ -857,12 +944,18 @@ class="paper-text"
 </section>
 
 
+
+<!-- ===========================
+     INDIZI
+=========================== -->
+
 <section
 id="tab-indizi"
 class="tab-page hidden"
 >
 
 <div class="evidence">
+
 
 <div
 id="indiziLiveStatus"
@@ -1008,10 +1101,16 @@ Terzo blocco personale di prova disponibile.
 
 </article>
 
+
 </div>
 
 </section>
 
+
+
+<!-- ===========================
+     REGIA
+=========================== -->
 
 <section
 id="tab-haviland"
@@ -1019,6 +1118,7 @@ class="tab-page hidden"
 >
 
 <div class="haviland">
+
 
 <h2>
 Haviland — Regia Villa
@@ -1029,6 +1129,7 @@ Pannello privato riservato all'organizzatore.
 Qui collegheremo i comandi vocali e gli annunci definitivi.
 </p>
 
+
 <button
 class="action-btn"
 onclick="havilandPlaceholder()"
@@ -1037,7 +1138,9 @@ ATTIVA MICROFONO
 </button>
 
 
+
 <div class="live-control">
+
 
 <h2>
 Regia indizi — Test live
@@ -1069,6 +1172,7 @@ Indizi comuni
 
 
 <div class="control-grid">
+
 
 <div class="control-card">
 
@@ -1135,6 +1239,7 @@ SBLOCCA / BLOCCA
 
 </div>
 
+
 </div>
 
 
@@ -1151,6 +1256,7 @@ Indizi personali
 
 
 <div class="control-grid">
+
 
 <div class="control-card">
 
@@ -1217,6 +1323,7 @@ SBLOCCA / BLOCCA
 
 </div>
 
+
 </div>
 
 
@@ -1233,14 +1340,18 @@ id="liveWriteStatus"
 class="live-write-status"
 ></div>
 
+
 </div>
+
 
 
 <div class="registry">
 
+
 <h2>
 Registro Villa
 </h2>
+
 
 <div
 id="registryLiveStatus"
@@ -1249,26 +1360,32 @@ class="live-status"
 ● REGISTRO LIVE
 </div>
 
+
 <div id="registryStatus">
 Caricamento registro…
 </div>
+
 
 <div
 id="registryRows"
 class="registry-grid"
 ></div>
 
+
 </div>
+
 
 </div>
 
 </section>
+
 
 </main>
 
 </div>
 
 </div>
+
 
 
 <nav
@@ -1284,12 +1401,14 @@ onclick="openTab('dossier')"
 DOSSIER
 </button>
 
+
 <button
 data-mobile-tab="indizi"
 onclick="openTab('indizi')"
 >
 INDIZI
 </button>
+
 
 <button
 id="havilandMobileBtn"
@@ -1302,8 +1421,14 @@ REGIA
 
 </nav>
 
+
 </section>
 
+
+
+<!-- ===========================
+     PORTRAITS
+=========================== -->
 
 <script src="portraits_01.js"></script>
 <script src="portraits_02.js"></script>
@@ -1317,15 +1442,26 @@ REGIA
 <script src="portraits_10.js"></script>
 
 
+
 <script>
+
+
+/* ===========================
+   CONFIGURAZIONE
+=========================== */
+
 
 const FIREBASE_DB=
 "https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 
-const ORGANIZER_CODE="321023";
+
+const ORGANIZER_CODE=
+"321023";
 
 
-const TEST_CODES=new Set([
+const TEST_CODES=
+new Set([
+
 "321023",
 "290604",
 "240383",
@@ -1346,85 +1482,431 @@ const TEST_CODES=new Set([
 "535506",
 "240322",
 "230704"
+
 ]);
+
+
+
+/* ===========================
+   PARTECIPANTI
+=========================== */
 
 
 const participants=[
 
-{id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
-{id:"giulia_tesini_vigasio",name:"Giulia Tesini di Vigasio",code:"290604",gender:"F"},
-{id:"angela_viviani",name:"Angela Viviani",code:"240383",gender:"F"},
-{id:"eleonora_pinto",name:"Eleonora Pinto",code:"141019",gender:"F"},
-{id:"rocco_monaco",name:"Rocco Monaco",code:"190797",gender:"M"},
-{id:"alessia_remelli",name:"Alessia Remelli",code:"949699",gender:"F"},
-{id:"andrea_filippi",name:"Andrea Filippi",code:"140918",gender:"M"},
-{id:"pietro_scolari",name:"Pietro Scolari",code:"900750",gender:"M"},
-{id:"julian_remelli",name:"Julian Remelli",code:"170504",gender:"M"},
-{id:"elena_pelizzaro",name:"Elena Pelizzaro",code:"122906",gender:"F"},
-{id:"beatrice_remelli",name:"Beatrice Remelli",code:"347106",gender:"F"},
-{id:"gabriele_di_cristo",name:"Gabriele Di Cristo",code:"319903",gender:"M"},
-{id:"gabriele_battini",name:"Gabriele Battini",code:"248842",gender:"M"},
-{id:"cristian_campesi",name:"Cristian Campesi",code:"265069",gender:"M"},
-{id:"vivald_keri",name:"Vivald Keri",code:"111111",gender:"M"},
-{id:"giulia_tesini_povegliano",name:"Giulia Tesini di Povegliano",code:"220225",gender:"F"},
-{id:"sonia_vanoni",name:"Sonia Vanoni",code:"150704",gender:"F"},
-{id:"andrea_raffi",name:"Andrea Raffi",code:"535506",gender:"M"},
-{id:"samuele_benatti",name:"Samuele Benatti",code:"240322",gender:"M"},
-{id:"emma_biasi",name:"Emma Biasi",code:"230704",gender:"F"}
+{
+id:"alberto_damico",
+name:"Alberto D'Amico",
+code:"321023",
+gender:"M",
+hasVoice:true
+},
+
+{
+id:"giulia_tesini_vigasio",
+name:"Giulia Tesini di Vigasio",
+code:"290604",
+gender:"F"
+},
+
+{
+id:"angela_viviani",
+name:"Angela Viviani",
+code:"240383",
+gender:"F"
+},
+
+{
+id:"eleonora_pinto",
+name:"Eleonora Pinto",
+code:"141019",
+gender:"F"
+},
+
+{
+id:"rocco_monaco",
+name:"Rocco Monaco",
+code:"190797",
+gender:"M"
+},
+
+{
+id:"alessia_remelli",
+name:"Alessia Remelli",
+code:"949699",
+gender:"F"
+},
+
+{
+id:"andrea_filippi",
+name:"Andrea Filippi",
+code:"140918",
+gender:"M"
+},
+
+{
+id:"pietro_scolari",
+name:"Pietro Scolari",
+code:"900750",
+gender:"M"
+},
+
+{
+id:"julian_remelli",
+name:"Julian Remelli",
+code:"170504",
+gender:"M"
+},
+
+{
+id:"elena_pelizzaro",
+name:"Elena Pelizzaro",
+code:"122906",
+gender:"F"
+},
+
+{
+id:"beatrice_remelli",
+name:"Beatrice Remelli",
+code:"347106",
+gender:"F"
+},
+
+{
+id:"gabriele_di_cristo",
+name:"Gabriele Di Cristo",
+code:"319903",
+gender:"M"
+},
+
+{
+id:"gabriele_battini",
+name:"Gabriele Battini",
+code:"248842",
+gender:"M"
+},
+
+{
+id:"cristian_campesi",
+name:"Cristian Campesi",
+code:"265069",
+gender:"M"
+},
+
+{
+id:"vivald_keri",
+name:"Vivald Keri",
+code:"111111",
+gender:"M"
+},
+
+{
+id:"giulia_tesini_povegliano",
+name:"Giulia Tesini di Povegliano",
+code:"220225",
+gender:"F"
+},
+
+{
+id:"sonia_vanoni",
+name:"Sonia Vanoni",
+code:"150704",
+gender:"F"
+},
+
+{
+id:"andrea_raffi",
+name:"Andrea Raffi",
+code:"535506",
+gender:"M"
+},
+
+{
+id:"samuele_benatti",
+name:"Samuele Benatti",
+code:"240322",
+gender:"M"
+},
+
+{
+id:"emma_biasi",
+name:"Emma Biasi",
+code:"230704",
+gender:"F"
+}
 
 ];
+
+
+
+/* ===========================
+   PERSONAGGI
+=========================== */
 
 
 const characters=[
 
-{id:"ettore_valenti",name:"Ettore Valenti",gender:"M",role:"Zio paterno di Angelina",description:"Appartieni alla vecchia generazione dei Valenti e sei molto legato al patrimonio e al nome della famiglia.",advice:"Mostrati autorevole. Fai attenzione a tutto ciò che riguarda eredità, proprietà e decisioni familiari."},
 
-{id:"ludovico_orsini",name:"Ludovico Orsini",gender:"M",role:"Marito di Angelina",description:"Il tuo matrimonio con Angelina negli ultimi mesi è diventato molto più complicato di quanto gli altri sappiano.",advice:"Mantieni la calma. Difendi il tuo rapporto con Angelina senza raccontare immediatamente tutto."},
+{
+id:"ettore_valenti",
+name:"Ettore Valenti",
+gender:"M",
+role:"Zio paterno di Angelina",
+description:
+"Appartieni alla vecchia generazione dei Valenti e sei molto legato al patrimonio e al nome della famiglia.",
+advice:
+"Mostrati autorevole. Fai attenzione a tutto ciò che riguarda eredità, proprietà e decisioni familiari."
+},
 
-{id:"corrado_de_marchi",name:"Corrado De Marchi",gender:"M",role:"Cugino materno di Angelina",description:"Hai avuto diversi contrasti con Angelina riguardo alcune proprietà della famiglia materna.",advice:"Mostrati cordiale, ma presta molta attenzione quando si parla di denaro e proprietà."},
 
-{id:"leone_de_marchi",name:"Leone De Marchi",gender:"M",role:"Zio materno di Angelina",description:"Conosci molti episodi della famiglia risalenti alla generazione precedente.",advice:"Parla poco e ascolta molto. Confronta ciò che gli altri raccontano con quello che ricordi."},
+{
+id:"ludovico_orsini",
+name:"Ludovico Orsini",
+gender:"M",
+role:"Marito di Angelina",
+description:
+"Il tuo matrimonio con Angelina negli ultimi mesi è diventato molto più complicato di quanto gli altri sappiano.",
+advice:
+"Mantieni la calma. Difendi il tuo rapporto con Angelina senza raccontare immediatamente tutto."
+},
 
-{id:"dorian_ferretti",name:"Dorian Ferretti",gender:"M",role:"Socio d'affari di Angelina",description:"Hai gestito diversi affari con Angelina e recentemente sono nate tensioni riguardo alcuni conti.",advice:"Rimani professionale e cerca di separare gli affari dalle questioni personali."},
 
-{id:"tancredi_moreau",name:"Tancredi Moreau",gender:"M",role:"Avvocato della famiglia",description:"Conosci contratti, testamenti, proprietà e controversie riguardanti molti dei presenti.",advice:"Ascolta con attenzione e cerca contraddizioni. Presta particolare attenzione a documenti, eredità e questioni economiche."},
+{
+id:"corrado_de_marchi",
+name:"Corrado De Marchi",
+gender:"M",
+role:"Cugino materno di Angelina",
+description:
+"Hai avuto diversi contrasti con Angelina riguardo alcune proprietà della famiglia materna.",
+advice:
+"Mostrati cordiale, ma presta molta attenzione quando si parla di denaro e proprietà."
+},
 
-{id:"marcello_albrizzi",name:"Marcello Albrizzi",gender:"M",role:"Medico e amico di famiglia",description:"Conosci Angelina da molti anni e possiedi competenze mediche che potrebbero diventare importanti.",advice:"Osserva dettagli fisici e comportamenti. Non arrivare troppo velocemente a una conclusione."},
 
-{id:"cesare_valli",name:"Cesare Valli",gender:"M",role:"Maggiordomo di Villa Valenti",description:"Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",advice:"Sii discreto. Osserva molto e parla soltanto quando ritieni necessario."},
+{
+id:"leone_de_marchi",
+name:"Leone De Marchi",
+gender:"M",
+role:"Zio materno di Angelina",
+description:
+"Conosci molti episodi della famiglia risalenti alla generazione precedente.",
+advice:
+"Parla poco e ascolta molto. Confronta ciò che gli altri raccontano con quello che ricordi."
+},
 
-{id:"adriano_conti",name:"Adriano Conti",gender:"M",role:"Ex spasimante di Angelina",description:"In passato hai provato sentimenti importanti per Angelina e il vostro rapporto non è stato completamente dimenticato.",advice:"Evita di sembrare apertamente geloso, ma reagisci quando qualcuno mette in dubbio il vostro passato."},
 
-{id:"elia_neroni",name:"Elia Neroni",gender:"M",role:"Amico d'infanzia di Angelina",description:"Conosci Angelina da prima della villa, della ricchezza e degli affari.",advice:"Osserva soprattutto i comportamenti. Sei bravo a capire quando qualcuno non sta raccontando tutta la verità."},
+{
+id:"dorian_ferretti",
+name:"Dorian Ferretti",
+gender:"M",
+role:"Socio d'affari di Angelina",
+description:
+"Hai gestito diversi affari con Angelina e recentemente sono nate tensioni riguardo alcuni conti.",
+advice:
+"Rimani professionale e cerca di separare gli affari dalle questioni personali."
+},
 
-{id:"ottavio_serra",name:"Ottavio Serra",gender:"M",role:"Fotografo e documentarista della famiglia",description:"Da anni documenti feste, ricorrenze ed eventi della famiglia Valenti.",advice:"Osserva dettagli, posizioni e comportamenti."},
 
-{id:"lavinia_valenti",name:"Lavinia Valenti",gender:"F",role:"Sorella maggiore di Angelina",description:"Il rapporto con Angelina è sempre stato segnato da una certa rivalità.",advice:"Difendi il nome della famiglia, ma non lasciare che i vecchi contrasti diventino automaticamente un'accusa contro di te."},
+{
+id:"tancredi_moreau",
+name:"Tancredi Moreau",
+gender:"M",
+role:"Avvocato della famiglia",
+description:
+"Conosci contratti, testamenti, proprietà e controversie riguardanti molti dei presenti.",
+advice:
+"Ascolta con attenzione e cerca contraddizioni. Presta particolare attenzione a documenti, eredità e questioni economiche."
+},
 
-{id:"celeste_valenti",name:"Celeste Valenti",gender:"F",role:"Sorella minore di Angelina",description:"Sei sempre stata molto protetta dalla famiglia e soprattutto da Angelina.",advice:"Cerca di capire perché Angelina avesse recentemente cambiato atteggiamento nei tuoi confronti."},
 
-{id:"ofelia_de_marchi",name:"Ofelia De Marchi",gender:"F",role:"Cugina materna",description:"Da tempo sospetti che alcune questioni relative all'eredità materna non siano mai state chiarite completamente.",advice:"Fai domande sui vecchi documenti, sulle proprietà e sulla storia della famiglia."},
+{
+id:"marcello_albrizzi",
+name:"Marcello Albrizzi",
+gender:"M",
+role:"Medico e amico di famiglia",
+description:
+"Conosci Angelina da molti anni e possiedi competenze mediche che potrebbero diventare importanti.",
+advice:
+"Osserva dettagli fisici e comportamenti. Non arrivare troppo velocemente a una conclusione."
+},
 
-{id:"viola_neroni",name:"Viola Neroni",gender:"F",role:"Migliore amica di Angelina",description:"Angelina si confidava spesso con te, ma nelle ultime settimane aveva iniziato a tenerti all'oscuro di qualcosa.",advice:"Cerca di capire perché Angelina abbia improvvisamente smesso di raccontarti tutto."},
 
-{id:"eva_montorsi",name:"Eva Montorsi",gender:"F",role:"Governante di Villa Valenti",description:"Lavori nella villa da molti anni e conosci bene le vere dinamiche della famiglia.",advice:"Confronta ciò che gli invitati dichiarano con ciò che hai visto personalmente negli anni."},
+{
+id:"cesare_valli",
+name:"Cesare Valli",
+gender:"M",
+role:"Maggiordomo di Villa Valenti",
+description:
+"Conosci perfettamente la villa, le stanze e le abitudini di chi la frequenta.",
+advice:
+"Sii discreto. Osserva molto e parla soltanto quando ritieni necessario."
+},
 
-{id:"bianca_albrizzi",name:"Bianca Albrizzi",gender:"F",role:"Segretaria personale di Angelina",description:"Gestivi appuntamenti, telefonate e parte della documentazione privata di Angelina.",advice:"Presta particolare attenzione agli orari, agli incontri e agli eventuali documenti mancanti."},
 
-{id:"emilia_riva",name:"Emilia Riva",gender:"F",role:"Collaboratrice della villa",description:"Collabori spesso all'organizzazione degli eventi di Villa Valenti.",advice:"Fai attenzione agli spostamenti degli invitati e a ciò che accade nelle zone di servizio."},
+{
+id:"adriano_conti",
+name:"Adriano Conti",
+gender:"M",
+role:"Ex spasimante di Angelina",
+description:
+"In passato hai provato sentimenti importanti per Angelina e il vostro rapporto non è stato completamente dimenticato.",
+advice:
+"Evita di sembrare apertamente geloso, ma reagisci quando qualcuno mette in dubbio il vostro passato."
+},
 
-{id:"ginevra_ferretti",name:"Ginevra Ferretti",gender:"F",role:"Conoscente dell'ambiente lavorativo di Angelina",description:"Conosci sia l'ambiente professionale sia alcune persone della cerchia privata di Angelina.",advice:"Cerca collegamenti tra gli affari e i rapporti personali presenti nella villa."},
 
-{id:"isabella_roversi",name:"Isabella Roversi",gender:"F",role:"Antiquaria e conoscente di Angelina",description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."}
+{
+id:"elia_neroni",
+name:"Elia Neroni",
+gender:"M",
+role:"Amico d'infanzia di Angelina",
+description:
+"Conosci Angelina da prima della villa, della ricchezza e degli affari.",
+advice:
+"Osserva soprattutto i comportamenti. Sei bravo a capire quando qualcuno non sta raccontando tutta la verità."
+},
+
+
+{
+id:"ottavio_serra",
+name:"Ottavio Serra",
+gender:"M",
+role:"Fotografo e documentarista della famiglia",
+description:
+"Da anni documenti feste, ricorrenze ed eventi della famiglia Valenti.",
+advice:
+"Osserva dettagli, posizioni e comportamenti."
+},
+
+
+{
+id:"lavinia_valenti",
+name:"Lavinia Valenti",
+gender:"F",
+role:"Sorella maggiore di Angelina",
+description:
+"Il rapporto con Angelina è sempre stato segnato da una certa rivalità.",
+advice:
+"Difendi il nome della famiglia, ma non lasciare che i vecchi contrasti diventino automaticamente un'accusa contro di te."
+},
+
+
+{
+id:"celeste_valenti",
+name:"Celeste Valenti",
+gender:"F",
+role:"Sorella minore di Angelina",
+description:
+"Sei sempre stata molto protetta dalla famiglia e soprattutto da Angelina.",
+advice:
+"Cerca di capire perché Angelina avesse recentemente cambiato atteggiamento nei tuoi confronti."
+},
+
+
+{
+id:"ofelia_de_marchi",
+name:"Ofelia De Marchi",
+gender:"F",
+role:"Cugina materna",
+description:
+"Da tempo sospetti che alcune questioni relative all'eredità materna non siano mai state chiarite completamente.",
+advice:
+"Fai domande sui vecchi documenti, sulle proprietà e sulla storia della famiglia."
+},
+
+
+{
+id:"viola_neroni",
+name:"Viola Neroni",
+gender:"F",
+role:"Migliore amica di Angelina",
+description:
+"Angelina si confidava spesso con te, ma nelle ultime settimane aveva iniziato a tenerti all'oscuro di qualcosa.",
+advice:
+"Cerca di capire perché Angelina abbia improvvisamente smesso di raccontarti tutto."
+},
+
+
+{
+id:"eva_montorsi",
+name:"Eva Montorsi",
+gender:"F",
+role:"Governante di Villa Valenti",
+description:
+"Lavori nella villa da molti anni e conosci bene le vere dinamiche della famiglia.",
+advice:
+"Confronta ciò che gli invitati dichiarano con ciò che hai visto personalmente negli anni."
+},
+
+
+{
+id:"bianca_albrizzi",
+name:"Bianca Albrizzi",
+gender:"F",
+role:"Segretaria personale di Angelina",
+description:
+"Gestivi appuntamenti, telefonate e parte della documentazione privata di Angelina.",
+advice:
+"Presta particolare attenzione agli orari, agli incontri e agli eventuali documenti mancanti."
+},
+
+
+{
+id:"emilia_riva",
+name:"Emilia Riva",
+gender:"F",
+role:"Collaboratrice della villa",
+description:
+"Collabori spesso all'organizzazione degli eventi di Villa Valenti.",
+advice:
+"Fai attenzione agli spostamenti degli invitati e a ciò che accade nelle zone di servizio."
+},
+
+
+{
+id:"ginevra_ferretti",
+name:"Ginevra Ferretti",
+gender:"F",
+role:"Conoscente dell'ambiente lavorativo di Angelina",
+description:
+"Conosci sia l'ambiente professionale sia alcune persone della cerchia privata di Angelina.",
+advice:
+"Cerca collegamenti tra gli affari e i rapporti personali presenti nella villa."
+},
+
+
+{
+id:"isabella_roversi",
+name:"Isabella Roversi",
+gender:"F",
+role:"Antiquaria e conoscente di Angelina",
+description:
+"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",
+advice:
+"Presta attenzione agli oggetti della villa e alla loro provenienza."
+}
 
 ];
+
+
+
+/* ===========================
+   RITRATTI
+=========================== */
 
 
 const PORTRAITS=
 window.PORTRAITS||{};
 
 
+
+/* ===========================
+   TEST PERSONAGGI
+=========================== */
+
+
 const MALE_TEST_ORDER=[
+
 "ettore_valenti",
 "ludovico_orsini",
 "corrado_de_marchi",
@@ -1436,10 +1918,12 @@ const MALE_TEST_ORDER=[
 "adriano_conti",
 "elia_neroni",
 "ottavio_serra"
+
 ];
 
 
 const FEMALE_TEST_ORDER=[
+
 "lavinia_valenti",
 "celeste_valenti",
 "ofelia_de_marchi",
@@ -1449,7 +1933,14 @@ const FEMALE_TEST_ORDER=[
 "emilia_riva",
 "ginevra_ferretti",
 "isabella_roversi"
+
 ];
+
+
+
+/* ===========================
+   ASSEGNAZIONI
+=========================== */
 
 
 const GAME_SEED=
@@ -1458,13 +1949,20 @@ const GAME_SEED=
 
 function hashString(str){
 
-let h=2166136261;
+let h=
+2166136261;
 
-for(let i=0;i<str.length;i++){
+for(
+let i=0;
+i<str.length;
+i++
+){
 
-h^=str.charCodeAt(i);
+h^=
+str.charCodeAt(i);
 
-h=Math.imul(
+h=
+Math.imul(
 h,
 16777619
 );
@@ -1476,17 +1974,22 @@ return h>>>0;
 }
 
 
+
 function seededRandom(seed){
 
-let value=seed>>>0;
+let value=
+seed>>>0;
 
 return function(){
 
-value+=0x6D2B79F5;
+value+=
+0x6D2B79F5;
 
-let t=value;
+let t=
+value;
 
-t=Math.imul(
+t=
+Math.imul(
 t^(t>>>15),
 t|1
 );
@@ -1505,6 +2008,7 @@ return(
 }
 
 }
+
 
 
 function shuffleStable(
@@ -1549,6 +2053,7 @@ result[i]
 return result;
 
 }
+
 
 
 function createCharacterAssignments(){
@@ -1614,8 +2119,10 @@ return assignments;
 }
 
 
+
 const CHARACTER_ASSIGNMENTS=
 createCharacterAssignments();
+
 
 
 function createSpecialRoles(){
@@ -1632,18 +2139,22 @@ eligible,
 );
 
 return{
+
 assassin:
 shuffled[0].id,
 
 accomplice:
 shuffled[1].id
+
 };
 
 }
 
 
+
 const SPECIAL_ROLES=
 createSpecialRoles();
+
 
 
 let currentParticipant=null;
@@ -1653,8 +2164,9 @@ let registryLiveTimer=null;
 let registryLoading=false;
 
 
+
 /* ===========================
-   REGIA LIVE
+   INDIZI LIVE
 =========================== */
 
 
@@ -1685,13 +2197,15 @@ let liveUnlockState={
 ...DEFAULT_LIVE_UNLOCKS
 };
 
+
 let liveUnlockTimer=null;
 
 let liveUnlockLoading=false;
 
 
+
 /* ===========================
-   TEST PERSONAGGI
+   TEST FOTO
 =========================== */
 
 
@@ -1706,9 +2220,11 @@ FEMALE_TEST_ORDER
 :
 MALE_TEST_ORDER;
 
+
 const key=
 "villaValentiTestPhotoIndex_"+
 participant.code;
+
 
 let index=
 Number(
@@ -1717,21 +2233,25 @@ localStorage.getItem(key)
 "-1"
 );
 
+
 index=
 (index+1)
 %
 order.length;
+
 
 localStorage.setItem(
 key,
 String(index)
 );
 
+
 return characters.find(
 c=>c.id===order[index]
 );
 
 }
+
 
 
 /* ===========================
@@ -1753,11 +2273,15 @@ path+
 ".json",
 
 {
+
 cache:"no-store",
+
 ...options
+
 }
 
 );
+
 
 if(!response.ok){
 
@@ -1768,9 +2292,11 @@ response.status
 
 }
 
+
 return response.json();
 
 }
+
 
 
 async function firebaseWrite(
@@ -1780,7 +2306,9 @@ method="PUT"
 ){
 
 return firebaseRequest(
+
 path,
+
 {
 
 method,
@@ -1794,9 +2322,11 @@ body:
 JSON.stringify(data)
 
 }
+
 );
 
 }
+
 
 
 async function firebaseDelete(
@@ -1804,13 +2334,17 @@ path
 ){
 
 return firebaseRequest(
+
 path,
+
 {
 method:"DELETE"
 }
+
 );
 
 }
+
 
 
 /* ===========================
@@ -1826,27 +2360,33 @@ const oldCode=
 const newCode=
 "220225";
 
+
 const oldPath=
 "players/"+
 oldCode+
 "/public";
+
 
 const newPath=
 "players/"+
 newCode+
 "/public";
 
+
 try{
+
 
 const oldRecord=
 await firebaseRequest(
 oldPath
 );
 
+
 const newRecord=
 await firebaseRequest(
 newPath
 );
+
 
 if(oldRecord){
 
@@ -1873,30 +2413,29 @@ new Date().toISOString()
 
 };
 
+
 await firebaseWrite(
 newPath,
 mergedRecord
 );
 
+
 await firebaseDelete(
 oldPath
 );
 
-console.log(
-"Firebase migrato: "+
-oldCode+
-" → "+
-newCode
-);
 
 return;
 
 }
 
+
 if(!newRecord){
 
 await firebaseWrite(
+
 newPath,
+
 {
 
 participantId:
@@ -1919,14 +2458,11 @@ migratedAt:
 new Date().toISOString()
 
 }
-);
 
-console.log(
-"Firebase inizializzato per il nuovo codice "+
-newCode
 );
 
 }
+
 
 }catch(error){
 
@@ -1940,7 +2476,9 @@ error
 }
 
 
+
 migrateGiuliaTesiniPoveglianoCode();
+
 
 
 /* ===========================
@@ -1989,15 +2527,18 @@ testMode:true
 
 }
 
+
 const path=
 "players/"+
 participant.code+
 "/public";
 
+
 const stored=
 await firebaseRequest(
 path
 );
+
 
 if(
 stored &&
@@ -2007,19 +2548,26 @@ stored.characterId
 const lastSeen=
 new Date().toISOString();
 
+
 const loginCount=
 Number(
 stored.loginCount||1
 )+1;
 
+
 await firebaseWrite(
+
 path,
+
 {
 lastSeen,
 loginCount
 },
+
 "PATCH"
+
 );
+
 
 return{
 
@@ -2035,8 +2583,10 @@ loginCount
 
 }
 
+
 const now=
 new Date().toISOString();
+
 
 const record={
 
@@ -2061,10 +2611,12 @@ loginCount:1
 
 };
 
+
 await firebaseWrite(
 path,
 record
 );
+
 
 return{
 
@@ -2078,6 +2630,7 @@ record
 }
 
 
+
 /* ===========================
    REGISTRO LIVE
 =========================== */
@@ -2087,13 +2640,17 @@ function startRegistryLive(){
 
 stopRegistryLive();
 
+
 if(
 !currentParticipant ||
 currentParticipant.code!==
 ORGANIZER_CODE
-)return;
+)
+return;
+
 
 loadRegistry();
+
 
 registryLiveTimer=
 setInterval(
@@ -2120,6 +2677,7 @@ stopRegistryLive();
 }
 
 
+
 function stopRegistryLive(){
 
 if(
@@ -2137,6 +2695,7 @@ registryLiveTimer=null;
 }
 
 
+
 /* ===========================
    INDIZI LIVE
 =========================== */
@@ -2146,11 +2705,15 @@ function startLiveUnlocks(){
 
 stopLiveUnlocks();
 
+
 if(
 !currentParticipant
-)return;
+)
+return;
+
 
 loadLiveUnlocks();
+
 
 liveUnlockTimer=
 setInterval(
@@ -2175,6 +2738,7 @@ stopLiveUnlocks();
 }
 
 
+
 function stopLiveUnlocks(){
 
 if(
@@ -2192,6 +2756,7 @@ liveUnlockTimer=null;
 }
 
 
+
 async function loadLiveUnlocks(
 silent=false
 ){
@@ -2199,16 +2764,21 @@ silent=false
 if(
 !currentParticipant ||
 liveUnlockLoading
-)return;
+)
+return;
+
 
 liveUnlockLoading=true;
 
+
 try{
+
 
 const data=
 await firebaseRequest(
 LIVE_UNLOCK_PATH
 );
+
 
 liveUnlockState={
 
@@ -2218,6 +2788,7 @@ liveUnlockState={
 
 };
 
+
 renderLiveUnlocks();
 
 
@@ -2225,6 +2796,7 @@ const liveStatus=
 document.getElementById(
 "indiziLiveStatus"
 );
+
 
 if(liveStatus){
 
@@ -2246,6 +2818,7 @@ document.getElementById(
 "liveControlConnection"
 );
 
+
 if(
 controlStatus &&
 currentParticipant.code===
@@ -2263,6 +2836,7 @@ new Date().toLocaleTimeString(
 
 }catch(e){
 
+
 if(!silent){
 
 console.error(
@@ -2272,10 +2846,12 @@ e
 
 }
 
+
 const liveStatus=
 document.getElementById(
 "indiziLiveStatus"
 );
+
 
 if(liveStatus){
 
@@ -2284,10 +2860,12 @@ liveStatus.textContent=
 
 }
 
+
 const controlStatus=
 document.getElementById(
 "liveControlConnection"
 );
+
 
 if(
 controlStatus &&
@@ -2301,6 +2879,7 @@ controlStatus.textContent=
 
 }
 
+
 }finally{
 
 liveUnlockLoading=false;
@@ -2310,20 +2889,28 @@ liveUnlockLoading=false;
 }
 
 
+
 function renderLiveUnlocks(){
 
 const map=[
 
 ["common1","commonClue1","stateCommon1"],
+
 ["common2","commonClue2","stateCommon2"],
+
 ["common3","commonClue3","stateCommon3"],
+
 ["personal1","personalClue1","statePersonal1"],
+
 ["personal2","personalClue2","statePersonal2"],
+
 ["personal3","personalClue3","statePersonal3"]
 
 ];
 
+
 let any=false;
+
 
 map.forEach(
 ([
@@ -2335,6 +2922,7 @@ stateId
 const on=
 !!liveUnlockState[key];
 
+
 any=
 any||on;
 
@@ -2343,6 +2931,7 @@ const clue=
 document.getElementById(
 clueId
 );
+
 
 if(clue){
 
@@ -2359,6 +2948,7 @@ document.getElementById(
 stateId
 );
 
+
 if(stateEl){
 
 stateEl.textContent=
@@ -2367,6 +2957,7 @@ on
 "SBLOCCATO"
 :
 "BLOCCATO";
+
 
 stateEl.classList.toggle(
 "on",
@@ -2378,10 +2969,12 @@ on
 }
 );
 
+
 const empty=
 document.getElementById(
 "noCluesBox"
 );
+
 
 if(empty){
 
@@ -2395,6 +2988,7 @@ any
 }
 
 
+
 async function toggleLiveUnlock(
 key
 ){
@@ -2403,12 +2997,15 @@ if(
 !currentParticipant ||
 currentParticipant.code!==
 ORGANIZER_CODE
-)return;
+)
+return;
+
 
 const status=
 document.getElementById(
 "liveWriteStatus"
 );
+
 
 if(status){
 
@@ -2417,7 +3014,9 @@ status.textContent=
 
 }
 
+
 try{
+
 
 const next={
 
@@ -2434,15 +3033,19 @@ currentParticipant.id
 
 };
 
+
 await firebaseWrite(
 LIVE_UNLOCK_PATH,
 next
 );
 
+
 liveUnlockState=
 next;
 
+
 renderLiveUnlocks();
+
 
 if(status){
 
@@ -2454,12 +3057,15 @@ new Date().toLocaleTimeString(
 
 }
 
+
 }catch(e){
+
 
 console.error(
 "Errore comando Regia:",
 e
 );
+
 
 if(status){
 
@@ -2473,18 +3079,22 @@ status.textContent=
 }
 
 
+
 async function resetLiveUnlocks(){
 
 if(
 !currentParticipant ||
 currentParticipant.code!==
 ORGANIZER_CODE
-)return;
+)
+return;
+
 
 const status=
 document.getElementById(
 "liveWriteStatus"
 );
+
 
 if(status){
 
@@ -2493,7 +3103,9 @@ status.textContent=
 
 }
 
+
 try{
+
 
 const next={
 
@@ -2507,15 +3119,19 @@ currentParticipant.id
 
 };
 
+
 await firebaseWrite(
 LIVE_UNLOCK_PATH,
 next
 );
 
+
 liveUnlockState=
 next;
 
+
 renderLiveUnlocks();
+
 
 if(status){
 
@@ -2527,12 +3143,15 @@ new Date().toLocaleTimeString(
 
 }
 
+
 }catch(e){
+
 
 console.error(
 "Errore reset Regia:",
 e
 );
+
 
 if(status){
 
@@ -2544,6 +3163,337 @@ status.textContent=
 }
 
 }
+
+
+
+/* ===========================
+   FIX BANDA NERA
+=========================== */
+
+
+function cropBlackBandFromPortrait(
+img,
+participantId,
+characterId
+){
+
+const shouldFix=
+
+(
+participantId===
+"beatrice_remelli"
+
+&&
+
+characterId===
+"lavinia_valenti"
+)
+
+||
+
+(
+participantId===
+"emma_biasi"
+
+&&
+
+characterId===
+"celeste_valenti"
+);
+
+
+if(!shouldFix)
+return;
+
+
+const process=()=>{
+
+
+try{
+
+
+if(
+!img.naturalWidth ||
+!img.naturalHeight
+)
+return;
+
+
+const canvas=
+document.createElement(
+"canvas"
+);
+
+
+canvas.width=
+img.naturalWidth;
+
+
+canvas.height=
+img.naturalHeight;
+
+
+const ctx=
+canvas.getContext(
+"2d",
+{
+willReadFrequently:true
+}
+);
+
+
+ctx.drawImage(
+img,
+0,
+0
+);
+
+
+const w=
+canvas.width;
+
+
+const h=
+canvas.height;
+
+
+const data=
+ctx.getImageData(
+0,
+0,
+w,
+h
+).data;
+
+
+let cropY=
+-1;
+
+
+let consecutive=
+0;
+
+
+const startY=
+Math.floor(
+h*0.28
+);
+
+
+for(
+let y=startY;
+y<h;
+y++
+){
+
+let black=
+0;
+
+
+let sampled=
+0;
+
+
+for(
+let x=0;
+x<w;
+x+=3
+){
+
+const i=
+(y*w+x)*4;
+
+
+const r=
+data[i];
+
+
+const g=
+data[i+1];
+
+
+const b=
+data[i+2];
+
+
+const a=
+data[i+3];
+
+
+if(a>200){
+
+sampled++;
+
+
+if(
+r<22 &&
+g<22 &&
+b<22
+){
+
+black++;
+
+}
+
+}
+
+}
+
+
+const ratio=
+sampled
+?
+black/sampled
+:
+0;
+
+
+if(
+ratio>0.82
+){
+
+consecutive++;
+
+
+if(
+consecutive>=8
+){
+
+cropY=
+y-7;
+
+break;
+
+}
+
+
+}else{
+
+consecutive=
+0;
+
+}
+
+}
+
+
+if(
+cropY<0
+){
+
+cropY=
+Math.floor(
+
+h*
+
+(
+participantId===
+"beatrice_remelli"
+?
+0.56
+:
+0.62
+)
+
+);
+
+}
+
+
+cropY=
+Math.max(
+
+Math.floor(
+h*0.40
+),
+
+Math.min(
+cropY,
+h
+)
+
+);
+
+
+const out=
+document.createElement(
+"canvas"
+);
+
+
+out.width=
+w;
+
+
+out.height=
+cropY;
+
+
+const outCtx=
+out.getContext(
+"2d"
+);
+
+
+outCtx.drawImage(
+
+canvas,
+
+0,
+0,
+w,
+cropY,
+
+0,
+0,
+w,
+cropY
+
+);
+
+
+img.src=
+out.toDataURL(
+"image/webp",
+0.92
+);
+
+
+}catch(e){
+
+
+console.error(
+"Correzione ritratto non riuscita:",
+e
+);
+
+
+}
+
+};
+
+
+if(
+img.complete &&
+img.naturalWidth
+){
+
+process();
+
+}else{
+
+img.addEventListener(
+"load",
+process,
+{
+once:true
+}
+);
+
+}
+
+}
+
 
 
 /* ===========================
@@ -2558,12 +3508,16 @@ document.getElementById(
 "codeInput"
 ).value.trim();
 
+
 const error=
 document.getElementById(
 "error"
 );
 
-error.textContent="";
+
+error.textContent=
+"";
+
 
 const participant=
 participants.find(
@@ -2571,6 +3525,7 @@ p=>
 p.code &&
 p.code===input
 );
+
 
 if(!participant){
 
@@ -2581,32 +3536,45 @@ return;
 
 }
 
+
 error.textContent=
 "ACCESSO ALL'ARCHIVIO…";
 
+
 try{
+
 
 currentParticipant=
 participant;
+
 
 await openCharacter(
 participant
 );
 
-error.textContent="";
+
+error.textContent=
+"";
+
 
 }catch(e){
 
+
 console.error(e);
 
-currentParticipant=null;
+
+currentParticipant=
+null;
+
 
 error.textContent=
 "ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA";
 
+
 }
 
 }
+
 
 
 /* ===========================
@@ -2623,12 +3591,14 @@ CHARACTER_ASSIGNMENTS[
 participant.id
 ];
 
+
 const officialCharacter=
 characters.find(
 c=>
 c.id===
 officialCharacterId
 );
+
 
 if(!officialCharacter){
 
@@ -2638,11 +3608,13 @@ throw new Error(
 
 }
 
+
 const result=
 await getOrCreatePlayer(
 participant,
 officialCharacter
 );
+
 
 const character=
 characters.find(
@@ -2650,6 +3622,7 @@ c=>
 c.id===
 result.data.characterId
 );
+
 
 if(!character){
 
@@ -2679,11 +3652,13 @@ character.name+
 ".";
 
 
+
 document.getElementById(
 "loginSection"
 ).classList.add(
 "hidden"
 );
+
 
 document.getElementById(
 "appSection"
@@ -2691,30 +3666,36 @@ document.getElementById(
 "hidden"
 );
 
+
 document.getElementById(
 "greeting"
 ).textContent=
 greeting;
+
 
 document.getElementById(
 "characterName"
 ).textContent=
 character.name;
 
+
 document.getElementById(
 "characterRole"
 ).textContent=
 character.role;
+
 
 document.getElementById(
 "characterDescription"
 ).textContent=
 character.description;
 
+
 document.getElementById(
 "characterAdvice"
 ).textContent=
 character.advice;
+
 
 document.getElementById(
 "realUserLabel"
@@ -2730,6 +3711,7 @@ result.data.testMode
 );
 
 
+
 const initials=
 character.name
 .split(" ")
@@ -2741,15 +3723,18 @@ p=>p[0]
 .toUpperCase();
 
 
+
 const monogram=
 document.getElementById(
 "characterMonogram"
 );
 
+
 const photo=
 document.getElementById(
 "characterPhoto"
 );
+
 
 
 const photoSrc=
@@ -2764,47 +3749,14 @@ character.id
 ];
 
 
-const portraitBox=
-photo.closest(
-".portrait"
-);
-
-portraitBox.classList.remove(
-"fix-beatrice-lavinia",
-"fix-emma-celeste"
-);
-
-
-if(
-participant.id==="beatrice_remelli"
-&&
-character.id==="lavinia_valenti"
-){
-
-portraitBox.classList.add(
-"fix-beatrice-lavinia"
-);
-
-}
-
-
-if(
-participant.id==="emma_biasi"
-&&
-character.id==="celeste_valenti"
-){
-
-portraitBox.classList.add(
-"fix-emma-celeste"
-);
-
-}
-
 
 if(photoSrc){
 
-photo.src=
-photoSrc;
+
+photo.removeAttribute(
+"src"
+);
+
 
 photo.alt=
 "Ritratto di "+
@@ -2812,32 +3764,111 @@ participant.name+
 " come "+
 character.name;
 
+
 photo.classList.remove(
 "hidden"
 );
+
 
 monogram.classList.add(
 "hidden"
 );
 
+
+
+const needsCrop=
+
+(
+participant.id===
+"beatrice_remelli"
+
+&&
+
+character.id===
+"lavinia_valenti"
+)
+
+||
+
+(
+participant.id===
+"emma_biasi"
+
+&&
+
+character.id===
+"celeste_valenti"
+);
+
+
+
+if(needsCrop){
+
+
+photo.addEventListener(
+"load",
+function originalPortraitLoaded(){
+
+photo.removeEventListener(
+"load",
+originalPortraitLoaded
+);
+
+
+cropBlackBandFromPortrait(
+
+photo,
+
+participant.id,
+
+character.id
+
+);
+
+},
+{
+once:true
+}
+);
+
+
+}
+
+
+photo.src=
+photoSrc;
+
+
+
 }else{
+
 
 photo.removeAttribute(
 "src"
 );
 
+
 photo.classList.add(
 "hidden"
 );
+
 
 monogram.classList.remove(
 "hidden"
 );
 
+
 monogram.textContent=
 initials;
 
+
 }
+
+
+
+/* ===========================
+   RUOLI SPECIALI
+=========================== */
 
 
 const secretBox=
@@ -2845,16 +3876,21 @@ document.getElementById(
 "secretRoleBox"
 );
 
+
 const secretText=
 document.getElementById(
 "secretRole"
 );
 
+
 secretBox.classList.add(
 "hidden"
 );
 
-secretText.innerHTML="";
+
+secretText.innerHTML=
+"";
+
 
 
 if(
@@ -2864,14 +3900,18 @@ SPECIAL_ROLES.assassin
 ){
 
 secretText.innerHTML=
-"<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>"+
+
+"<strong>DOCUMENTO PERSONALE RISERVATO</strong>"+
+"<br><br>"+
 "Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti."+
 "<br><br>"+
 "Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
 
+
 secretBox.classList.remove(
 "hidden"
 );
+
 
 }else if(
 !result.data.testMode &&
@@ -2879,22 +3919,29 @@ participant.id===
 SPECIAL_ROLES.accomplice
 ){
 
+
 secretText.innerHTML=
-"<strong>DOCUMENTO PERSONALE RISERVATO</strong><br><br>"+
+
+"<strong>DOCUMENTO PERSONALE RISERVATO</strong>"+
+"<br><br>"+
 "Ti è stato assegnato un ruolo speciale nella storia di Villa Valenti."+
 "<br><br>"+
 "Le istruzioni definitive verranno rese disponibili qui nella versione completa del gioco.";
+
 
 secretBox.classList.remove(
 "hidden"
 );
 
+
 }
+
 
 
 const isOrganizer=
 participant.code===
 ORGANIZER_CODE;
+
 
 
 document.getElementById(
@@ -2904,6 +3951,8 @@ document.getElementById(
 !isOrganizer
 );
 
+
+
 document.getElementById(
 "havilandMobileBtn"
 ).classList.toggle(
@@ -2911,12 +3960,15 @@ document.getElementById(
 !isOrganizer
 );
 
+
+
 document.getElementById(
 "mobileNav"
 ).classList.toggle(
 "three",
 isOrganizer
 );
+
 
 
 if(isOrganizer){
@@ -2930,6 +3982,7 @@ stopRegistryLive();
 }
 
 
+
 startLiveUnlocks();
 
 
@@ -2937,11 +3990,13 @@ openTab(
 "dossier"
 );
 
+
 speakGreeting(
 greeting
 );
 
 }
+
 
 
 /* ===========================
@@ -2955,13 +4010,18 @@ stopRegistryLive();
 
 stopLiveUnlocks();
 
-currentParticipant=null;
+
+currentParticipant=
+null;
+
 
 liveUnlockState={
 ...DEFAULT_LIVE_UNLOCKS
 };
 
+
 renderLiveUnlocks();
+
 
 document.getElementById(
 "appSection"
@@ -2969,25 +4029,32 @@ document.getElementById(
 "hidden"
 );
 
+
 document.getElementById(
 "loginSection"
 ).classList.remove(
 "hidden"
 );
 
+
 document.getElementById(
 "codeInput"
-).value="";
+).value=
+"";
+
 
 document.getElementById(
 "error"
-).textContent="";
+).textContent=
+"";
+
 
 openTab(
 "dossier"
 );
 
 }
+
 
 
 /* ===========================
@@ -3001,10 +4068,14 @@ tabName
 
 if(
 tabName==="haviland"
+
 &&
+
 (
 !currentParticipant
+
 ||
+
 currentParticipant.code!==
 ORGANIZER_CODE
 )
@@ -3014,6 +4085,7 @@ tabName=
 "dossier";
 
 }
+
 
 
 document
@@ -3028,10 +4100,12 @@ p.classList.add(
 );
 
 
+
 const page=
 document.getElementById(
 "tab-"+tabName
 );
+
 
 if(page){
 
@@ -3040,6 +4114,7 @@ page.classList.remove(
 );
 
 }
+
 
 
 document
@@ -3056,6 +4131,7 @@ tabName
 );
 
 
+
 document
 .querySelectorAll(
 ".mobile-nav button"
@@ -3070,11 +4146,16 @@ tabName
 );
 
 
+
 if(
 tabName==="haviland"
+
 &&
+
 currentParticipant
+
 &&
+
 currentParticipant.code===
 ORGANIZER_CODE
 ){
@@ -3086,9 +4167,12 @@ loadLiveUnlocks(true);
 }
 
 
+
 if(
 tabName==="indizi"
+
 &&
+
 currentParticipant
 ){
 
@@ -3097,12 +4181,17 @@ loadLiveUnlocks(true);
 }
 
 
+
 window.scrollTo({
+
 top:0,
+
 behavior:"smooth"
+
 });
 
 }
+
 
 
 /* ===========================
@@ -3116,43 +4205,56 @@ text
 
 if(
 !("speechSynthesis" in window)
-)return;
+)
+return;
+
 
 try{
 
+
 speechSynthesis.cancel();
+
 
 const u=
 new SpeechSynthesisUtterance(
 text
 );
 
+
 u.lang=
 "it-IT";
+
 
 u.rate=
 .86;
 
+
 u.pitch=
 .82;
 
+
 u.volume=
 1;
+
 
 speechSynthesis.speak(
 u
 );
 
+
 }catch(e){
+
 
 console.error(
 "Errore voce:",
 e
 );
 
+
 }
 
 }
+
 
 
 /* ===========================
@@ -3166,15 +4268,23 @@ silent=false
 
 if(
 !currentParticipant
+
 ||
+
 currentParticipant.code!==
 ORGANIZER_CODE
+
 ||
+
 registryLoading
-)return;
+)
+return;
 
 
-registryLoading=true;
+
+registryLoading=
+true;
+
 
 
 const status=
@@ -3182,10 +4292,12 @@ document.getElementById(
 "registryStatus"
 );
 
+
 const rows=
 document.getElementById(
 "registryRows"
 );
+
 
 
 if(!silent){
@@ -3196,17 +4308,22 @@ status.textContent=
 }
 
 
+
 try{
+
 
 const allPlayers=
 await firebaseRequest(
 "players"
 )
-||{};
+||
+{};
+
 
 
 const fragment=
 document.createDocumentFragment();
+
 
 
 participants
@@ -3216,10 +4333,12 @@ p=>p.code
 .forEach(
 p=>{
 
+
 const node=
 allPlayers[
 p.code
 ];
+
 
 const record=
 node &&
@@ -3230,13 +4349,16 @@ node.public
 null;
 
 
+
 const row=
 document.createElement(
 "div"
 );
 
+
 row.className=
 "registry-row";
+
 
 
 const characterName=
@@ -3248,6 +4370,7 @@ record.characterName
 "—";
 
 
+
 const accessStatus=
 record &&
 record.assigned
@@ -3257,6 +4380,7 @@ record.assigned
 '<span class="pending">○ Non ancora assegnato</span>';
 
 
+
 row.innerHTML=
 
 "<div><strong>"+
@@ -3264,48 +4388,62 @@ escapeHtml(
 p.name
 )+
 "</strong></div>"+
+
 "<div>"+
 escapeHtml(
 characterName
 )+
 "</div>"+
+
 "<div>"+
 accessStatus+
 "</div>";
+
 
 
 fragment.appendChild(
 row
 );
 
+
 }
 );
+
 
 
 rows.replaceChildren(
 fragment
 );
 
-status.textContent="";
+
+status.textContent=
+"";
 
 
 }catch(e){
+
 
 console.error(
 "Errore Registro Villa:",
 e
 );
 
+
 status.textContent=
 "IMPOSSIBILE CARICARE IL REGISTRO VILLA";
 
+
 }finally{
 
-registryLoading=false;
+
+registryLoading=
+false;
+
 
 }
 
 }
+
 
 
 /* ===========================
@@ -3320,19 +4458,29 @@ value
 return String(
 value
 ).replace(
+
 /[&<>"']/g,
+
 c=>(
 {
+
 "&":"&amp;",
+
 "<":"&lt;",
+
 ">":"&gt;",
+
 '"':"&quot;",
+
 "'":"&#039;"
+
 }
 )[c]
+
 );
 
 }
+
 
 
 function havilandPlaceholder(){
@@ -3344,6 +4492,7 @@ alert(
 );
 
 }
+
 
 
 /* ===========================
@@ -3358,11 +4507,14 @@ document.addEventListener(
 if(
 document.visibilityState===
 "visible"
+
 &&
+
 currentParticipant
 ){
 
 loadLiveUnlocks(true);
+
 
 if(
 currentParticipant.code===
@@ -3377,6 +4529,7 @@ loadRegistry(true);
 
 }
 );
+
 
 
 document
@@ -3400,9 +4553,12 @@ login();
 );
 
 
+
 renderLiveUnlocks();
+
 
 </script>
 
 </body>
+
 </html>
