@@ -7,42 +7,6 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<script>
-/* AGGIORNAMENTO AUTOMATICO — stesso link, sempre ultima versione */
-(function(){
-  function hashText(str){
-    let h=2166136261;
-    for(let i=0;i<str.length;i++){
-      h^=str.charCodeAt(i);
-      h=Math.imul(h,16777619);
-    }
-    return (h>>>0).toString(36);
-  }
-
-  async function checkLatestVersion(){
-    try{
-      const checkUrl=new URL('index.html',window.location.href);
-      checkUrl.searchParams.set('__fresh',Date.now().toString());
-      const res=await fetch(checkUrl.toString(),{cache:'no-store'});
-      if(!res.ok)return;
-      const freshHtml=await res.text();
-      const latestVersion=hashText(freshHtml);
-      const currentUrl=new URL(window.location.href);
-      const currentVersion=currentUrl.searchParams.get('v');
-
-      if(currentVersion!==latestVersion){
-        currentUrl.searchParams.set('v',latestVersion);
-        currentUrl.searchParams.delete('__fresh');
-        window.location.replace(currentUrl.toString());
-      }
-    }catch(e){
-      /* Se il controllo rete fallisce, il sito continua normalmente. */
-    }
-  }
-
-  checkLatestVersion();
-})();
-</script>
 <title>Villa Valenti — TEST Alberto/Vivald/Julian</title>
 <style>
 :root{--gold:#d0b77c;--line:rgba(188,157,104,.35);--ink:#221a13}
@@ -245,7 +209,6 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <div class="haviland">
 <h2>Haviland — Regia Villa</h2>
 <p>Pannello privato riservato all'organizzatore. Qui collegheremo i comandi vocali e gli annunci definitivi.</p>
-<button class="action-btn" onclick="havilandPlaceholder()">ATTIVA MICROFONO</button>
 
 <div class="live-control">
 <h2>Regia indizi — Live</h2>
@@ -1445,7 +1408,6 @@ async function loadRegistry(silent=false){
 }
 
 function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c])}
-function havilandPlaceholder(){alert("Haviland è pronto. La voce Julian e i comandi della serata verranno collegati nelle prossime modifiche della Regia.")}
 
 document.addEventListener("visibilitychange",()=>{
  if(document.visibilityState==="visible"&&currentParticipant){
