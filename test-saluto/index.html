@@ -93,8 +93,8 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 .haviland p{color:#9b8a70;line-height:1.6}
 .registry{margin-top:30px;padding-top:25px;border-top:1px solid var(--line);text-align:left}
 .registry-grid{display:grid;gap:8px}
-.registry-row{display:grid;grid-template-columns:1.25fr 1.25fr .8fr;gap:10px;padding:11px;border:1px solid rgba(188,157,104,.2);border-radius:8px;background:rgba(255,255,255,.025);font-size:13px}
-.ok{color:#b9d09d}.pending{color:#8f806b}
+.registry-row{display:grid;grid-template-columns:1.15fr 1.05fr .9fr .75fr;gap:10px;padding:11px;border:1px solid rgba(188,157,104,.2);border-radius:8px;background:rgba(255,255,255,.025);font-size:13px}
+.ok{color:#b9d09d}.pending{color:#8f806b}.vote-summary{margin:10px 0 14px;padding:12px;border:1px solid rgba(188,157,104,.25);border-radius:8px;color:#e2ceaa;font:700 12px "Courier New",monospace}.vote-done{color:#b9d09d}.vote-wait{color:#c8a66b}.vote-na{color:#7f7465}
 .live-status{color:#b9d09d;font:11px "Courier New",monospace;letter-spacing:1px;margin-bottom:14px}
 .mobile-nav{display:none}
 
@@ -139,10 +139,11 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
 <div style="margin-top:14px;padding:12px;border:1px dashed #7d2424;font:700 12px 'Courier New',monospace;line-height:1.5;color:#6d1f1f">
-TEST DEFINITIVO ISOLATO · Alberto = assassino · Pietro = complice.<br>
-Questa pagina usa dati separati dal gioco definitivo.
-<div style="margin-top:10px">
-<button type="button" class="action-btn" onclick="resetFullFinalTest()" style="width:100%">RESET TEST COMPLETO</button>
+TEST DEFINITIVO ISOLATO · dati separati dal gioco definitivo.<br>
+<div id="testScenarioLabel" style="margin-top:6px">Scenario attivo: caricamento…</div>
+<div style="margin-top:10px;display:grid;gap:8px">
+<button type="button" class="action-btn" onclick="resetFullFinalTest('ALBERTO_ASSASSIN')" style="width:100%">TEST A · ALBERTO ASSASSINO</button>
+<button type="button" class="action-btn" onclick="resetFullFinalTest('ALBERTO_INNOCENT')" style="width:100%">TEST B · ALBERTO INNOCENTE</button>
 </div>
 </div>
 </div></div></div>
@@ -262,7 +263,7 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <div id="liveWriteStatus" class="live-write-status"></div>
 </div>
 
-<div class="registry"><h2>Registro Villa</h2><div id="registryLiveStatus" class="live-status">● REGISTRO LIVE</div><div id="registryStatus">Caricamento registro…</div><div id="registryRows" class="registry-grid"></div></div>
+<div class="registry"><h2>Registro Villa</h2><div id="registryLiveStatus" class="live-status">● REGISTRO LIVE</div><div id="registryStatus">Caricamento registro…</div><div id="voteSummary" class="vote-summary">VOTI RICEVUTI: 0 / 18</div><div id="registryRows" class="registry-grid"></div></div>
 </div>
 </section>
 
@@ -371,7 +372,12 @@ function randomTwoDistinct(array){
 
 function chooseSpecialRolePair(mode="RANDOM"){
  const byId=id=>participants.find(p=>p.id===id);
- /* TEST ISOLATO: coppia fissa per verificare tutte le funzioni senza toccare il definitivo. */
+ const testMode=localStorage.getItem("villaValentiTestScenario")||"ALBERTO_ASSASSIN";
+ if(testMode==="ALBERTO_INNOCENT"){
+   /* TEST B: Alberto è organizzatore ma NON assassino/complice. */
+   return [byId("pietro_scolari"),byId("rocco_monaco")];
+ }
+ /* TEST A: Alberto assassino, Pietro complice. */
  return [byId("alberto_damico"),byId("pietro_scolari")];
 }
 
@@ -993,19 +999,35 @@ async function submitConclusion(){
  }
 }
 
-async function resetFullFinalTest(){
- if(!confirm("Vuoi azzerare completamente SOLO il test isolato?"))return;
+async function resetFullFinalTest(scenario){
+ const chosen=scenario==="ALBERTO_INNOCENT"?"ALBERTO_INNOCENT":"ALBERTO_ASSASSIN";
+ const readable=chosen==="ALBERTO_INNOCENT"
+   ?"Alberto innocente · Pietro assassino · Rocco complice"
+   :"Alberto assassino · Pietro complice";
+ if(!confirm("Azzerare SOLO il test isolato e avviare questo scenario?\n\n"+readable))return;
  const error=document.getElementById("error");
  try{
    if(error)error.textContent="RESET TEST IN CORSO…";
    await firebaseDelete("testDefinitivoCompleto2026");
-   try{localStorage.clear()}catch(e){}
-   if(error)error.textContent="TEST AZZERATO · PUOI RIPARTIRE DAL PRIMO ACCESSO";
-   alert("Test isolato azzerato. Il gioco definitivo non è stato toccato.");
+   try{
+     localStorage.setItem("villaValentiTestScenario",chosen);
+   }catch(e){}
+   updateTestScenarioLabel();
+   if(error)error.textContent="TEST AZZERATO · SCENARIO PRONTO";
+   alert("Scenario test pronto. Il gioco definitivo non è stato toccato.");
  }catch(e){
    console.error("Errore reset test:",e);
    if(error)error.textContent="ERRORE RESET TEST";
  }
+}
+
+function updateTestScenarioLabel(){
+ const el=document.getElementById("testScenarioLabel");
+ if(!el)return;
+ const mode=localStorage.getItem("villaValentiTestScenario")||"ALBERTO_ASSASSIN";
+ el.textContent=mode==="ALBERTO_INNOCENT"
+   ?"Scenario attivo: TEST B · Alberto innocente · Pietro assassino · Rocco complice"
+   :"Scenario attivo: TEST A · Alberto assassino · Pietro complice";
 }
 
 async function login(){
@@ -1129,22 +1151,60 @@ function speakGreeting(text){
 /* REGISTRO REGIA: mostra solo accesso e personaggio assegnato. I ruoli segreti non vengono mostrati. */
 async function loadRegistry(silent=false){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE||registryLoading)return;
- registryLoading=true;const status=document.getElementById("registryStatus"),rows=document.getElementById("registryRows");
+ registryLoading=true;
+ const status=document.getElementById("registryStatus");
+ const rows=document.getElementById("registryRows");
+ const voteSummary=document.getElementById("voteSummary");
  if(!silent)status.textContent="AGGIORNAMENTO REGISTRO…";
  try{
-   const allPlayers=await firebaseRequest(PLAYER_ROOT)||{};
+   const [allPlayers,state]=await Promise.all([
+     firebaseRequest(PLAYER_ROOT).then(v=>v||{}),
+     ensureAssignmentState()
+   ]);
+   const specialIds=new Set([state.specialRoles.assassin,state.specialRoles.accomplice]);
+   const eligible=participants.filter(p=>!specialIds.has(p.id));
+   let voted=0;
+   eligible.forEach(p=>{
+     const node=allPlayers[p.code];
+     if(node&&node.conclusion&&node.conclusion.submitted)voted++;
+   });
+   if(voteSummary)voteSummary.textContent="VOTI RICEVUTI: "+voted+" / "+eligible.length+" · LIVE";
+
    const fragment=document.createDocumentFragment();
    participants.filter(p=>p.code).forEach(p=>{
-     const node=allPlayers[p.code],record=node&&node.public?node.public:null,row=document.createElement("div");
+     const node=allPlayers[p.code];
+     const record=node&&node.public?node.public:null;
+     const row=document.createElement("div");
      row.className="registry-row";
+
      const characterName=record&&record.characterName?record.characterName:"—";
-     const accessStatus=record&&record.assigned?'<span class="ok">✓ Accesso effettuato</span>':'<span class="pending">○ Non ha ancora effettuato l\'accesso</span>';
-     row.innerHTML="<div><strong>"+escapeHtml(p.name)+"</strong></div><div>"+escapeHtml(characterName)+"</div><div>"+accessStatus+"</div>";
+     const accessStatus=record&&record.assigned
+       ?'<span class="ok">✓ Accesso effettuato</span>'
+       :"<span class=\"pending\">○ Non ha ancora effettuato l'accesso</span>";
+
+     let voteStatus="";
+     if(specialIds.has(p.id)){
+       voteStatus='<span class="vote-na">— NON PARTECIPA</span>';
+     }else if(node&&node.conclusion&&node.conclusion.submitted){
+       voteStatus='<span class="vote-done">✓ HA VOTATO</span>';
+     }else{
+       voteStatus='<span class="vote-wait">○ DA VOTARE</span>';
+     }
+
+     row.innerHTML="<div><strong>"+escapeHtml(p.name)+"</strong></div>"
+       +"<div>"+escapeHtml(characterName)+"</div>"
+       +"<div>"+accessStatus+"</div>"
+       +"<div>"+voteStatus+"</div>";
      fragment.appendChild(row);
    });
-   rows.replaceChildren(fragment);status.textContent="";
- }catch(e){console.error("Errore Registro Villa:",e);status.textContent="IMPOSSIBILE CARICARE IL REGISTRO VILLA"}
- finally{registryLoading=false}
+   rows.replaceChildren(fragment);
+   status.textContent="";
+ }catch(e){
+   console.error("Errore Registro Villa:",e);
+   status.textContent="IMPOSSIBILE CARICARE IL REGISTRO VILLA";
+ }finally{
+   registryLoading=false;
+ }
 }
 
 function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[c])}
@@ -1159,6 +1219,7 @@ document.addEventListener("visibilitychange",()=>{
 });
 document.getElementById("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
 renderLiveUnlocks();
+updateTestScenarioLabel();
 </script>
 </body>
 </html>
