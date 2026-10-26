@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Villa Valenti — TEST Alberto/Vivald/Julian</title>
+<title>Villa Valenti — TEST finale bloccato</title>
 <style>
 :root{--gold:#d0b77c;--line:rgba(188,157,104,.35);--ink:#221a13}
 *{box-sizing:border-box} html{scroll-behavior:smooth}
@@ -113,13 +113,6 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
 <div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
-<div class="test-box">
-TEST ISOLATO · ministorie + ruoli + colpo di scena. Nessun dato del gioco definitivo viene toccato.<br>
-<div id="testScenarioLabel" style="margin-top:6px">Scenario attivo: Alberto innocente · Vivald assassino · Julian complice</div>
-<div class="test-grid">
-<button type="button" class="action-btn" onclick="resetFullFinalTest()" style="width:100%">AZZERA E PREPARA QUESTO TEST</button>
-</div>
-</div>
 </div></div></div>
 </section>
 
@@ -231,14 +224,13 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Colpo di scena</div>
 <div class="control-grid">
-<div class="control-card twist-control"><strong>Seconda vittima · Biblioteca</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi sbloccare Comune 3 e Personale 3.</div></div>
+<div class="control-card twist-control"><strong>Seconda vittima · Cantina / zona tecnica</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi sbloccare Comune 3 e Personale 3.</div></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Conclusione</div>
 <div class="control-grid">
 <div class="control-card"><strong>Pannello conclusione</strong><div id="stateConclusion" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('conclusion')">SBLOCCA / BLOCCA</button></div>
 </div>
-<button class="reset-live-btn" onclick="resetLiveUnlocks()">AZZERA SBLOCCHI</button>
 <div id="liveWriteStatus" class="live-write-status"></div>
 </div>
 
@@ -266,8 +258,8 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const PLAYER_ROOT="testVivaldJulian2026/players";
-const ASSIGNMENT_STATE_PATH="testVivaldJulian2026/private/assignmentState";
+const PLAYER_ROOT="testFinaleBloccato2026/players";
+const ASSIGNMENT_STATE_PATH="testFinaleBloccato2026/private/assignmentState";
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -353,9 +345,12 @@ function randomTwoDistinct(array){
 }
 
 function chooseSpecialRolePair(mode="RANDOM"){
- const byId=id=>participants.find(p=>p.id===id);
- /* TEST FISSO: Alberto innocente · Vivald assassino · Julian complice */
- return [byId("vivald_keri"),byId("julian_remelli")];
+ /* Estrazione libera tra TUTTI i partecipanti.
+    Possibili: M/M, M/F, F/F e F/M.
+    L'ordine è significativo: [assassino, complice]. */
+ const shuffled=secureShuffle([...participants]);
+ if(shuffled.length<2)throw new Error("Partecipanti insufficienti per i ruoli speciali");
+ return [shuffled[0],shuffled[1]];
 }
 
 
@@ -485,7 +480,7 @@ function buildNarrativePackage(state){
    accomplicePrivate:"Hai accettato di collaborare perché "+b.pressure+". Il tuo contributo era possibile grazie a "+b.capability+". Senza il tuo aiuto l'altra persona non avrebbe potuto gestire tutte le tracce lasciate dal dossier.",
    secondVictimCharacterId:accompliceCharacter.id,
    secondVictimCharacterName:accompliceCharacter.name,
-   secondVictimRoom:"Biblioteca di Villa Valenti",
+   secondVictimRoom:"Cantina / zona tecnica di Villa Valenti",
    commonClues,
    personalClues
  };
@@ -496,7 +491,7 @@ function narrativeForCurrentPlayer(narrative,participant){
 }
 /* ===== FINE MOTORE NARRATIVO 380 ===== */
 
-const LIVE_UNLOCK_PATH="testVivaldJulian2026/liveUnlocks";
+const LIVE_UNLOCK_PATH="testFinaleBloccato2026/liveUnlocks";
 const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,twist:false,twistAt:null,conclusion:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
@@ -512,7 +507,7 @@ let currentCharacter=null;
 let currentLoginAt=0;
 let plotTwistOverlayActive=false;
 const PLOT_TWIST_VIDEO="haviland-colpo-di-scena.mp4";
-const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella Biblioteca. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate gli alibi, ricostruite gli spostamenti e chiedetevi perché questa persona dovesse essere messa a tacere. Non date per scontato che i due delitti abbiano motivazioni indipendenti. L'indagine continua.";
+const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella cantina, nella zona tecnica della villa. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate gli alibi, ricostruite gli spostamenti e chiedetevi perché questa persona dovesse essere messa a tacere. Non date per scontato che i due delitti abbiano motivazioni indipendenti. L'indagine continua.";
 
 async function firebaseRequest(path,options={}){
  const response=await fetch(FIREBASE_DB+"/"+path+".json",{cache:"no-store",...options});
@@ -563,7 +558,7 @@ function validateStaticConfiguration(){
 }
 
 function isValidFrozenAssignmentState(state){
- if(!state||state.version!==6||!state.assignments||!state.specialRoles||!state.narrative)return false;
+ if(!state||state.version!==7||!state.assignments||!state.specialRoles||!state.narrative)return false;
 
  const participantIds=new Set(participants.map(p=>p.id));
  const characterIds=[];
@@ -612,7 +607,7 @@ function createInitialAssignmentState(mode="RANDOM"){
 
  const [assassin,accomplice]=chooseSpecialRolePair(mode);
  const state={
-   version:6,
+   version:7,
    createdAt:new Date().toISOString(),
    assignments,
    specialRoles:{assassin:assassin.id,accomplice:accomplice.id}
@@ -1017,7 +1012,7 @@ function showPlotTwistOverlay(){
 
  const room=currentNarrative&&currentNarrative.secondVictimRoom
    ?currentNarrative.secondVictimRoom
-   :"Biblioteca di Villa Valenti";
+   :"Cantina / zona tecnica di Villa Valenti";
 
  fallback.textContent=PLOT_TWIST_FALLBACK;
  fallback.classList.remove("hidden");
@@ -1052,22 +1047,6 @@ function closePlotTwistOverlay(){
  plotTwistOverlayActive=false;
 
  try{sessionStorage.setItem(plotTwistSeenKey(),"1")}catch(e){}
-}
-
-async function resetLiveUnlocks(){
- if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
- const status=document.getElementById("liveWriteStatus");
- if(status)status.textContent="RESET IN CORSO…";
- try{
-   const next={...DEFAULT_LIVE_UNLOCKS,updatedAt:new Date().toISOString(),updatedBy:currentParticipant.id};
-   await firebaseWrite(LIVE_UNLOCK_PATH,next);
-   liveUnlockState=next;
-   renderLiveUnlocks();
-   if(status)status.textContent="INDIZI AZZERATI · "+new Date().toLocaleTimeString("it-IT");
- }catch(e){
-   console.error("Errore reset Regia:",e);
-   if(status)status.textContent="ERRORE · RESET NON RIUSCITO";
- }
 }
 
 
@@ -1192,29 +1171,6 @@ async function submitConclusion(){
  }
 }
 
-async function resetFullFinalTest(){
- const readable="Alberto innocente · Vivald assassino · Julian complice";
- if(!confirm("Azzerare SOLO questo test isolato e preparare lo scenario?\n\n"+readable))return;
- const error=document.getElementById("error");
- try{
-   if(error)error.textContent="RESET TEST IN CORSO…";
-   await firebaseDelete("testVivaldJulian2026");
-   try{
-     localStorage.setItem("villaValentiTestScenario","VIVALD_ASSASSIN_JULIAN_ACCOMPLICE");
-     [...Object.keys(sessionStorage)].filter(k=>k.startsWith("villaValentiTwistSeen:")).forEach(k=>sessionStorage.removeItem(k));
-   }catch(e){}
-   updateTestScenarioLabel();
-   if(error)error.textContent="TEST AZZERATO · SCENARIO PRONTO";
-   alert("Scenario test pronto.\n\nAlberto = innocente\nVivald = assassino\nJulian = complice / seconda vittima\n\nIl gioco definitivo non è stato toccato.");
- }catch(e){
-   console.error("Errore reset test:",e);
-   if(error)error.textContent="ERRORE RESET TEST";
- }
-}
-function updateTestScenarioLabel(){
- const el=document.getElementById("testScenarioLabel");
- if(el)el.textContent="Scenario attivo: Alberto innocente · Vivald assassino · Julian complice";
-}
 
 async function login(){
  const input=document.getElementById("codeInput").value.trim();
@@ -1287,7 +1243,7 @@ async function openCharacter(participant){
  const story=document.getElementById("characterStory");
  if(story)story.textContent=profile.story||character.description;
  document.getElementById("characterAdvice").textContent=profile.interpretation||character.advice;
- document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · ASSEGNAZIONE BLOCCATA";
+ document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · PERSONAGGIO BLOCCATO";
 
  const initials=character.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
  const monogram=document.getElementById("characterMonogram");
