@@ -546,6 +546,8 @@ let registryLiveTimer=null,registryLoading=false;
 let secretPartnerTimer=null;
 let secretPartnerLoading=false;
 let currentCharacter=null;
+let currentLoginAt=0;
+let plotTwistOverlayActive=false;
 const PLOT_TWIST_VIDEO="haviland-colpo-di-scena.mp4";
 const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella Biblioteca. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate gli alibi, ricostruite gli spostamenti e chiedetevi perché questa persona dovesse essere messa a tacere. Non date per scontato che i due delitti abbiano motivazioni indipendenti. L'indagine continua.";
 
@@ -984,52 +986,108 @@ async function activatePlotTwist(){
  }
 }
 
-function plotTwistSeenKey(){return "villaValentiTwistSeen:"+(liveUnlockState.twistAt||"active")+":"+(currentParticipant?currentParticipant.id:"anon")}
+function plotTwistSeenKey(){
+ return "villaValentiTwistSeen:"+(liveUnlockState.twistAt||"active")+":"+(currentParticipant?currentParticipant.id:"anon");
+}
+
 function maybeShowPlotTwist(){
  if(!currentParticipant||!liveUnlockState.twist)return;
+
  const key=plotTwistSeenKey();
- try{if(sessionStorage.getItem(key)==="1")return}catch(e){}
+
+ try{
+   if(sessionStorage.getItem(key)==="1")return;
+ }catch(e){}
+
+ const twistTime=Date.parse(liveUnlockState.twistAt||"");
+
+ /* Se questo giocatore ha aperto il dossier dopo che il Colpo di scena
+    era già avvenuto, non gli riproponiamo il vecchio annuncio. */
+ if(
+   currentLoginAt &&
+   Number.isFinite(twistTime) &&
+   twistTime < currentLoginAt-1000
+ ){
+   try{sessionStorage.setItem(key,"1")}catch(e){}
+   return;
+ }
+
+ /* Evita che il polling Firebase rilanci continuamente lo stesso evento. */
+ if(plotTwistOverlayActive)return;
+
+ plotTwistOverlayActive=true;
+
+ /* L'evento viene considerato ricevuto appena compare. */
+ try{sessionStorage.setItem(key,"1")}catch(e){}
+
  showPlotTwistOverlay();
 }
+
 function showPlotTwistOverlay(){
  const overlay=document.getElementById("plotTwistOverlay");
  const video=document.getElementById("plotTwistVideo");
  const playback=document.getElementById("plotTwistPlayback");
  const fallback=document.getElementById("plotTwistFallback");
  const victim=document.getElementById("plotTwistVictim");
- const cont=document.getElementById("plotTwistContinue");if(!overlay||!video||!playback||!fallback||!victim||!cont)return;
+ const cont=document.getElementById("plotTwistContinue");
+
+ if(!overlay||!fallback||!victim||!cont)return;
+
  overlay.classList.remove("hidden");
- playback.classList.add("hidden"); fallback.classList.add("hidden"); victim.classList.add("hidden"); cont.classList.add("hidden");
- const victimName=currentNarrative&&currentNarrative.secondVictimCharacterName?currentNarrative.secondVictimCharacterName:"Seconda vittima";
- const room=currentNarrative&&currentNarrative.secondVictimRoom?currentNarrative.secondVictimRoom:"Biblioteca di Villa Valenti";
- victim.innerHTML="SECONDA VITTIMA IDENTIFICATA<br><span style=\"font-size:1.25em\">"+escapeHtml(victimName)+"</span><br><small>Ritrovamento: "+escapeHtml(room)+"</small>";
- const finish=()=>{playback.classList.add("hidden");victim.classList.remove("hidden");cont.classList.remove("hidden")};
- const loadFail=()=>{video.classList.add("hidden");playback.classList.add("hidden");fallback.textContent=PLOT_TWIST_FALLBACK;fallback.classList.remove("hidden");finish()};
- const autoplayBlocked=()=>{playback.classList.remove("hidden")};
- video.classList.remove("hidden");
- video.onended=finish;
- video.onerror=loadFail;
- video.src=PLOT_TWIST_VIDEO+"?v="+encodeURIComponent(liveUnlockState.twistAt||Date.now());
- try{
-   const p=video.play();
-   if(p&&typeof p.catch==="function")p.catch(autoplayBlocked);
- }catch(e){autoplayBlocked()}
+
+ /* MODALITÀ TEST SENZA VIDEO:
+    niente tentativi di caricamento, niente schermate nere e niente lampeggi. */
+ if(video){
+   try{
+     video.pause();
+     video.removeAttribute("src");
+     video.load();
+   }catch(e){}
+   video.classList.add("hidden");
+ }
+
+ if(playback)playback.classList.add("hidden");
+
+ const victimName=currentNarrative&&currentNarrative.secondVictimCharacterName
+   ?currentNarrative.secondVictimCharacterName
+   :"Seconda vittima";
+
+ const room=currentNarrative&&currentNarrative.secondVictimRoom
+   ?currentNarrative.secondVictimRoom
+   :"Biblioteca di Villa Valenti";
+
+ fallback.textContent=PLOT_TWIST_FALLBACK;
+ fallback.classList.remove("hidden");
+
+ victim.innerHTML=
+   "SECONDA VITTIMA IDENTIFICATA<br>"+
+   "<span style=\"font-size:1.25em\">"+escapeHtml(victimName)+"</span><br>"+
+   "<small>Ritrovamento: "+escapeHtml(room)+"</small>";
+
+ victim.classList.remove("hidden");
+ cont.classList.remove("hidden");
 }
+
 function playPlotTwistVideo(){
- const video=document.getElementById("plotTwistVideo");
- const playback=document.getElementById("plotTwistPlayback");
- if(!video)return;
- try{
-   const p=video.play();
-   if(playback)playback.classList.add("hidden");
-   if(p&&typeof p.catch==="function")p.catch(()=>{if(playback)playback.classList.remove("hidden")});
- }catch(e){if(playback)playback.classList.remove("hidden")}
+ /* Temporaneamente disattivato nel TEST.
+    Verrà riattivato quando definiamo il flusso video definitivo. */
 }
+
 function closePlotTwistOverlay(){
  const overlay=document.getElementById("plotTwistOverlay");
  const video=document.getElementById("plotTwistVideo");
- if(video){try{video.pause()}catch(e){}}
+
+ if(video){
+   try{
+     video.pause();
+     video.currentTime=0;
+   }catch(e){}
+ }
+
  if(overlay)overlay.classList.add("hidden");
+
+ plotTwistOverlayActive=false;
+
  try{sessionStorage.setItem(plotTwistSeenKey(),"1")}catch(e){}
 }
 
@@ -1201,8 +1259,20 @@ async function login(){
  const participant=participants.find(p=>p.code&&p.code===input);
  if(!participant){error.textContent="ACCESSO NEGATO · CODICE NON RICONOSCIUTO";return}
  error.textContent="ACCESSO ALL'ARCHIVIO…";
- try{currentParticipant=participant;await openCharacter(participant);error.textContent=""}
- catch(e){console.error(e);currentParticipant=null;error.textContent="ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA"}
+ try{
+   currentLoginAt=Date.now();
+   plotTwistOverlayActive=false;
+   currentParticipant=participant;
+   await openCharacter(participant);
+   error.textContent="";
+ }
+ catch(e){
+   console.error(e);
+   currentParticipant=null;
+   currentLoginAt=0;
+   plotTwistOverlayActive=false;
+   error.textContent="ARCHIVIO MOMENTANEAMENTE NON DISPONIBILE · RIPROVA";
+ }
 }
 
 
@@ -1290,6 +1360,8 @@ function logout(){
  currentNarrative=null;
  currentSpecialRole=null;
  currentCharacter=null;
+ currentLoginAt=0;
+ plotTwistOverlayActive=false;
  liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
  renderLiveUnlocks();
  document.getElementById("appSection").classList.add("hidden");
@@ -1396,7 +1468,7 @@ renderLiveUnlocks();
     <div id="plotTwistFallback" class="twist-fallback hidden"></div>
     <div id="plotTwistVictim" class="twist-victim hidden"></div>
     <div class="twist-actions"><button id="plotTwistContinue" class="action-btn hidden" onclick="closePlotTwistOverlay()">CONTINUA L'INDAGINE</button></div>
-    <div class="twist-note">TEST · il video definitivo verrà collegato con il file Haviland.</div>
+    <div class="twist-note">TEST · modalità temporanea senza video. Il filmato definitivo verrà collegato successivamente.</div>
   </div>
 </div>
 
