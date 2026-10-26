@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
@@ -137,6 +137,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 </article></div>
 <div class="stack">
 <article class="sheet"><div class="section-title">Identità</div><div id="greeting" class="paper-text" style="font-weight:700;margin-bottom:12px"></div><div id="characterIdentity" class="identity-lines"></div></article>
+<article class="sheet"><div class="section-title">Storia breve</div><div id="characterShortStory" class="paper-text"></div></article>
 <article class="sheet"><div class="section-title">La tua storia</div><div id="characterStory" class="paper-text story-lead"></div></article>
 <article class="sheet"><div class="section-title">Come interpretare il personaggio</div><div id="characterAdvice" class="paper-text"></div></article>
 <article id="secretRoleBox" class="sheet secret hidden"><div class="section-title">Documento personale riservato</div><div id="secretRole" class="paper-text"></div></article>
@@ -1240,6 +1241,8 @@ async function openCharacter(participant){
  if(identity)identity.innerHTML=
    "<div class=\"identity-line\"><strong>Occupazione</strong><br>"+escapeHtml(profile.occupation||"Non specificata")+"</div>"+
    "<div class=\"identity-line\"><strong>Rapporto con Angelina Valenti</strong><br>"+escapeHtml(profile.relation||character.description)+"</div>";
+ const shortStory=document.getElementById("characterShortStory");
+ if(shortStory)shortStory.textContent=character.description||profile.relation||"";
  const story=document.getElementById("characterStory");
  if(story)story.textContent=profile.story||character.description;
  document.getElementById("characterAdvice").textContent=profile.interpretation||character.advice;
