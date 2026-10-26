@@ -43,7 +43,7 @@
   checkLatestVersion();
 })();
 </script>
-<title>TEST ISOLATO — Villa Valenti</title>
+<title>Villa Valenti — TEST Alberto/Vivald/Julian</title>
 <style>
 :root{--gold:#d0b77c;--line:rgba(188,157,104,.35);--ink:#221a13}
 *{box-sizing:border-box} html{scroll-behavior:smooth}
@@ -120,6 +120,17 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 .conclusion-feedback.correct{border-color:#52683d;color:#31451f;background:rgba(103,130,73,.12)}
 .conclusion-feedback.wrong{border-color:#7d2424;color:#6d1f1f;background:rgba(125,36,36,.08)}
 
+
+/* ===== TEST MINISTORIE + COLPO DI SCENA ===== */
+.identity-lines{display:grid;gap:8px;margin-top:8px}.identity-line{padding:9px 10px;border-left:3px solid rgba(125,36,36,.55);background:rgba(125,36,36,.035)}
+.story-lead{font-size:15px;line-height:1.75}.interpret-list{display:grid;gap:8px}.interpret-pill{padding:9px 11px;background:#f3eadb;border:1px solid #d7c6aa;border-radius:8px}
+.test-box{margin-top:14px;padding:12px;border:1px dashed #7d2424;font:700 12px 'Courier New',monospace;line-height:1.5;color:#6d1f1f}.test-grid{margin-top:10px;display:grid;gap:8px}
+.twist-control{border:1px solid rgba(189,66,48,.55)!important;background:linear-gradient(180deg,rgba(87,16,16,.32),rgba(20,14,10,.96))!important}.twist-control strong{color:#f0c4b8!important}.twist-btn{background:#7d2424!important;color:#fff5e8!important;border-color:#9f3b31!important}.twist-btn:disabled{opacity:.48;cursor:not-allowed}
+.twist-overlay{position:fixed;inset:0;z-index:9999;background:radial-gradient(circle at center,rgba(28,17,12,.95),rgba(5,4,3,.995));display:flex;align-items:center;justify-content:center;padding:18px}.twist-overlay.hidden{display:none}
+.twist-panel{width:min(900px,100%);max-height:94vh;overflow:auto;border:1px solid rgba(213,180,123,.38);border-radius:18px;background:#110d0a;box-shadow:0 35px 100px rgba(0,0,0,.75);padding:18px;color:#ead8b7;text-align:center}
+.twist-kicker{font:700 12px 'Courier New',monospace;letter-spacing:.18em;color:#ba6d5d;margin-bottom:8px}.twist-panel h2{font-family:Georgia,serif;font-size:clamp(26px,5vw,46px);margin:4px 0 16px;color:#f1dfbe}.twist-video{width:100%;max-height:52vh;background:#000;border:1px solid #49382a;border-radius:12px}.twist-fallback{margin:14px auto 0;max-width:720px;padding:16px;border:1px solid #574535;border-radius:10px;background:#1a1410;text-align:left;line-height:1.65}.twist-victim{margin:18px auto 0;padding:16px;border:1px solid #8c342b;background:rgba(125,36,36,.18);border-radius:10px;max-width:720px;font:700 18px Georgia,serif}.twist-actions{margin-top:16px}.twist-note{margin-top:10px;font:700 11px 'Courier New',monospace;color:#a99072}
+.death-clue{border:2px solid #7d2424!important;background:linear-gradient(180deg,#fff8ed,#f2dfcf)!important}.death-clue .section-title{color:#7d2424!important}.death-warning{font-weight:800;font-size:16px;color:#6c1e1e}.death-rules{margin-top:10px;line-height:1.65}
+
 @media(max-width:860px){
 .layout{display:block}.sidebar{display:none}.dossier-grid{grid-template-columns:1fr}.app{padding:10px 10px 85px}
 .mobile-nav{display:grid;position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));grid-template-columns:repeat(2,1fr);z-index:50;background:rgba(18,13,9,.97);border:1px solid var(--line);border-radius:12px;overflow:hidden}
@@ -138,12 +149,11 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
 <div class="code-row"><input id="codeInput" type="text" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="000000"><button class="enter-btn" onclick="login()">APRI DOSSIER</button></div>
 <div id="error" class="error"></div>
-<div style="margin-top:14px;padding:12px;border:1px dashed #7d2424;font:700 12px 'Courier New',monospace;line-height:1.5;color:#6d1f1f">
-TEST DEFINITIVO ISOLATO · dati separati dal gioco definitivo.<br>
-<div id="testScenarioLabel" style="margin-top:6px">Scenario attivo: caricamento…</div>
-<div style="margin-top:10px;display:grid;gap:8px">
-<button type="button" class="action-btn" onclick="resetFullFinalTest('ALBERTO_ASSASSIN')" style="width:100%">TEST A · ALBERTO ASSASSINO</button>
-<button type="button" class="action-btn" onclick="resetFullFinalTest('ALBERTO_INNOCENT')" style="width:100%">TEST B · ALBERTO INNOCENTE</button>
+<div class="test-box">
+TEST ISOLATO · ministorie + ruoli + colpo di scena. Nessun dato del gioco definitivo viene toccato.<br>
+<div id="testScenarioLabel" style="margin-top:6px">Scenario attivo: Alberto innocente · Vivald assassino · Julian complice</div>
+<div class="test-grid">
+<button type="button" class="action-btn" onclick="resetFullFinalTest()" style="width:100%">AZZERA E PREPARA QUESTO TEST</button>
 </div>
 </div>
 </div></div></div>
@@ -169,8 +179,9 @@ TEST DEFINITIVO ISOLATO · dati separati dal gioco definitivo.<br>
 <div id="characterName" class="char-name"></div><div id="characterRole" class="char-role"></div>
 </article></div>
 <div class="stack">
-<article class="sheet"><div class="section-title">Profilo</div><div id="greeting" class="paper-text" style="font-weight:700;margin-bottom:12px"></div><div id="characterDescription" class="paper-text"></div></article>
-<article class="sheet"><div class="section-title">Indicazioni di comportamento</div><div id="characterAdvice" class="paper-text"></div></article>
+<article class="sheet"><div class="section-title">Identità</div><div id="greeting" class="paper-text" style="font-weight:700;margin-bottom:12px"></div><div id="characterIdentity" class="identity-lines"></div></article>
+<article class="sheet"><div class="section-title">La tua storia</div><div id="characterStory" class="paper-text story-lead"></div></article>
+<article class="sheet"><div class="section-title">Come interpretare il personaggio</div><div id="characterAdvice" class="paper-text"></div></article>
 <article id="secretRoleBox" class="sheet secret hidden"><div class="section-title">Documento personale riservato</div><div id="secretRole" class="paper-text"></div></article>
 </div></div></section>
 
@@ -255,6 +266,11 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <div class="control-card"><strong>Blocco personale 3</strong><div id="statePersonal3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal3')">SBLOCCA / BLOCCA</button></div>
 </div>
 
+<div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Colpo di scena</div>
+<div class="control-grid">
+<div class="control-card twist-control"><strong>Seconda vittima · Biblioteca</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi sbloccare Comune 3 e Personale 3.</div></div>
+</div>
+
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Conclusione</div>
 <div class="control-grid">
 <div class="control-card"><strong>Pannello conclusione</strong><div id="stateConclusion" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('conclusion')">SBLOCCA / BLOCCA</button></div>
@@ -287,8 +303,8 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const PLAYER_ROOT="testDefinitivoCompleto2026/players";
-const ASSIGNMENT_STATE_PATH="testDefinitivoCompleto2026/private/assignmentState";
+const PLAYER_ROOT="testVivaldJulian2026/players";
+const ASSIGNMENT_STATE_PATH="testVivaldJulian2026/private/assignmentState";
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -336,6 +352,9 @@ const characters=[
 {id:"isabella_roversi",name:"Isabella Roversi",gender:"F",role:"Antiquaria e conoscente di Angelina",description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."}
 ];
 
+
+const CHARACTER_PROFILES={"ettore_valenti":{"occupation":"Amministratore informale del patrimonio storico dei Valenti","relation":"Zio paterno di Angelina; rappresenta la generazione che considera il nome di famiglia più importante delle persone.","story":"Da anni ti occupi, anche senza un incarico ufficiale, di tenere insieme proprietà, terreni e vecchi accordi della famiglia Valenti. Angelina ti ha sempre rispettato, ma negli ultimi mesi ha iniziato a prendere decisioni senza consultarti. Ti ha invitato a Villa Valenti dicendo di voler chiudere alcune questioni patrimoniali prima che diventassero pubbliche. Hai accettato perché sei convinto che certe faccende debbano restare in famiglia. Con Angelina il rapporto è fatto di affetto, orgoglio e scontri continui: la consideri brillante, ma troppo impulsiva. Durante la serata vuoi capire quali documenti abbia recuperato e chi abbia avuto accesso alle carte di famiglia.","interpretation":"Parla con calma e autorevolezza. Difendi il nome Valenti. Non mostrarti mai agitato per primo. Quando si parla di eredità o proprietà, diventa molto preciso e fai domande.","assassinStory":"Angelina stava per rendere ufficiale una revisione patrimoniale capace di ridurre la tua influenza e di far emergere decisioni che hai sempre considerato necessarie per proteggere la famiglia. Per te non era più una discussione: il dossier rischiava di distruggere equilibri costruiti in decenni. Hai deciso che Angelina non avrebbe dovuto portare quelle carte fuori dalla villa.","accompliceStory":"Hai scoperto che l'assassino aveva lo stesso interesse a fermare il dossier. Non vuoi essere l'esecutore, ma accetti di aiutare perché la pubblicazione delle carte metterebbe in discussione il patrimonio e il nome dei Valenti. Il tuo contributo nasce dalla conoscenza di proprietà, documenti e vecchi vincoli familiari."},"ludovico_orsini":{"occupation":"Consulente finanziario; gestisce parte degli interessi economici condivisi con Angelina","relation":"Marito di Angelina; il matrimonio è in crisi ma la separazione non è ancora pubblica.","story":"Per anni tu e Angelina avete dato all'esterno l'immagine di una coppia solida. Negli ultimi mesi, però, il matrimonio si è trasformato in una trattativa fatta di silenzi, conti separati e decisioni rinviate. Lavori come consulente finanziario e conosci bene il peso economico delle scelte di Angelina. Lei ti ha invitato alla cena assicurandoti che voleva parlare con calma, ma sai che aveva raccolto documenti su alcuni accordi privati e che aveva preso appuntamento con qualcuno fuori dalla famiglia. Non sai quanto intendesse rivelare. Durante la serata vuoi proteggere la tua reputazione, capire chi fosse al corrente della crisi e impedire che ogni gesto venga letto come gelosia.","interpretation":"Mantieni un tono controllato e civile. Evita scenate sentimentali. Se qualcuno parla del matrimonio, rispondi ma non raccontare tutto. Osserva chi sembra conoscere dettagli che non dovrebbe sapere.","assassinStory":"Angelina aveva trasformato la crisi matrimoniale in un fascicolo di accordi, trasferimenti e promesse private. Se quel materiale fosse uscito, avresti perso molto più di un matrimonio: reputazione, denaro e controllo sulla tua vita. Hai scelto di agire prima che potesse consegnarlo all'esterno.","accompliceStory":"Non hai pianificato il delitto, ma hai accettato di aiutare perché il dossier conteneva informazioni che avrebbero reso pubblica la vostra crisi e alcuni accordi economici riservati. Conosci gli spazi privati di Angelina e puoi offrire accesso e copertura senza attirare subito l'attenzione."},"corrado_de_marchi":{"occupation":"Imprenditore immobiliare","relation":"Cugino materno di Angelina; da tempo discute con lei di terreni e proprietà della linea De Marchi.","story":"Gestisci investimenti immobiliari e sei abituato a considerare ogni proprietà come qualcosa che deve avere confini, valori e responsabilità chiare. Con Angelina hai avuto discussioni accese su alcuni beni provenienti dal ramo materno della famiglia: secondo te certe questioni erano già state chiuse, mentre lei ha continuato a cercare mappe, atti e vecchi passaggi notarili. L'invito a Villa Valenti ti ha sorpreso, soprattutto perché Angelina ti aveva anticipato che avrebbe finalmente mostrato ciò che aveva trovato. Sei venuto per difendere la tua posizione, ma anche per capire chi le abbia fornito nuovi documenti. Non vuoi che gli altri confondano una disputa patrimoniale con un odio personale.","interpretation":"Sii pragmatico, diretto e poco sentimentale. Quando si parla di proprietà chiedi dati concreti. Se vieni accusato, ricorda che una lite economica non equivale a un delitto.","assassinStory":"Angelina stava per riaprire una disputa immobiliare che credevi definitivamente sepolta. Il dossier poteva dimostrare che alcuni confini e passaggi di proprietà erano stati gestiti in modo molto diverso da quanto dichiarato. Hai deciso di impedirle di portare la questione fuori dalla famiglia.","accompliceStory":"Hai aiutato perché il dossier avrebbe riaperto una vicenda immobiliare capace di travolgere anche te. La tua conoscenza dei terreni e degli atti De Marchi permette di capire quali carte cercare e quali elementi possono sembrare normali a chi non conosce la storia delle proprietà."},"leone_de_marchi":{"occupation":"Pensionato, già dirigente amministrativo","relation":"Zio materno di Angelina; conserva memoria di episodi familiari che i più giovani conoscono solo in parte.","story":"Sei uno degli ultimi membri della famiglia a ricordare direttamente ciò che accadde quando molte proprietà passarono da una generazione all'altra. Per anni hai evitato di intervenire nelle dispute dei più giovani, convinto che certe storie dovessero restare nel passato. Angelina, invece, negli ultimi mesi ha iniziato a farti domande sempre più precise su date, notai e decisioni prese decenni prima. Ti ha invitato perché voleva confrontare i tuoi ricordi con un dossier appena ricostruito. Sei venuto con riluttanza: temi che vecchie mezze verità possano essere interpretate come colpe. Ascolti molto e parli solo quando sei sicuro di ciò che ricordi.","interpretation":"Parla poco, con frasi ponderate. Mostrati più interessato alle contraddizioni che alle accuse. Usa la tua memoria degli eventi passati come forza, ma ammetti quando non ricordi un dettaglio.","assassinStory":"Il dossier di Angelina collegava un episodio della generazione precedente a conseguenze patrimoniali attuali. Se lei avesse reso pubblica la ricostruzione, la tua scelta di allora sarebbe diventata il centro di uno scandalo. Hai deciso che quella versione dei fatti non doveva uscire dalla villa.","accompliceStory":"Hai accettato di aiutare perché il dossier stava trasformando una vecchia vicenda familiare in una prova attuale. La tua memoria di persone, date e decisioni del passato è essenziale per capire che cosa Angelina aveva davvero ricostruito e dove cercare le carte più pericolose."},"dorian_ferretti":{"occupation":"Imprenditore e socio d'affari di Angelina","relation":"Partner professionale di Angelina in diverse operazioni e investimenti.","story":"Hai costruito con Angelina una collaborazione redditizia, fondata sulla sua capacità di decidere in fretta e sulla tua abilità nel trasformare idee in operazioni concrete. Negli ultimi mesi, però, lei ha iniziato a controllare direttamente fatture, contratti e movimenti che prima delegava. Le discussioni sono diventate frequenti e Angelina ha chiesto spiegazioni su alcune differenze contabili che tu consideri normali. La cena doveva servire a chiarire la situazione prima di una riunione importante prevista per i giorni successivi. Sei venuto deciso a mantenere tutto sul piano professionale. Più che della famiglia, ti interessano numeri, accordi e chi possa aver fornito ad Angelina informazioni sui vostri affari.","interpretation":"Ragiona in termini di fatti, cifre e contratti. Non perdere la calma. Tratta le questioni emotive come distrazioni e prova a riportare sempre la discussione su elementi verificabili.","assassinStory":"Angelina aveva raccolto movimenti economici che, letti insieme, potevano far apparire alcune operazioni molto meno regolari di quanto risultasse dalla contabilità ufficiale. Se avesse consegnato il dossier, la tua carriera e gli affari sarebbero crollati. Hai scelto di fermarla.","accompliceStory":"Hai aiutato perché le carte di Angelina contenevano collegamenti economici che ti avrebbero coinvolto direttamente. Conosci conti, contratti e flussi di denaro abbastanza bene da capire quali tracce siano davvero pericolose e quali possano essere spiegate come normali discrepanze."},"tancredi_moreau":{"occupation":"Avvocato di fiducia della famiglia Valenti","relation":"Consulente legale di Angelina e di diversi membri della famiglia.","story":"Da anni gestisci contratti, successioni e controversie dei Valenti. Il tuo vantaggio è sapere molto senza dover raccontare quasi nulla. Angelina ti ha sempre considerato affidabile, ma recentemente ha iniziato a chiederti copie di vecchie bozze e a confrontarle con documenti conservati altrove. Ti ha comunicato che voleva sottoporre alcuni atti a un professionista esterno, scelta che hai vissuto come una mancanza di fiducia. Sei alla villa perché formalmente sei un ospite, ma sai che molte conversazioni potrebbero trasformarsi in domande legali. Devi distinguere ciò che è realmente irregolare da ciò che è soltanto sospetto.","interpretation":"Sii preciso e misurato. Non dare mai un parere senza aver ascoltato. Ricorda agli altri la differenza tra sospetto e prova. Fai molta attenzione a date, firme, clausole e versioni dei documenti.","assassinStory":"Angelina stava per far riesaminare all'esterno documenti che avrebbero sollevato domande sul modo in cui alcune clausole erano state preparate e gestite. La tua reputazione professionale dipendeva dal fatto che quel dossier restasse privato. Hai deciso di impedire la verifica.","accompliceStory":"Hai accettato di collaborare perché una verifica esterna avrebbe coinvolto direttamente documenti passati dalle tue mani. Il tuo contributo è la conoscenza dei contratti, delle bozze e di ciò che, in un fascicolo, può sembrare innocuo ma diventare decisivo se collegato ad altro."},"marcello_albrizzi":{"occupation":"Medico di famiglia e consulente sanitario privato","relation":"Amico di lunga data di Angelina e della famiglia Valenti.","story":"Hai seguito la famiglia Valenti per anni e, oltre al ruolo professionale, sei diventato una presenza abituale nella loro cerchia privata. Angelina si fidava del tuo giudizio e spesso ti chiedeva di spiegare dettagli medici o tecnici che non comprendeva. Ultimamente, però, ti aveva sottoposto domande stranamente precise su orari, reazioni fisiche e vecchie annotazioni. Non ti aveva spiegato il motivo, ma avevi capito che stava ricostruendo qualcosa. Sei alla cena come amico di famiglia, eppure sai che le tue competenze potrebbero trasformarti rapidamente in una fonte di informazioni. Vuoi restare razionale e non permettere agli altri di trasformare ogni dato medico in una certezza.","interpretation":"Osserva, ragiona e correggi le conclusioni affrettate. Parla in modo professionale ma comprensibile. Non inventare diagnosi: usa soltanto gli elementi che il dossier ti fornisce.","assassinStory":"Angelina aveva collegato informazioni tecniche e mediche a una cronologia più ampia, mettendo in discussione una versione dei fatti che ti proteggeva. Se avesse chiesto una verifica esterna, il tuo ruolo sarebbe emerso. Hai deciso che non potevi permetterglielo.","accompliceStory":"Hai accettato di aiutare perché il dossier conteneva dati tecnici che, interpretati correttamente, avrebbero collegato anche te alla vicenda. La tua competenza ti permette di capire quali dettagli possono essere decisivi e quali invece possono essere presentati come ambigui."},"cesare_valli":{"occupation":"Maggiordomo e responsabile operativo di Villa Valenti","relation":"Dipendente storico della famiglia; conosce Angelina, la villa e le abitudini di tutti.","story":"Vivi la villa quasi come una macchina di cui conosci ogni rumore: chiavi, porte, orari, passaggi di servizio e abitudini degli ospiti. Hai visto Angelina crescere e, pur mantenendo sempre una distanza professionale, hai sviluppato verso di lei una forte lealtà. Negli ultimi giorni ti aveva chiesto di ricostruire alcuni accessi a stanze che normalmente nessuno controlla con precisione. Non ti aveva detto perché. Durante la cena il tuo compito naturale sarebbe assicurarti che tutto funzioni, ma ora ogni spostamento può diventare importante. Sai che molte persone sottovalutano ciò che il personale vede e ricorda.","interpretation":"Sii discreto, formale e molto osservatore. Non interrompere gli altri inutilmente. Quando parli di stanze, chiavi o orari, fallo con sicurezza. Non trasformarti però in un narratore onnisciente.","assassinStory":"Angelina aveva iniziato a ricostruire accessi e spostamenti nella villa che avrebbero mostrato quanto controllo avessi realmente sulle aree riservate. Il dossier minacciava di collegarti a una copertura che nessuno avrebbe dovuto notare. Hai deciso di fermarla.","accompliceStory":"Hai aiutato perché conosci ogni percorso della villa e potevi rendere possibile un'azione senza attirare attenzione immediata. Il rischio per te è che Angelina avesse già annotato incongruenze negli accessi. Devi proteggere la tua conoscenza operativa senza sembrare evasivo."},"adriano_conti":{"occupation":"Architetto e progettista","relation":"Ex spasimante di Angelina; tra voi è rimasto un passato mai completamente chiarito.","story":"Anni fa eri convinto che tu e Angelina avreste costruito qualcosa insieme, poi lei scelse un'altra vita. Hai trasformato quella delusione in distanza e lavoro, ma non avete mai interrotto del tutto i contatti. Di recente Angelina ti ha scritto più volte, chiedendoti di parlare di vecchie lettere e promesse che pensavi dimenticate. Hai accettato l'invito perché vuoi capire perché il passato sia tornato improvvisamente importante. Sai che la tua presenza può essere interpretata come gelosia e questo ti irrita: non vuoi che una storia sentimentale cancelli tutto il resto. Cerchi di capire chi conosca davvero ciò che accadde tra voi.","interpretation":"Mostrati orgoglioso e controllato. Reagisci quando il passato viene banalizzato. Non fare il geloso stereotipato: sei soprattutto infastidito dal fatto che altri pretendano di sapere cosa provavi.","assassinStory":"Angelina aveva conservato lettere e promesse capaci di riaprire un passato che avrebbe danneggiato la vita che ti sei costruito. Quando hai capito che voleva usarle per completare il dossier, hai deciso che quelle informazioni non avrebbero dovuto uscire.","accompliceStory":"Hai accettato di aiutare perché la pubblicazione del dossier avrebbe riportato alla luce corrispondenza privata che coinvolgeva direttamente te. Conosci il lato sentimentale di Angelina e puoi riconoscere riferimenti che agli altri sembrerebbero insignificanti."},"elia_neroni":{"occupation":"Artigiano e restauratore","relation":"Amico d'infanzia di Angelina; la conosce da prima della ricchezza e della vita a Villa Valenti.","story":"Conosci Angelina da quando nessuno dei due aveva denaro, responsabilità o un cognome capace di aprire porte. Le vostre vite hanno preso strade diverse, ma sei rimasto una delle poche persone con cui lei poteva parlare senza sentirsi osservata come 'Angelina Valenti'. Negli ultimi mesi ti aveva chiesto di ricordare episodi dell'infanzia, persone e soprannomi che non nominavate da anni. Ti sembrava nostalgia, poi hai capito che stava cercando di collegare quei ricordi a qualcosa di molto più recente. Sei venuto alla villa perché lei te l'ha chiesto personalmente. Ti fidi dell'istinto e conosci abbastanza Angelina da capire quando aveva paura, anche se cercava di nasconderlo.","interpretation":"Sii spontaneo e poco impressionato dal prestigio degli altri. Osserva le reazioni più delle parole. Quando parli di Angelina, fallo come persona e non come proprietaria della villa.","assassinStory":"Angelina aveva dato un significato nuovo a un episodio dell'infanzia che tu volevi restasse un ricordo innocuo. Collegandolo al dossier, rischiava di trasformare il tuo passato in una prova contro di te. Hai deciso di impedirle di completare quel collegamento.","accompliceStory":"Hai aiutato perché solo tu potevi comprendere alcuni riferimenti personali presenti negli appunti di Angelina. Il dossier stava collegando il passato a eventi recenti e questo ti esponeva. La tua conoscenza intima della sua storia ti rende utile al piano dell'assassino."},"ottavio_serra":{"occupation":"Fotografo e documentarista","relation":"Da anni fotografa eventi e ricorrenze dei Valenti; Angelina gli affidava spesso archivi di immagini.","story":"Hai documentato matrimoni, feste, incontri di lavoro e momenti privati della famiglia Valenti. Per te una fotografia non è mai soltanto un'immagine: contiene orari, posizioni, persone sullo sfondo e dettagli che spesso nessuno ricorda. Angelina lo sapeva e, nelle ultime settimane, ti aveva chiesto di recuperare vecchi file originali con i relativi metadati. Sembrava interessata a confrontare immagini e cronologie. Sei alla cena anche per consegnarle materiale che aveva richiesto. Conosci il rischio di leggere troppo dentro una fotografia, ma sai anche che un dettaglio visivo può smentire una versione apparentemente perfetta.","interpretation":"Guarda dove erano le persone e cosa potevano vedere. Parla di immagini e orari con precisione. Ricorda agli altri che una foto è una prova solo se contestualizzata correttamente.","assassinStory":"Angelina aveva trovato, attraverso immagini e metadati, una contraddizione temporale che ti collegava direttamente alla vicenda del dossier. Se avesse consegnato i file originali, la tua posizione sarebbe diventata difficile da spiegare. Hai scelto di intervenire.","accompliceStory":"Hai aiutato perché potevi riconoscere, selezionare o interpretare materiale fotografico capace di cambiare una cronologia. Angelina aveva già individuato qualcosa di pericoloso e il dossier rischiava di rendere quel dettaglio impossibile da ignorare."},"lavinia_valenti":{"occupation":"Curatrice di eventi culturali e rappresentante della famiglia Valenti","relation":"Sorella maggiore di Angelina; tra voi esiste una rivalità antica fatta di affetto e competizione.","story":"Sei cresciuta con la sensazione di dover rappresentare la famiglia in modo impeccabile, mentre Angelina sembrava ottenere naturalmente attenzione e libertà. Vi volete bene, ma ogni scelta importante ha sempre riaperto vecchi confronti. Negli ultimi mesi Angelina aveva iniziato a prendere decisioni che avrebbero cambiato gli equilibri interni dei Valenti, e tu ti sei sentita ancora una volta esclusa. La cena era, secondo lei, l'occasione per chiarire finalmente le cose. Sei venuta decisa a non trasformare la serata nell'ennesima lite tra sorelle. Vuoi proteggere il nome della famiglia, ma anche capire che cosa Angelina avesse davvero intenzione di fare.","interpretation":"Sii elegante, composta e orgogliosa. Difendi la famiglia ma non fingere che tu e Angelina foste sempre d'accordo. Reagisci soprattutto quando qualcuno riduce tutto a semplice gelosia tra sorelle.","assassinStory":"Angelina stava per prendere una decisione che avrebbe ridisegnato ruoli, precedenze e patrimonio familiare, lasciandoti ancora una volta senza voce. Il dossier conteneva anche elementi che avrebbero reso pubblici vecchi contrasti. Hai deciso di fermarla prima dell'annuncio.","accompliceStory":"Hai aiutato perché il dossier minacciava l'equilibrio della famiglia e il tuo ruolo al suo interno. Conosci rivalità, accordi e punti deboli dei Valenti e puoi capire quali decisioni di Angelina avrebbero avuto le conseguenze più gravi."},"celeste_valenti":{"occupation":"Illustratrice freelance, sostenuta economicamente dalla famiglia","relation":"Sorella minore di Angelina; per anni è stata protetta e aiutata soprattutto da lei.","story":"Hai sempre vissuto Angelina come una sorella maggiore capace di risolvere problemi prima ancora che tu li vedessi. Questa protezione, però, negli ultimi mesi si è trasformata in distanza. Angelina aveva iniziato a chiederti di diventare più indipendente e aveva accennato a cambiamenti economici che ti hanno spaventata. Lavori come illustratrice e stai cercando di costruirti una vita fuori dall'ombra della famiglia, ma non sei ancora pronta a perdere completamente il suo sostegno. Sei venuta alla cena sperando di chiarire il suo improvviso cambiamento. Vuoi capire se qualcuno l'abbia convinta a prendere decisioni contro di te.","interpretation":"Mostrati emotiva ma non ingenua. Difendi la tua autonomia quando qualcuno ti tratta come 'la sorella piccola'. Cerca spiegazioni sul cambiamento di Angelina e osserva chi sembra conoscerne le ragioni.","assassinStory":"Angelina aveva deciso di interrompere una protezione economica e personale da cui dipendevi più di quanto ammettessi. Il dossier conteneva le ragioni di quella scelta e rischiava di renderti responsabile di qualcosa che volevi restasse privato. Hai deciso di impedirle di procedere.","accompliceStory":"Hai aiutato perché temevi che il dossier portasse alla fine del sostegno di Angelina e rendesse pubblici aspetti della tua dipendenza dalla famiglia. La tua vicinanza personale ti permette di muoverti senza destare sospetti e di capire le sue reazioni meglio di molti altri."},"ofelia_de_marchi":{"occupation":"Commercialista","relation":"Cugina materna di Angelina; interessata alle questioni ereditarie della linea De Marchi.","story":"Sei sempre stata quella che, davanti alle discussioni di famiglia, chiedeva di vedere i documenti. Lavori come commercialista e diffidi delle ricostruzioni basate soltanto sui ricordi. Da tempo sospetti che alcune quote dell'eredità materna non siano mai state chiarite del tutto e Angelina, dopo aver inizialmente evitato l'argomento, aveva iniziato a darti ragione. Poi improvvisamente ha smesso di condividere informazioni. L'invito alla villa ti ha fatto pensare che avesse finalmente trovato qualcosa. Sei determinata a ottenere trasparenza, anche se questo può renderti scomoda agli occhi dei parenti.","interpretation":"Fai domande precise e chiedi di vedere carte, percentuali e date. Non essere aggressiva senza motivo: il tuo tratto principale è la tenacia. Non accettare 'si è sempre fatto così' come risposta.","assassinStory":"Angelina aveva trovato documenti capaci di trasformare i tuoi sospetti sull'eredità in una responsabilità concreta che avrebbe coinvolto anche te. La trasparenza che pretendevi avrebbe finito per ritorcersi contro di te. Hai deciso che il dossier non doveva essere consegnato.","accompliceStory":"Hai accettato di aiutare perché le carte sull'eredità materna esponevano una posizione che ti riguardava direttamente. La tua competenza contabile ti permette di riconoscere quali percentuali, trasferimenti e correzioni siano realmente pericolosi."},"viola_neroni":{"occupation":"Psicologa e consulente privata","relation":"Migliore amica di Angelina; era una delle persone con cui si confidava di più.","story":"Per anni Angelina ti ha raccontato quasi tutto: paure, litigi, decisioni e dubbi che non avrebbe mai condiviso con la famiglia. Proprio per questo hai notato immediatamente quando ha iniziato a chiudersi. Nelle ultime settimane evitava certe domande, cambiava argomento e sembrava temere che qualcosa detto in confidenza potesse uscire. Ti ha invitata alla cena senza spiegarti il motivo, limitandosi a dire che dopo quella sera 'molte cose sarebbero state più semplici'. Sei venuta preoccupata più che curiosa. Conosci il modo in cui Angelina reagiva sotto pressione e sai riconoscere quando una sua frase nascondeva altro.","interpretation":"Ascolta molto e fai domande sulle motivazioni, non solo sui fatti. Non diagnosticare gli altri. Usa la tua conoscenza emotiva di Angelina per capire quali comportamenti sarebbero stati insoliti per lei.","assassinStory":"Angelina aveva iniziato a sospettare che alcune confidenze fossero state utilizzate o riferite contro di lei. Il dossier collegava una fuga di informazioni a conseguenze concrete che avrebbero distrutto il rapporto tra voi e la tua reputazione. Hai deciso di fermarla.","accompliceStory":"Hai aiutato perché sapevi che il dossier conteneva confidenze e passaggi privati che avrebbero mostrato quanto conoscessi della vicenda. La tua vicinanza emotiva ad Angelina ti rende capace di prevedere le sue decisioni e di capire che cosa avrebbe considerato una prova."},"eva_montorsi":{"occupation":"Governante di Villa Valenti","relation":"Dipendente storica e presenza costante nella vita domestica di Angelina.","story":"Hai lavorato a Villa Valenti abbastanza a lungo da conoscere la differenza tra ciò che la famiglia mostra e ciò che accade davvero dietro le porte chiuse. Hai visto litigi, riconciliazioni, ospiti entrare da accessi secondari e decisioni cambiare nel giro di una notte. Angelina si fidava della tua discrezione e negli ultimi giorni ti aveva chiesto di ricordare orari e movimenti apparentemente insignificanti. Non sapevi a cosa servissero. Durante la cena continui istintivamente a osservare chi si alza, chi scompare e chi sembra conoscere la villa troppo bene. Non ami i pettegolezzi: per te conta ciò che hai visto direttamente.","interpretation":"Sii concreta, discreta e difficilmente impressionabile. Distingui sempre ciò che hai visto da ciò che hai sentito dire. Presta attenzione agli spostamenti nelle aree di servizio e alle abitudini insolite.","assassinStory":"Angelina aveva ricostruito alcuni movimenti interni alla villa che avrebbero mostrato il tuo coinvolgimento in accessi e coperture non autorizzate. Se il dossier fosse uscito, la tua posizione e la fiducia costruita in anni sarebbero finite. Hai deciso di intervenire.","accompliceStory":"Hai aiutato perché conosci tempi, passaggi e routine della villa meglio di quasi tutti. Angelina aveva già iniziato a controllare proprio quegli elementi. Il tuo compito è stato rendere plausibile uno spostamento o un accesso che altrimenti avrebbe attirato attenzione."},"bianca_albrizzi":{"occupation":"Segretaria personale e assistente organizzativa di Angelina","relation":"Gestisce agenda, telefonate, appuntamenti e parte dell'archivio personale di Angelina.","story":"Se qualcuno voleva parlare con Angelina, quasi sempre passava prima da te. Conosci appuntamenti, cambi di programma, numeri privati e documenti che non arrivano mai sulla scrivania degli altri. Ultimamente Angelina aveva iniziato a gestire personalmente alcune telefonate e ti aveva chiesto di recuperare appuntamenti cancellati mesi prima. Questo ti aveva fatto capire che stava ricostruendo una cronologia precisa. La cena, per te, doveva essere un evento come tanti, ma l'atmosfera ti sembra diversa. Sai che un'agenda può raccontare molto più di quanto sembri e che chiunque abbia avuto accesso ai suoi appuntamenti potrebbe aver saputo in anticipo ciò che Angelina stava preparando.","interpretation":"Sii efficiente, precisa e attenta agli orari. Ricorda chi poteva conoscere gli appuntamenti di Angelina. Non raccontare automaticamente tutto: rispondi quando un dettaglio diventa pertinente.","assassinStory":"Angelina aveva ricomposto appuntamenti, telefonate e documenti cancellati, arrivando a una cronologia che avrebbe mostrato il tuo coinvolgimento. Essendo la persona che gestiva quelle informazioni, sapevi quanto fosse pericolosa. Hai deciso di impedirle di completarla.","accompliceStory":"Hai accettato di aiutare perché il dossier usava proprio l'agenda e la corrispondenza che passavano dalle tue mani. Puoi capire quali appuntamenti sono decisivi e quali modifiche possono sembrare normali cambi di programma."},"emilia_riva":{"occupation":"Coordinatrice di eventi e collaboratrice esterna della villa","relation":"Lavora spesso a Villa Valenti e conosce bene le zone di servizio e l'organizzazione delle serate.","story":"Non fai parte della famiglia, ma durante gli eventi sei una delle persone che può muoversi quasi ovunque senza attirare attenzione. Organizzi fornitori, tavoli, consegne e cambi di programma, e per questo conosci corridoi e aree di servizio meglio di molti invitati. Angelina apprezzava la tua capacità di risolvere problemi e, poco prima della cena, ti aveva chiesto di ricostruire una vecchia lista di consegne. Ti era sembrata una richiesta strana. Ora ogni deviazione, passaggio o porta lasciata aperta potrebbe avere un significato. Vuoi evitare che il personale venga usato come capro espiatorio soltanto perché aveva libertà di movimento.","interpretation":"Sii pratica e veloce. Ragiona per percorsi e tempi. Difendi chi lavora nella villa quando le accuse sono basate solo sull'accesso agli spazi. Ricorda però gli spostamenti insoliti.","assassinStory":"Angelina aveva collegato vecchi movimenti nelle zone di servizio a una sequenza che ti coinvolgeva. Il dossier mostrava che alcune deviazioni non erano semplici problemi organizzativi. Hai deciso che non avrebbe dovuto consegnare quella ricostruzione.","accompliceStory":"Hai aiutato perché la tua libertà di movimento durante gli eventi poteva rendere invisibile un passaggio importante. Angelina, però, aveva già notato incongruenze nelle liste e nei percorsi. Devi proteggere la tua parte senza attirare l'attenzione sul personale."},"ginevra_ferretti":{"occupation":"Consulente di relazioni aziendali","relation":"Conosce l'ambiente professionale di Angelina e diversi contatti esterni ai Valenti.","story":"Ti muovi bene tra aziende, professionisti e persone che preferiscono non comparire ufficialmente nelle trattative. Hai conosciuto Angelina attraverso il lavoro e con il tempo sei entrata anche nella sua cerchia privata. Negli ultimi mesi lei ti aveva chiesto informazioni su contatti che, secondo te, non avevano nulla a che fare l'uno con l'altro. Poi hai capito che stava cercando di ricostruire una rete di rapporti professionali paralleli. Sei stata invitata perché conosci nomi e ambienti che la famiglia ignora. Durante la serata vuoi capire fino a che punto Angelina fosse arrivata e chi, tra i presenti, abbia avuto rapporti con persone esterne alla villa.","interpretation":"Sii socievole ma molto attenta a chi conosce chi. Fai domande sui contatti esterni e sui rapporti professionali. Non confondere una conoscenza d'affari con una complicità senza altre prove.","assassinStory":"Angelina aveva collegato contatti professionali paralleli a operazioni che avrebbero compromesso la tua carriera e mostrato che alcuni rapporti non erano affatto casuali. Hai deciso di fermare la consegna del dossier prima che la rete diventasse pubblica.","accompliceStory":"Hai aiutato perché conosci persone e canali esterni che potevano collegare il dossier alla tua attività. Il tuo valore per l'assassino è capire quali contatti siano realmente compromettenti e come certe relazioni possano sembrare normali dall'esterno."},"isabella_roversi":{"occupation":"Antiquaria e perita di beni storici","relation":"Ha aiutato Angelina a catalogare oggetti, archivi e documenti appartenuti alla famiglia.","story":"Sei entrata a Villa Valenti per catalogare mobili, oggetti e documenti che per la famiglia erano soltanto ricordi. Tu, invece, hai imparato a leggere provenienze, correzioni, firme e incongruenze. Angelina si era appassionata al lavoro e aveva iniziato a chiederti verifiche sempre più specifiche, soprattutto su alcuni beni legati a vecchie successioni. Poco prima della cena ti aveva anticipato di aver trovato una scheda che non coincideva con la versione conservata nell'archivio. Sei curiosa di sapere che cosa significasse. Per te gli oggetti non mentono, ma possono essere descritti in modo sbagliato per anni.","interpretation":"Osserva oggetti e documenti come prove materiali. Parla con precisione ma senza superiorità. Chiedi sempre provenienza, data e chi abbia avuto in mano un oggetto prima di trarre conclusioni.","assassinStory":"Angelina aveva trovato una discrepanza nella provenienza di un bene o documento che avrebbe messo in discussione una valutazione a cui eri legata. Una nuova perizia avrebbe fatto emergere il tuo coinvolgimento. Hai deciso di impedire che quella verifica avvenisse.","accompliceStory":"Hai accettato di aiutare perché sapevi riconoscere quali oggetti o schede del dossier potevano diventare prove. La tua competenza era utile per spostare l'attenzione su spiegazioni alternative, ma Angelina aveva già iniziato una nuova verifica."}};
+
 const PORTRAITS=window.PORTRAITS||{};
 
 /* MOTORE ASSEGNAZIONI DEFINITIVE
@@ -372,13 +391,8 @@ function randomTwoDistinct(array){
 
 function chooseSpecialRolePair(mode="RANDOM"){
  const byId=id=>participants.find(p=>p.id===id);
- const testMode=localStorage.getItem("villaValentiTestScenario")||"ALBERTO_ASSASSIN";
- if(testMode==="ALBERTO_INNOCENT"){
-   /* TEST B: Alberto è organizzatore ma NON assassino/complice. */
-   return [byId("pietro_scolari"),byId("rocco_monaco")];
- }
- /* TEST A: Alberto assassino, Pietro complice. */
- return [byId("alberto_damico"),byId("pietro_scolari")];
+ /* TEST FISSO: Alberto innocente · Vivald assassino · Julian complice */
+ return [byId("vivald_keri"),byId("julian_remelli")];
 }
 
 
@@ -506,6 +520,9 @@ function buildNarrativePackage(state){
    sharedStory,
    assassinPrivate:"Hai deciso di agire direttamente perché "+a.pressure+". Il tuo vantaggio operativo era "+a.capability+". La collaborazione dell'altra persona era indispensabile perché il dossier collegava entrambe le vostre posizioni.",
    accomplicePrivate:"Hai accettato di collaborare perché "+b.pressure+". Il tuo contributo era possibile grazie a "+b.capability+". Senza il tuo aiuto l'altra persona non avrebbe potuto gestire tutte le tracce lasciate dal dossier.",
+   secondVictimCharacterId:accompliceCharacter.id,
+   secondVictimCharacterName:accompliceCharacter.name,
+   secondVictimRoom:"Biblioteca di Villa Valenti",
    commonClues,
    personalClues
  };
@@ -516,8 +533,8 @@ function narrativeForCurrentPlayer(narrative,participant){
 }
 /* ===== FINE MOTORE NARRATIVO 380 ===== */
 
-const LIVE_UNLOCK_PATH="testDefinitivoCompleto2026/liveUnlocks";
-const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,conclusion:false,updatedAt:null};
+const LIVE_UNLOCK_PATH="testVivaldJulian2026/liveUnlocks";
+const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,twist:false,twistAt:null,conclusion:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
 let liveUnlockLoading=false;
@@ -528,6 +545,9 @@ let currentSpecialRole=null;
 let registryLiveTimer=null,registryLoading=false;
 let secretPartnerTimer=null;
 let secretPartnerLoading=false;
+let currentCharacter=null;
+const PLOT_TWIST_VIDEO="haviland-colpo-di-scena.mp4";
+const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella Biblioteca. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate gli alibi, ricostruite gli spostamenti e chiedetevi perché questa persona dovesse essere messa a tacere. Non date per scontato che i due delitti abbiano motivazioni indipendenti. L'indagine continua.";
 
 async function firebaseRequest(path,options={}){
  const response=await fetch(FIREBASE_DB+"/"+path+".json",{cache:"no-store",...options});
@@ -558,7 +578,57 @@ async function firebasePutIfMatch(path,data,etag){
  return {ok:true,data:await response.json()};
 }
 
+function validateStaticConfiguration(){
+ const participantIds=participants.map(p=>p.id);
+ const participantCodes=participants.map(p=>p.code);
+ const characterIds=characters.map(c=>c.id);
+
+ if(participants.length!==20||characters.length!==20)throw new Error("Configurazione incompleta: servono 20 partecipanti e 20 personaggi");
+ if(new Set(participantIds).size!==participants.length)throw new Error("Configurazione non valida: ID partecipante duplicato");
+ if(new Set(participantCodes).size!==participants.length)throw new Error("Configurazione non valida: codice partecipante duplicato");
+ if(new Set(characterIds).size!==characters.length)throw new Error("Configurazione non valida: personaggio duplicato");
+
+ const maleParticipants=participants.filter(p=>p.gender==="M").length;
+ const femaleParticipants=participants.filter(p=>p.gender==="F").length;
+ const maleCharacters=characters.filter(c=>c.gender==="M").length;
+ const femaleCharacters=characters.filter(c=>c.gender==="F").length;
+ if(maleParticipants!==maleCharacters||femaleParticipants!==femaleCharacters){
+   throw new Error("Configurazione non valida: matrice M/F incompatibile");
+ }
+}
+
+function isValidFrozenAssignmentState(state){
+ if(!state||state.version!==6||!state.assignments||!state.specialRoles||!state.narrative)return false;
+
+ const participantIds=new Set(participants.map(p=>p.id));
+ const characterIds=[];
+
+ for(const participant of participants){
+   const assignment=state.assignments[participant.id];
+   if(!assignment)return false;
+   if(assignment.participantId!==participant.id)return false;
+   if(assignment.participantCode!==participant.code)return false;
+   if(assignment.participantGender!==participant.gender)return false;
+   if(assignment.locked!==true)return false;
+
+   const character=characters.find(c=>c.id===assignment.characterId);
+   if(!character||character.gender!==participant.gender)return false;
+   characterIds.push(character.id);
+ }
+
+ /* Devono esserci esattamente 20 assegnazioni e 20 personaggi diversi. */
+ if(Object.keys(state.assignments).length!==participants.length)return false;
+ if(new Set(characterIds).size!==characters.length)return false;
+
+ const assassin=state.specialRoles.assassin;
+ const accomplice=state.specialRoles.accomplice;
+ if(!participantIds.has(assassin)||!participantIds.has(accomplice)||assassin===accomplice)return false;
+
+ return true;
+}
+
 function createInitialAssignmentState(mode="RANDOM"){
+ validateStaticConfiguration();
  const maleParticipants=secureShuffle(participants.filter(p=>p.gender==="M"));
  const femaleParticipants=secureShuffle(participants.filter(p=>p.gender==="F"));
  const maleCharacters=secureShuffle(characters.filter(c=>c.gender==="M"));
@@ -577,7 +647,7 @@ function createInitialAssignmentState(mode="RANDOM"){
 
  const [assassin,accomplice]=chooseSpecialRolePair(mode);
  const state={
-   version:5,
+   version:6,
    createdAt:new Date().toISOString(),
    assignments,
    specialRoles:{assassin:assassin.id,accomplice:accomplice.id}
@@ -587,15 +657,21 @@ function createInitialAssignmentState(mode="RANDOM"){
 }
 
 async function ensureAssignmentState(){
+ validateStaticConfiguration();
+
  for(let attempt=0;attempt<10;attempt++){
    const snapshot=await firebaseReadWithEtag(ASSIGNMENT_STATE_PATH);
-   if(snapshot.data&&snapshot.data.version===5&&snapshot.data.assignments&&snapshot.data.specialRoles&&snapshot.data.narrative){
+
+   if(snapshot.data){
+     if(!isValidFrozenAssignmentState(snapshot.data)){
+       throw new Error("Stato definitivo non valido: assegnazioni duplicate, non bloccate o incompatibili. Nessuna sovrascrittura automatica.");
+     }
      return snapshot.data;
    }
-   if(snapshot.data){
-     throw new Error("Esiste una vecchia assegnazione non compatibile: serve reset organizzatore prima della pubblicazione");
-   }
+
    const initial=createInitialAssignmentState("RANDOM");
+   if(!isValidFrozenAssignmentState(initial))throw new Error("Generazione assegnazioni non valida");
+
    const write=await firebasePutIfMatch(ASSIGNMENT_STATE_PATH,initial,snapshot.etag);
    if(write.ok)return initial;
    if(!write.conflict)throw new Error("Impossibile inizializzare le assegnazioni");
@@ -703,33 +779,37 @@ function renderSecretRole(roleBundle){
  const secretText=document.getElementById("secretRole");
  secretBox.classList.add("hidden");
  secretText.innerHTML="";
- if(!roleBundle||!roleBundle.specialRole)return;
+ if(!roleBundle||!roleBundle.specialRole||!currentCharacter)return;
 
  const isAssassin=roleBundle.specialRole==="assassin";
  const roleTitle=isAssassin?"ASSASSINO":"COMPLICE";
  const partnerTitle=isAssassin?"complice":"assassino";
+ const profile=CHARACTER_PROFILES[currentCharacter.id]||{};
+ const personalOrigin=isAssassin?profile.assassinStory:profile.accompliceStory;
+ const privateText=currentNarrative?(isAssassin?currentNarrative.assassinPrivate:currentNarrative.accomplicePrivate):"";
+
+ let html="<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
+   "<strong>PERCHÉ SEI COINVOLTO</strong><br>"+escapeHtml(personalOrigin||privateText)+"<br><br>";
 
  if(!roleBundle.partnerUnlocked||!roleBundle.partner){
-   secretText.innerHTML=
-     "<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
-     "Il tuo ruolo segreto è stato assegnato e rimane bloccato.<br><br>"+
-     "<strong>IDENTITÀ DEL "+partnerTitle.toUpperCase()+": SIGILLATA</strong><br>"+
-     "Attendi che il "+partnerTitle+" faccia il suo primo accesso. Anche il legame condiviso con Angelina resterà sigillato fino a quel momento.<br><br>"+
+   html+="<strong>IDENTITÀ DEL "+partnerTitle.toUpperCase()+": SIGILLATA</strong><br>"+
+     "Il tuo ruolo è già attivo, ma l'identità dell'altra persona verrà mostrata soltanto quando avrà effettuato il suo primo accesso. Fino ad allora non cercare di indovinare o contattare qualcuno come partner segreto.<br><br>"+
+     "<strong>COME MUOVERTI</strong><br>"+escapeHtml(privateText)+"<br><br>"+
      "Non mostrare questo documento agli altri partecipanti.";
+   secretText.innerHTML=html;
    secretBox.classList.remove("hidden");
    return;
  }
 
- const privateText=currentNarrative?(isAssassin?currentNarrative.assassinPrivate:currentNarrative.accomplicePrivate):"";
  const motive=currentNarrative?currentNarrative.commonMotive:"";
- secretText.innerHTML=
-   "<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
-   "Il tuo "+partnerTitle+" è ora disponibile:<br><br>"+
+ html+="<strong>IL TUO "+partnerTitle.toUpperCase()+"</strong><br>"+
    "<strong>Nome vero:</strong> "+escapeHtml(roleBundle.partner.participantName)+"<br>"+
    "<strong>Personaggio della storia:</strong> "+escapeHtml(roleBundle.partner.characterName)+"<br><br>"+
-   "<strong>LEGAME CON ANGELINA</strong><br>"+escapeHtml(motive)+"<br><br>"+
-   "<strong>LA TUA POSIZIONE</strong><br>"+escapeHtml(privateText)+"<br><br>"+
+   "<strong>IL MOVENTE CONDIVISO</strong><br>"+escapeHtml(motive)+"<br><br>"+
+   "<strong>LA TUA PARTE</strong><br>"+escapeHtml(privateText)+"<br><br>"+
+   "Proteggi la coerenza della vostra versione. Non devi mentire su tutto: devi evitare che gli altri colleghino correttamente i dettagli decisivi.<br><br>"+
    "Non mostrare questo documento agli altri partecipanti.";
+ secretText.innerHTML=html;
  secretBox.classList.remove("hidden");
 }
 
@@ -808,17 +888,28 @@ async function loadLiveUnlocks(silent=false){
 }
 
 function renderLiveUnlocks(){
+ const isDeadAccomplice=!!(liveUnlockState.twist&&currentSpecialRole==="accomplice");
  if(currentNarrative){
    const common=currentNarrative.commonClues||[];
    for(let i=1;i<=3;i++){
      const el=document.getElementById("commonClue"+i+"Text");
-     if(el)el.textContent=common[i-1]||"Documento non disponibile.";
+     if(!el)continue;
+     if(i===3&&isDeadAccomplice){
+       el.innerHTML="<div class=\"death-warning\">IL TUO PERSONAGGIO È STATO TROVATO SENZA VITA NELLA BIBLIOTECA DI VILLA VALENTI.</div><div class=\"death-rules\">La tua parte attiva nell'indagine termina qui. Qualunque cosa tu abbia detto prima del ritrovamento rimane parte della storia.</div>";
+     }else el.textContent=common[i-1]||"Documento non disponibile.";
    }
    const personal=narrativeForCurrentPlayer(currentNarrative,currentParticipant);
    for(let i=1;i<=3;i++){
      const el=document.getElementById("personalClue"+i+"Text");
-     if(el)el.textContent=personal[i-1]||"Informazione personale non disponibile.";
+     if(!el)continue;
+     if(i===3&&isDeadAccomplice){
+       el.innerHTML="<div class=\"death-warning\">SEI LA SECONDA VITTIMA.</div><div class=\"death-rules\">Da questo momento non puoi fornire nuove informazioni sul tuo personaggio, correggere dichiarazioni precedenti, rispondere agli interrogatori o suggerire come interpretare gli indizi. Puoi restare con gli altri, seguire l'indagine e assistere alla conclusione. Mantieni segreto il tuo vero ruolo.</div>";
+     }else el.textContent=personal[i-1]||"Informazione personale non disponibile.";
    }
+   const common3=document.getElementById("commonClue3");
+   const personal3=document.getElementById("personalClue3");
+   if(common3)common3.classList.toggle("death-clue",isDeadAccomplice);
+   if(personal3)personal3.classList.toggle("death-clue",isDeadAccomplice);
  }
  const map=[
    ["common1","commonClue1","stateCommon1"],
@@ -842,11 +933,23 @@ function renderLiveUnlocks(){
  });
  const empty=document.getElementById("noCluesBox");
  if(empty)empty.classList.toggle("hidden",any);
+ const twistState=document.getElementById("statePlotTwist");
+ const twistBtn=document.getElementById("plotTwistBtn");
+ if(twistState){
+   twistState.textContent=liveUnlockState.twist?"ATTIVATO":"IN ATTESA";
+   twistState.classList.toggle("on",!!liveUnlockState.twist);
+ }
+ if(twistBtn)twistBtn.disabled=!!liveUnlockState.twist;
+ maybeShowPlotTwist();
  renderConclusionAccess();
 }
 
 async function toggleLiveUnlock(key){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
+ if((key==="common3"||key==="personal3")&&!liveUnlockState.twist){
+   alert("Prima attiva il COLPO DI SCENA. Comune 3 e Personale 3 restano bloccati fino al ritrovamento della seconda vittima.");
+   return;
+ }
  const status=document.getElementById("liveWriteStatus");
  if(status)status.textContent="INVIO COMANDO…";
  try{
@@ -859,6 +962,75 @@ async function toggleLiveUnlock(key){
    console.error("Errore comando Regia:",e);
    if(status)status.textContent="ERRORE · COMANDO NON INVIATO";
  }
+}
+
+async function activatePlotTwist(){
+ if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
+ if(liveUnlockState.twist)return;
+ if(!confirm("Attivare il COLPO DI SCENA?\n\nTutti i dispositivi riceveranno la comunicazione Haviland e verrà rivelata la seconda vittima. Nel test l'evento è irreversibile fino al reset."))return;
+ const status=document.getElementById("liveWriteStatus");
+ try{
+   if(status)status.textContent="ATTIVAZIONE COLPO DI SCENA…";
+   const now=new Date().toISOString();
+   const next={...liveUnlockState,twist:true,twistAt:now,common3:false,personal3:false,updatedAt:now,updatedBy:currentParticipant.id};
+   await firebaseWrite(LIVE_UNLOCK_PATH,next);
+   liveUnlockState=next;
+   try{sessionStorage.removeItem("villaValentiTwistSeen:"+now)}catch(e){}
+   renderLiveUnlocks();
+   if(status)status.textContent="COLPO DI SCENA ATTIVATO · "+new Date().toLocaleTimeString("it-IT");
+ }catch(e){
+   console.error("Errore colpo di scena:",e);
+   if(status)status.textContent="ERRORE · COLPO DI SCENA NON ATTIVATO";
+ }
+}
+
+function plotTwistSeenKey(){return "villaValentiTwistSeen:"+(liveUnlockState.twistAt||"active")+":"+(currentParticipant?currentParticipant.id:"anon")}
+function maybeShowPlotTwist(){
+ if(!currentParticipant||!liveUnlockState.twist)return;
+ const key=plotTwistSeenKey();
+ try{if(sessionStorage.getItem(key)==="1")return}catch(e){}
+ showPlotTwistOverlay();
+}
+function showPlotTwistOverlay(){
+ const overlay=document.getElementById("plotTwistOverlay");
+ const video=document.getElementById("plotTwistVideo");
+ const playback=document.getElementById("plotTwistPlayback");
+ const fallback=document.getElementById("plotTwistFallback");
+ const victim=document.getElementById("plotTwistVictim");
+ const cont=document.getElementById("plotTwistContinue");if(!overlay||!video||!playback||!fallback||!victim||!cont)return;
+ overlay.classList.remove("hidden");
+ playback.classList.add("hidden"); fallback.classList.add("hidden"); victim.classList.add("hidden"); cont.classList.add("hidden");
+ const victimName=currentNarrative&&currentNarrative.secondVictimCharacterName?currentNarrative.secondVictimCharacterName:"Seconda vittima";
+ const room=currentNarrative&&currentNarrative.secondVictimRoom?currentNarrative.secondVictimRoom:"Biblioteca di Villa Valenti";
+ victim.innerHTML="SECONDA VITTIMA IDENTIFICATA<br><span style=\"font-size:1.25em\">"+escapeHtml(victimName)+"</span><br><small>Ritrovamento: "+escapeHtml(room)+"</small>";
+ const finish=()=>{playback.classList.add("hidden");victim.classList.remove("hidden");cont.classList.remove("hidden")};
+ const loadFail=()=>{video.classList.add("hidden");playback.classList.add("hidden");fallback.textContent=PLOT_TWIST_FALLBACK;fallback.classList.remove("hidden");finish()};
+ const autoplayBlocked=()=>{playback.classList.remove("hidden")};
+ video.classList.remove("hidden");
+ video.onended=finish;
+ video.onerror=loadFail;
+ video.src=PLOT_TWIST_VIDEO+"?v="+encodeURIComponent(liveUnlockState.twistAt||Date.now());
+ try{
+   const p=video.play();
+   if(p&&typeof p.catch==="function")p.catch(autoplayBlocked);
+ }catch(e){autoplayBlocked()}
+}
+function playPlotTwistVideo(){
+ const video=document.getElementById("plotTwistVideo");
+ const playback=document.getElementById("plotTwistPlayback");
+ if(!video)return;
+ try{
+   const p=video.play();
+   if(playback)playback.classList.add("hidden");
+   if(p&&typeof p.catch==="function")p.catch(()=>{if(playback)playback.classList.remove("hidden")});
+ }catch(e){if(playback)playback.classList.remove("hidden")}
+}
+function closePlotTwistOverlay(){
+ const overlay=document.getElementById("plotTwistOverlay");
+ const video=document.getElementById("plotTwistVideo");
+ if(video){try{video.pause()}catch(e){}}
+ if(overlay)overlay.classList.add("hidden");
+ try{sessionStorage.setItem(plotTwistSeenKey(),"1")}catch(e){}
 }
 
 async function resetLiveUnlocks(){
@@ -999,35 +1171,28 @@ async function submitConclusion(){
  }
 }
 
-async function resetFullFinalTest(scenario){
- const chosen=scenario==="ALBERTO_INNOCENT"?"ALBERTO_INNOCENT":"ALBERTO_ASSASSIN";
- const readable=chosen==="ALBERTO_INNOCENT"
-   ?"Alberto innocente · Pietro assassino · Rocco complice"
-   :"Alberto assassino · Pietro complice";
- if(!confirm("Azzerare SOLO il test isolato e avviare questo scenario?\n\n"+readable))return;
+async function resetFullFinalTest(){
+ const readable="Alberto innocente · Vivald assassino · Julian complice";
+ if(!confirm("Azzerare SOLO questo test isolato e preparare lo scenario?\n\n"+readable))return;
  const error=document.getElementById("error");
  try{
    if(error)error.textContent="RESET TEST IN CORSO…";
-   await firebaseDelete("testDefinitivoCompleto2026");
+   await firebaseDelete("testVivaldJulian2026");
    try{
-     localStorage.setItem("villaValentiTestScenario",chosen);
+     localStorage.setItem("villaValentiTestScenario","VIVALD_ASSASSIN_JULIAN_ACCOMPLICE");
+     [...Object.keys(sessionStorage)].filter(k=>k.startsWith("villaValentiTwistSeen:")).forEach(k=>sessionStorage.removeItem(k));
    }catch(e){}
    updateTestScenarioLabel();
    if(error)error.textContent="TEST AZZERATO · SCENARIO PRONTO";
-   alert("Scenario test pronto. Il gioco definitivo non è stato toccato.");
+   alert("Scenario test pronto.\n\nAlberto = innocente\nVivald = assassino\nJulian = complice / seconda vittima\n\nIl gioco definitivo non è stato toccato.");
  }catch(e){
    console.error("Errore reset test:",e);
    if(error)error.textContent="ERRORE RESET TEST";
  }
 }
-
 function updateTestScenarioLabel(){
  const el=document.getElementById("testScenarioLabel");
- if(!el)return;
- const mode=localStorage.getItem("villaValentiTestScenario")||"ALBERTO_ASSASSIN";
- el.textContent=mode==="ALBERTO_INNOCENT"
-   ?"Scenario attivo: TEST B · Alberto innocente · Pietro assassino · Rocco complice"
-   :"Scenario attivo: TEST A · Alberto assassino · Pietro complice";
+ if(el)el.textContent="Scenario attivo: Alberto innocente · Vivald assassino · Julian complice";
 }
 
 async function login(){
@@ -1070,6 +1235,8 @@ async function openCharacter(participant){
  currentNarrative=result.state&&result.state.narrative?result.state.narrative:null;
  const character=characters.find(c=>c.id===result.data.characterId);
  if(!character)throw new Error("Personaggio non valido");
+ currentCharacter=character;
+ const profile=CHARACTER_PROFILES[character.id]||{};
 
  const spokenGreeting=result.firstAccess
    ? "Salve, "+character.name+"."
@@ -1080,8 +1247,13 @@ async function openCharacter(participant){
  document.getElementById("greeting").textContent=spokenGreeting;
  document.getElementById("characterName").textContent=character.name;
  document.getElementById("characterRole").textContent=character.role;
- document.getElementById("characterDescription").textContent=character.description;
- document.getElementById("characterAdvice").textContent=character.advice;
+ const identity=document.getElementById("characterIdentity");
+ if(identity)identity.innerHTML=
+   "<div class=\"identity-line\"><strong>Occupazione</strong><br>"+escapeHtml(profile.occupation||"Non specificata")+"</div>"+
+   "<div class=\"identity-line\"><strong>Rapporto con Angelina Valenti</strong><br>"+escapeHtml(profile.relation||character.description)+"</div>";
+ const story=document.getElementById("characterStory");
+ if(story)story.textContent=profile.story||character.description;
+ document.getElementById("characterAdvice").textContent=profile.interpretation||character.advice;
  document.getElementById("realUserLabel").textContent="ID: "+participant.name+" · ASSEGNAZIONE BLOCCATA";
 
  const initials=character.name.split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
@@ -1117,6 +1289,7 @@ function logout(){
  currentParticipant=null;
  currentNarrative=null;
  currentSpecialRole=null;
+ currentCharacter=null;
  liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
  renderLiveUnlocks();
  document.getElementById("appSection").classList.add("hidden");
@@ -1163,8 +1336,8 @@ async function loadRegistry(silent=false){
    ]);
 
    /* CONTEGGIO VOTI PRIVACY-SAFE:
-      in Regia appare solo X / 18.
-      Non vengono mostrati votanti, non votanti, assassino o complice. */
+      la Regia mostra solo X / 18.
+      Non mostra chi ha votato, chi manca o chi ricopre i ruoli segreti. */
    const specialIds=new Set([state.specialRoles.assassin,state.specialRoles.accomplice]);
    const eligible=participants.filter(p=>!specialIds.has(p.id));
    let voted=0;
@@ -1180,12 +1353,10 @@ async function loadRegistry(silent=false){
      const record=node&&node.public?node.public:null;
      const row=document.createElement("div");
      row.className="registry-row";
-
      const characterName=record&&record.characterName?record.characterName:"—";
      const accessStatus=record&&record.assigned
        ?'<span class="ok">✓ Accesso effettuato</span>'
        :"<span class=\"pending\">○ Non ha ancora effettuato l'accesso</span>";
-
      row.innerHTML="<div><strong>"+escapeHtml(p.name)+"</strong></div>"
        +"<div>"+escapeHtml(characterName)+"</div>"
        +"<div>"+accessStatus+"</div>";
@@ -1212,8 +1383,22 @@ document.addEventListener("visibilitychange",()=>{
  }
 });
 document.getElementById("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
-renderLiveUnlocks();
 updateTestScenarioLabel();
+renderLiveUnlocks();
 </script>
+
+<div id="plotTwistOverlay" class="twist-overlay hidden" aria-live="assertive" aria-modal="true" role="dialog">
+  <div class="twist-panel">
+    <div class="twist-kicker">HAVILAND · COMUNICAZIONE URGENTE</div>
+    <h2>Colpo di scena</h2>
+    <video id="plotTwistVideo" class="twist-video" playsinline preload="metadata"></video>
+    <div id="plotTwistPlayback" class="twist-actions hidden"><button id="plotTwistPlay" class="action-btn" onclick="playPlotTwistVideo()">▶ RIPRODUCI COMUNICAZIONE HAVILAND</button></div>
+    <div id="plotTwistFallback" class="twist-fallback hidden"></div>
+    <div id="plotTwistVictim" class="twist-victim hidden"></div>
+    <div class="twist-actions"><button id="plotTwistContinue" class="action-btn hidden" onclick="closePlotTwistOverlay()">CONTINUA L'INDAGINE</button></div>
+    <div class="twist-note">TEST · il video definitivo verrà collegato con il file Haviland.</div>
+  </div>
+</div>
+
 </body>
 </html>
