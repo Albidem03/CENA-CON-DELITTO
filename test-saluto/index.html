@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Villa Valenti — TEST presenza Alessia</title>
+<title>Villa Valenti — Archivio Riservato</title>
 <style>
 :root{--gold:#d0b77c;--line:rgba(188,157,104,.35);--ink:#221a13}
 *{box-sizing:border-box} html{scroll-behavior:smooth}
@@ -121,7 +121,6 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <section id="appSection" class="hidden"><div class="app">
 <header class="topbar"><div class="brand"><strong>Archivio Villa Valenti</strong><span>Accesso autenticato</span></div><button onclick="logout()">CHIUDI DOSSIER</button></header>
 <div class="layout">
-<div id="attendanceBanner" class="attendance-warning hidden"></div>
 <aside class="sidebar">
 <button class="nav-btn active" data-tab="dossier" onclick="openTab('dossier')">▣ Dossier personale</button>
 <button class="nav-btn" data-tab="indizi" onclick="openTab('indizi')">⌕ Indizi</button>
@@ -264,18 +263,20 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 (function(){
   const pageVersion=new URLSearchParams(window.location.search).get('v')||Date.now().toString(36);
   ['01','02','03','04'].forEach(function(n){
-    document.write('<script src="../portraits_'+n+'.js?v='+encodeURIComponent(pageVersion)+'"><\/script>');
+    document.write('<script src="portraits_'+n+'.js?v='+encodeURIComponent(pageVersion)+'"><\/script>');
   });
 })();
 </script>
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const PLAYER_ROOT="testModulareAlessia2026/players";
-const ASSIGNMENT_STATE_PATH="testModulareAlessia2026/private/assignmentState";
-const MODULAR_PRESENCE_PATH="testModulareAlessia2026/live/modularPresence/alessia_remelli";
+const PLAYER_ROOT="villaValentiDefinitivo2026/players";
+const ASSIGNMENT_STATE_PATH="villaValentiDefinitivo2026/private/assignmentState";
+const MODULAR_PRESENCE_PATH="villaValentiDefinitivo2026/live/fixedEdition";
 const MODULAR_PARTICIPANT_ID="alessia_remelli";
 const MODULAR_CHARACTER_ID="isabella_roversi";
+const GAME_EDITION="B_CON_ALESSIA";
+const FIXED_ALESSIA_PRESENT=true;
 /* Isabella Roversi NON compare nelle tavole generali.
    È riservata esclusivamente ad Alessia Remelli.
    NOTA: queste funzioni vengono valutate solo DOPO che `characters`
@@ -283,14 +284,12 @@ const MODULAR_CHARACTER_ID="isabella_roversi";
 function getGeneralCharactersByGender(gender){
   return characters.filter(c=>c.gender===gender && c.id!==MODULAR_CHARACTER_ID);
 }
-
 function getAllowedCharactersForParticipant(participant){
-  if(participant.id===MODULAR_PARTICIPANT_ID){
+  if(FIXED_ALESSIA_PRESENT && participant.id===MODULAR_PARTICIPANT_ID){
     return characters.filter(c=>c.id===MODULAR_CHARACTER_ID);
   }
   return getGeneralCharactersByGender(participant.gender);
 }
-
 
 const participants=[
 {id:"alberto_damico",name:"Alberto D'Amico",code:"321023",gender:"M",hasVoice:true},
@@ -373,15 +372,11 @@ function randomTwoDistinct(array){
  return [shuffled[0],shuffled[1]];
 }
 
-function chooseSpecialRolePair(mode="RANDOM",alessiaPresent=false){
- /* Alessia è una giocatrice NORMALE quando la Regia la conferma PRESENTE.
-    Se è ASSENTE viene esclusa completamente dal cast attivo. */
- const eligible=participants.filter(p=>p.id!==MODULAR_PARTICIPANT_ID || alessiaPresent===true);
- const shuffled=secureShuffle([...eligible]);
+function chooseSpecialRolePair(mode="RANDOM"){
+ const shuffled=secureShuffle([...participants]);
  if(shuffled.length<2)throw new Error("Partecipanti insufficienti per i ruoli speciali");
  return [shuffled[0],shuffled[1]];
 }
-
 
 /* ===== MOTORE NARRATIVO 342 =====
    Ogni coppia di personaggi (171 coppie non ordinate) riceve un legame condiviso
@@ -448,8 +443,7 @@ function characterForParticipant(state,participantId){
  return allocation?characters.find(c=>c.id===allocation.characterId):null;
 }
 function buildNarrativePackage(state){
- const alessiaActive=state.alessiaPresentAtBuild===true;
- const activeAssignmentEntries=Object.entries(state.assignments).filter(([participantId])=>participantId!==MODULAR_PARTICIPANT_ID||alessiaActive);
+ const activeAssignmentEntries=Object.entries(state.assignments);
  const assassinParticipant=participants.find(p=>p.id===state.specialRoles.assassin);
  const accompliceParticipant=participants.find(p=>p.id===state.specialRoles.accomplice);
  const assassinCharacter=characterForParticipant(state,state.specialRoles.assassin);
@@ -521,7 +515,7 @@ function narrativeForCurrentPlayer(narrative,participant){
 }
 /* ===== FINE MOTORE NARRATIVO 342 ===== */
 
-const LIVE_UNLOCK_PATH="testModulareAlessia2026/liveUnlocks";
+const LIVE_UNLOCK_PATH="villaValentiDefinitivo2026/liveUnlocks";
 const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,twist:false,twistAt:null,conclusion:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
@@ -571,51 +565,33 @@ async function firebasePutIfMatch(path,data,etag){
 }
 
 function validateStaticConfiguration(){
- const alessiaConfig=participants.find(p=>p.id===MODULAR_PARTICIPANT_ID);
- const isabellaConfig=characters.find(c=>c.id===MODULAR_CHARACTER_ID);
- if(!alessiaConfig||!isabellaConfig)throw new Error("Configurazione Alessia/Isabella mancante");
- if(getAllowedCharactersForParticipant(alessiaConfig).length!==1||getAllowedCharactersForParticipant(alessiaConfig)[0].id!==MODULAR_CHARACTER_ID){
-   throw new Error("Alessia deve avere esclusivamente Isabella Roversi");
- }
  const participantIds=participants.map(p=>p.id);
  const participantCodes=participants.map(p=>p.code);
  const characterIds=characters.map(c=>c.id);
-
- if(participants.length!==19||characters.length!==19)throw new Error("Configurazione incompleta: servono 18 partecipanti fissi + Alessia modulare e 18 personaggi fissi + Isabella modulare");
- if(new Set(participantIds).size!==participants.length)throw new Error("Configurazione non valida: ID partecipante duplicato");
- if(new Set(participantCodes).size!==participants.length)throw new Error("Configurazione non valida: codice partecipante duplicato");
- if(new Set(characterIds).size!==characters.length)throw new Error("Configurazione non valida: personaggio duplicato");
-
- /* La matrice generale deve confrontare SOLO i 18 partecipanti fissi
-    con i 18 personaggi generali. Alessia e Isabella formano una coppia
-    riservata separata e quindi non vanno conteggiate qui. */
- const fixedParticipants=participants.filter(p=>p.id!==MODULAR_PARTICIPANT_ID);
- const maleParticipants=fixedParticipants.filter(p=>p.gender==="M").length;
- const femaleParticipants=fixedParticipants.filter(p=>p.gender==="F").length;
- const maleCharacters=getGeneralCharactersByGender("M").length;
- const femaleCharacters=getGeneralCharactersByGender("F").length;
- if(maleParticipants!==maleCharacters||femaleParticipants!==femaleCharacters){
-   throw new Error("Configurazione non valida: matrice M/F dei partecipanti fissi incompatibile");
- }
+ if(participants.length!==19||characters.length!==19)throw new Error("Configurazione edizione 19 giocatori incompleta");
+ if(new Set(participantIds).size!==participants.length)throw new Error("ID partecipante duplicato");
+ if(new Set(participantCodes).size!==participants.length)throw new Error("Codice partecipante duplicato");
+ if(new Set(characterIds).size!==characters.length)throw new Error("Personaggio duplicato");
+ const mp=participants.filter(p=>p.gender==="M").length, fp=participants.filter(p=>p.gender==="F").length;
+ const mc=characters.filter(c=>c.gender==="M").length, fc=characters.filter(c=>c.gender==="F").length;
+ if(mp!==mc||fp!==fc)throw new Error("Matrice M/F incompatibile");
+ const alessia=participants.find(p=>p.id===MODULAR_PARTICIPANT_ID); const isabella=characters.find(c=>c.id===MODULAR_CHARACTER_ID); if(!alessia||!isabella)throw new Error("Alessia/Isabella mancanti");
 }
 
 async function isValidFrozenAssignmentState(state){
- if(!state||state.version!==12||!state.assignments||!state.specialRoles||!state.narrative)return false;
- const currentAlessiaPresence=await getAlessiaPresence();
- if(state.alessiaPresentAtBuild!==currentAlessiaPresence)return false;
+ if(!state||state.version!==19||!state.assignments||!state.specialRoles||!state.narrative)return false;
  const participantIds=new Set(participants.map(p=>p.id));
- const characterIds=[];
+ const used=[];
  for(const participant of participants){
    const assignment=state.assignments[participant.id];
    if(!assignment||assignment.participantId!==participant.id||assignment.participantCode!==participant.code||assignment.participantGender!==participant.gender||assignment.locked!==true)return false;
    const character=characters.find(c=>c.id===assignment.characterId);
    if(!character||character.gender!==participant.gender)return false;
-   if(participant.id===MODULAR_PARTICIPANT_ID&&character.id!==MODULAR_CHARACTER_ID)return false;
-   if(participant.id!==MODULAR_PARTICIPANT_ID&&character.id===MODULAR_CHARACTER_ID)return false;
-   characterIds.push(character.id);
+   if(participant.id===MODULAR_PARTICIPANT_ID&&character.id!==MODULAR_CHARACTER_ID)return false; if(participant.id!==MODULAR_PARTICIPANT_ID&&character.id===MODULAR_CHARACTER_ID)return false;
+   used.push(character.id);
  }
  if(Object.keys(state.assignments).length!==participants.length)return false;
- if(new Set(characterIds).size!==characters.length)return false;
+ if(new Set(used).size!==characters.length)return false;
  const assassin=state.specialRoles.assassin,accomplice=state.specialRoles.accomplice;
  if(!participantIds.has(assassin)||!participantIds.has(accomplice)||assassin===accomplice)return false;
  return true;
@@ -623,83 +599,35 @@ async function isValidFrozenAssignmentState(state){
 
 async function createInitialAssignmentState(mode="RANDOM"){
  validateStaticConfiguration();
- const alessiaPresent=await getAlessiaPresence();
- const modularParticipant=participants.find(p=>p.id===MODULAR_PARTICIPANT_ID);
- const modularCharacter=characters.find(c=>c.id===MODULAR_CHARACTER_ID);
- if(!modularParticipant||!modularCharacter)throw new Error("Configurazione modulare Alessia/Isabella mancante");
- const fixedParticipants=participants.filter(p=>p.id!==MODULAR_PARTICIPANT_ID);
- const fixedCharacters=characters.filter(c=>c.id!==MODULAR_CHARACTER_ID);
- const maleParticipants=secureShuffle(fixedParticipants.filter(p=>p.gender==="M"));
- const femaleParticipants=secureShuffle(fixedParticipants.filter(p=>p.gender==="F"));
- const maleCharacters=secureShuffle(fixedCharacters.filter(c=>c.gender==="M"));
- const femaleCharacters=secureShuffle(fixedCharacters.filter(c=>c.gender==="F"));
- if(maleParticipants.length!==maleCharacters.length||femaleParticipants.length!==femaleCharacters.length)throw new Error("Numero partecipanti/personaggi fissi non compatibile");
+ const alessia=participants.find(p=>p.id===MODULAR_PARTICIPANT_ID);
+ const isabella=characters.find(c=>c.id===MODULAR_CHARACTER_ID);
+ const normalParticipants=participants.filter(p=>p.id!==MODULAR_PARTICIPANT_ID);
+ const normalCharacters=characters.filter(c=>c.id!==MODULAR_CHARACTER_ID);
+ const maleParticipants=secureShuffle(normalParticipants.filter(p=>p.gender==="M"));
+ const femaleParticipants=secureShuffle(normalParticipants.filter(p=>p.gender==="F"));
+ const maleCharacters=secureShuffle(normalCharacters.filter(c=>c.gender==="M"));
+ const femaleCharacters=secureShuffle(normalCharacters.filter(c=>c.gender==="F"));
+ if(maleParticipants.length!==maleCharacters.length||femaleParticipants.length!==femaleCharacters.length)throw new Error("Numero partecipanti/personaggi non compatibile");
  const assignments={};
- maleParticipants.forEach((participant,index)=>assignments[participant.id]={participantId:participant.id,participantCode:participant.code,participantGender:participant.gender,characterId:maleCharacters[index].id,locked:true});
- femaleParticipants.forEach((participant,index)=>assignments[participant.id]={participantId:participant.id,participantCode:participant.code,participantGender:participant.gender,characterId:femaleCharacters[index].id,locked:true});
- assignments[modularParticipant.id]={participantId:modularParticipant.id,participantCode:modularParticipant.code,participantGender:modularParticipant.gender,characterId:modularCharacter.id,locked:true,modular:true};
- const [assassin,accomplice]=chooseSpecialRolePair(mode,alessiaPresent);
- const state={version:12,createdAt:new Date().toISOString(),alessiaPresentAtBuild:alessiaPresent,assignments,specialRoles:{assassin:assassin.id,accomplice:accomplice.id}};
+ maleParticipants.forEach((p,i)=>assignments[p.id]={participantId:p.id,participantCode:p.code,participantGender:p.gender,characterId:maleCharacters[i].id,locked:true});
+ femaleParticipants.forEach((p,i)=>assignments[p.id]={participantId:p.id,participantCode:p.code,participantGender:p.gender,characterId:femaleCharacters[i].id,locked:true});
+ assignments[alessia.id]={participantId:alessia.id,participantCode:alessia.code,participantGender:alessia.gender,characterId:isabella.id,locked:true};
+ const [assassin,accomplice]=chooseSpecialRolePair(mode);
+ const state={version:19,edition:"B_CON_ALESSIA",createdAt:new Date().toISOString(),assignments,specialRoles:{assassin:assassin.id,accomplice:accomplice.id}};
  state.narrative=buildNarrativePackage(state);
  return state;
 }
 
 async function ensureAssignmentState(){
- const currentPresence=await getAlessiaPresence();
  const remote=await firebaseRequest(ASSIGNMENT_STATE_PATH);
-
  if(remote && await isValidFrozenAssignmentState(remote))return remote;
-
- /* Se esiste già uno stato della stessa versione ma è cambiata SOLO la presenza
-    di Alessia, manteniamo tutte le assegnazioni personaggio già fissate.
-    In questo modo nessun altro partecipante cambia personaggio. */
- if(
-   remote &&
-   remote.version===12 &&
-   remote.assignments &&
-   Object.keys(remote.assignments).length===participants.length
- ){
-   const candidate={
-     ...remote,
-     alessiaPresentAtBuild:currentPresence,
-     updatedAt:new Date().toISOString()
-   };
-
-   /* I ruoli vengono ricontrollati rispetto al cast attivo.
-      Se Alessia è ASSENTE e per qualunque motivo fosse in un ruolo speciale,
-      rigeneriamo solo assassino/complice; le assegnazioni dei personaggi restano ferme. */
-   const assassinId=candidate.specialRoles&&candidate.specialRoles.assassin;
-   const accompliceId=candidate.specialRoles&&candidate.specialRoles.accomplice;
-   const alessiaInSpecialRole=
-     assassinId===MODULAR_PARTICIPANT_ID ||
-     accompliceId===MODULAR_PARTICIPANT_ID;
-
-   if(!candidate.specialRoles || (!currentPresence && alessiaInSpecialRole)){
-     const [assassin,accomplice]=chooseSpecialRolePair("RANDOM",currentPresence);
-     candidate.specialRoles={assassin:assassin.id,accomplice:accomplice.id};
-   }
-
-   candidate.narrative=buildNarrativePackage(candidate);
-   await firebaseWrite(ASSIGNMENT_STATE_PATH,candidate);
-
-   const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
-   if(!(await isValidFrozenAssignmentState(confirmed))){
-     throw new Error("Stato assegnazioni non valido dopo aggiornamento presenza");
-   }
-   return confirmed;
- }
-
- /* Prima inizializzazione del test. */
  const candidate=await createInitialAssignmentState();
- candidate.alessiaPresentAtBuild=currentPresence;
  await firebaseWrite(ASSIGNMENT_STATE_PATH,candidate);
-
  const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
- if(!(await isValidFrozenAssignmentState(confirmed))){
-   throw new Error("Stato assegnazioni non valido");
- }
+ if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Stato assegnazioni non valido");
  return confirmed;
 }
+
 function getRoleBase(state,participant){
  if(!state||!state.specialRoles)return {specialRole:null,partnerId:null,partnerLabel:null};
  if(state.specialRoles.assassin===participant.id){
@@ -886,13 +814,11 @@ function startRegistryLive(){
     - presenza Alessia
     Tutto viene riletto da Firebase automaticamente. */
  loadRegistry();
- renderAlessiaPresenceControl();
 
  registryLiveTimer=setInterval(async ()=>{
    if(currentParticipant&&currentParticipant.code===ORGANIZER_CODE){
      await Promise.all([
        loadRegistry(true),
-       renderAlessiaPresenceControl()
      ]);
    }else{
      stopRegistryLive();
@@ -949,7 +875,7 @@ function renderLiveUnlocks(){
      const el=document.getElementById("commonClue"+i+"Text");
      if(!el)continue;
      if(i===3&&isDeadAccomplice){
-       el.innerHTML="<div class=\"death-warning\">IL TUO PERSONAGGIO È STATO TROVATO SENZA VITA NELLA BIBLIOTECA DI VILLA VALENTI.</div><div class=\"death-rules\">La tua parte attiva nell'indagine termina qui. Qualunque cosa tu abbia detto prima del ritrovamento rimane parte della storia.</div>";
+       el.innerHTML="<div class=\"death-warning\">IL TUO PERSONAGGIO È STATO TROVATO SENZA VITA NELLA CANTINA / ZONA TECNICA DI VILLA VALENTI.</div><div class=\"death-rules\">La tua parte attiva nell'indagine termina qui. Qualunque cosa tu abbia detto prima del ritrovamento rimane parte della storia.</div>";
      }else el.textContent=common[i-1]||"Documento non disponibile.";
    }
    const personal=narrativeForCurrentPlayer(currentNarrative,currentParticipant);
@@ -1266,109 +1192,13 @@ async function submitConclusion(){
 }
 
 
-async function getAlessiaPresence(){
- try{return (await firebaseRequest(MODULAR_PRESENCE_PATH))===true}
- catch(e){console.error("Errore lettura presenza Alessia:",e);return false}
-}
-async function setAlessiaPresence(present){await firebaseWrite(MODULAR_PRESENCE_PATH,!!present);return !!present}
-async function renderAlessiaPresenceControl(){
- const state=document.getElementById("stateAlessiaPresence");
- const btn=document.getElementById("alessiaPresenceBtn");
- const live=document.getElementById("alessiaPresenceLive");
- if(!state||!btn)return false;
-
- const present=await getAlessiaPresence();
-
- state.textContent=present
-   ?"PRESENTE · ISABELLA GIOCABILE NORMALMENTE"
-   :"ASSENTE · PERSONAGGIO NON ATTIVO";
-
- state.classList.toggle("on",present);
- btn.textContent=present?"SEGNA ASSENTE":"CONFERMA PRESENTE";
-
- if(live){
-   live.textContent="PRESENZA ALESSIA: "+(present?"PRESENTE":"ASSENTE")+" · LIVE";
- }
-
- return present;
-}
-async function toggleAlessiaPresence(){
- if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
- const status=document.getElementById("liveWriteStatus");
- try{
-   const current=await getAlessiaPresence();
-   const next=!current;
-
-   if(status)status.textContent="AGGIORNAMENTO PRESENZA ALESSIA…";
-   await setAlessiaPresence(next);
-
-   await Promise.all([
-     renderAlessiaPresenceControl(),
-     loadRegistry(true)
-   ]);
-
-   if(status){
-     status.textContent=(next
-       ?"ALESSIA PRESENTE · AGGIORNAMENTO LIVE · "
-       :"ALESSIA ASSENTE · AGGIORNAMENTO LIVE · ")+new Date().toLocaleTimeString("it-IT");
-   }
- }catch(e){
-   console.error(e);
-   if(status)status.textContent="IMPOSSIBILE AGGIORNARE LA PRESENZA DI ALESSIA";
- }
-}
-
-
-async function renderCurrentAttendanceBanner(){
- const banner=document.getElementById("attendanceBanner");
- if(!banner||!currentParticipant)return false;
-
- if(currentParticipant.id!==MODULAR_PARTICIPANT_ID){
-   banner.classList.add("hidden");
-   banner.classList.remove("attendance-ok");
-   banner.textContent="";
-   return true;
- }
-
- const present=await getAlessiaPresence();
- banner.classList.remove("hidden");
- banner.classList.toggle("attendance-ok",present);
- banner.textContent=present
-   ?"PRESENZA CONFERMATA · Sabato giocherai normalmente come Isabella Roversi. · LIVE"
-   :"PRESENZA NON ANCORA CONFERMATA · Puoi accedere e vedere il tuo personaggio, ma la tua partecipazione alla partita non è ancora confermata. · LIVE";
- return present;
-}
-
-function startAlessiaPresenceLive(){
- stopAlessiaPresenceLive();
- if(!currentParticipant||currentParticipant.id!==MODULAR_PARTICIPANT_ID)return;
-
- renderCurrentAttendanceBanner();
- alessiaPresenceLiveTimer=setInterval(async ()=>{
-   if(!currentParticipant||currentParticipant.id!==MODULAR_PARTICIPANT_ID){
-     stopAlessiaPresenceLive();
-     return;
-   }
-   if(alessiaPresenceLiveLoading)return;
-   alessiaPresenceLiveLoading=true;
-   try{
-     await renderCurrentAttendanceBanner();
-   }catch(e){
-     console.warn("Aggiornamento live presenza Alessia non riuscito:",e);
-   }finally{
-     alessiaPresenceLiveLoading=false;
-   }
- },1000);
-}
-
-function stopAlessiaPresenceLive(){
- if(alessiaPresenceLiveTimer!==null){
-   clearInterval(alessiaPresenceLiveTimer);
-   alessiaPresenceLiveTimer=null;
- }
- alessiaPresenceLiveLoading=false;
-}
-
+async function getAlessiaPresence(){return true;}
+async function setAlessiaPresence(){return true;}
+async function renderAlessiaPresenceControl(){return true;}
+async function toggleAlessiaPresence(){return true;}
+async function renderCurrentAttendanceBanner(){return true;}
+function startAlessiaPresenceLive(){}
+function stopAlessiaPresenceLive(){}
 
 async function login(){
  const input=document.getElementById("codeInput").value.trim();
@@ -1398,8 +1228,8 @@ async function login(){
 
 /* ===== AUDIO ELEVENLABS ===== */
 function greetingAudioPath(character,firstAccess){
-  if(firstAccess)return "salve_"+character.id+".mp3";
-  return (character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
+  if(firstAccess)return "test-saluto/salve_"+character.id+".mp3";
+  return "test-saluto/"+(character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
 }
 function playGreetingAudio(character,firstAccess){
   try{
@@ -1526,17 +1356,14 @@ async function loadRegistry(silent=false){
  const voteSummary=document.getElementById("voteSummary");
  if(!silent)status.textContent="AGGIORNAMENTO REGISTRO…";
  try{
-   const [allPlayers,state,alessiaPresent]=await Promise.all([
+   const [allPlayers,state]=await Promise.all([
      firebaseRequest(PLAYER_ROOT).then(v=>v||{}),
-     ensureAssignmentState(),
-     getAlessiaPresence()
+     ensureAssignmentState()
    ]);
-   await renderAlessiaPresenceControl();
 
    /* CONTEGGIO VOTI PRIVACY-SAFE E DINAMICO. */
    const specialIds=new Set([state.specialRoles.assassin,state.specialRoles.accomplice]);
-   const activeParticipants=participants.filter(p=>p.id!==MODULAR_PARTICIPANT_ID||alessiaPresent);
-   const eligible=activeParticipants.filter(p=>!specialIds.has(p.id));
+   const eligible=participants.filter(p=>!specialIds.has(p.id));
    let voted=0;
    eligible.forEach(p=>{
      const node=allPlayers[p.code];
@@ -1592,7 +1419,7 @@ renderLiveUnlocks();
     <div id="plotTwistFallback" class="twist-fallback hidden"></div>
     <div id="plotTwistVictim" class="twist-victim hidden"></div>
     <div class="twist-actions"><button id="plotTwistContinue" class="action-btn hidden" onclick="closePlotTwistOverlay()">CONTINUA L'INDAGINE</button></div>
-    <div class="twist-note">TEST · modalità temporanea senza video. Il filmato definitivo verrà collegato successivamente.</div>
+    <div class="twist-note">Comunicazione di Villa Valenti.</div>
   </div>
 </div>
 
