@@ -271,9 +271,9 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <script>
 const FIREBASE_DB="https://villa-valenti-test-default-rtdb.europe-west1.firebasedatabase.app";
 const ORGANIZER_CODE="321023";
-const PLAYER_ROOT="testModulareAlessia2026/players";
-const ASSIGNMENT_STATE_PATH="testModulareAlessia2026/private/assignmentState";
-const MODULAR_PRESENCE_PATH="testModulareAlessia2026/live/modularPresence/alessia_remelli";
+const PLAYER_ROOT="testAlessiaFinale2026/players";
+const ASSIGNMENT_STATE_PATH="testAlessiaFinale2026/private/assignmentState";
+const MODULAR_PRESENCE_PATH="testAlessiaFinale2026/live/modularPresence/alessia_remelli";
 const MODULAR_PARTICIPANT_ID="alessia_remelli";
 const MODULAR_CHARACTER_ID="isabella_roversi";
 /* Isabella Roversi NON compare nelle tavole generali.
@@ -521,7 +521,7 @@ function narrativeForCurrentPlayer(narrative,participant){
 }
 /* ===== FINE MOTORE NARRATIVO 342 ===== */
 
-const LIVE_UNLOCK_PATH="testModulareAlessia2026/liveUnlocks";
+const LIVE_UNLOCK_PATH="testAlessiaFinale2026/liveUnlocks";
 const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,twist:false,twistAt:null,conclusion:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
@@ -645,17 +645,57 @@ async function createInitialAssignmentState(mode="RANDOM"){
 async function ensureAssignmentState(){
  const currentPresence=await getAlessiaPresence();
  const remote=await firebaseRequest(ASSIGNMENT_STATE_PATH);
+
  if(remote && await isValidFrozenAssignmentState(remote))return remote;
 
- /* La presenza di Alessia è l'unica condizione che può cambiare il cast.
-    Quando cambia, rigeneriamo lo stato prima dell'inizio della partita:
-    PRESENTE = Isabella entra normalmente in storia/ruoli;
-    ASSENTE = Alessia/Isabella vengono escluse dalla lettura del gioco. */
+ /* Se esiste già uno stato della stessa versione ma è cambiata SOLO la presenza
+    di Alessia, manteniamo tutte le assegnazioni personaggio già fissate.
+    In questo modo nessun altro partecipante cambia personaggio. */
+ if(
+   remote &&
+   remote.version===9 &&
+   remote.assignments &&
+   Object.keys(remote.assignments).length===participants.length
+ ){
+   const candidate={
+     ...remote,
+     alessiaPresentAtBuild:currentPresence,
+     updatedAt:new Date().toISOString()
+   };
+
+   /* I ruoli vengono ricontrollati rispetto al cast attivo.
+      Se Alessia è ASSENTE e per qualunque motivo fosse in un ruolo speciale,
+      rigeneriamo solo assassino/complice; le assegnazioni dei personaggi restano ferme. */
+   const assassinId=candidate.specialRoles&&candidate.specialRoles.assassin;
+   const accompliceId=candidate.specialRoles&&candidate.specialRoles.accomplice;
+   const alessiaInSpecialRole=
+     assassinId===MODULAR_PARTICIPANT_ID ||
+     accompliceId===MODULAR_PARTICIPANT_ID;
+
+   if(!candidate.specialRoles || (!currentPresence && alessiaInSpecialRole)){
+     const [assassin,accomplice]=chooseSpecialRolePair("RANDOM",currentPresence);
+     candidate.specialRoles={assassin:assassin.id,accomplice:accomplice.id};
+   }
+
+   candidate.narrative=buildNarrativePackage(candidate);
+   await firebaseWrite(ASSIGNMENT_STATE_PATH,candidate);
+
+   const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
+   if(!(await isValidFrozenAssignmentState(confirmed))){
+     throw new Error("Stato assegnazioni non valido dopo aggiornamento presenza");
+   }
+   return confirmed;
+ }
+
+ /* Prima inizializzazione del test. */
  const candidate=await createInitialAssignmentState();
  candidate.alessiaPresentAtBuild=currentPresence;
  await firebaseWrite(ASSIGNMENT_STATE_PATH,candidate);
+
  const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
- if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Stato assegnazioni non valido");
+ if(!(await isValidFrozenAssignmentState(confirmed))){
+   throw new Error("Stato assegnazioni non valido");
+ }
  return confirmed;
 }
 function getRoleBase(state,participant){
@@ -714,8 +754,19 @@ async function getOrCreatePlayer(participant){
    const stored=snapshot.data;
    const now=new Date().toISOString();
    if(stored&&stored.characterId){
-     if(stored.characterId!==character.id)throw new Error("Assegnazione giocatore non coerente");
-     const updated={...stored,lastSeen:now,loginCount:Number(stored.loginCount||1)+1};
+     const updated={
+       ...stored,
+       participantId:participant.id,
+       participantName:participant.name,
+       code:participant.code,
+       characterId:character.id,
+       characterName:character.name,
+       characterGender:character.gender,
+       assigned:true,
+       locked:true,
+       lastSeen:now,
+       loginCount:Number(stored.loginCount||1)+1
+     };
      const write=await firebasePutIfMatch(path,updated,snapshot.etag);
      if(write.ok){
        const roleBundle=await getRoleBundle(state,participant);
