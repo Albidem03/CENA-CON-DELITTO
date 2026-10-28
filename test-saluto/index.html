@@ -569,7 +569,8 @@ function validateStaticConfiguration(){
 }
 
 async function isValidFrozenAssignmentState(state){
- if(!state||state.version!==19||!state.assignments||!state.specialRoles||!state.narrative)return false;
+ if(!state||state.version!==21||!state.assignments||!state.specialRoles||!state.narrative)return false;
+ if(state.edition!=="B_19_GIOCATORI_MIGRABILE"&&state.edition!=="B_19_GIOCATORI_MIGRATA_DA_A")return false;
  const participantIds=new Set(participants.map(p=>p.id));
  const used=[];
  for(const participant of participants){
@@ -603,19 +604,76 @@ async function createInitialAssignmentState(mode="RANDOM"){
  femaleParticipants.forEach((p,i)=>assignments[p.id]={participantId:p.id,participantCode:p.code,participantGender:p.gender,characterId:femaleCharacters[i].id,locked:true});
  assignments[alessia.id]={participantId:alessia.id,participantCode:alessia.code,participantGender:alessia.gender,characterId:isabella.id,locked:true};
  const [assassin,accomplice]=chooseSpecialRolePair(mode);
- const state={version:19,edition:"B_CON_ALESSIA",createdAt:new Date().toISOString(),assignments,specialRoles:{assassin:assassin.id,accomplice:accomplice.id}};
+ const state={version:21,edition:"B_19_GIOCATORI_MIGRABILE",createdAt:new Date().toISOString(),accessStartedAt:null,migratedFrom:null,assignments,specialRoles:{assassin:assassin.id,accomplice:accomplice.id}};
  state.narrative=buildNarrativePackage(state);
  return state;
+}
+
+function isMigratableEditionAState(state){
+ if(!state||state.version!==20||state.edition!=="A_18_GIOCATORI_MIGRABILE"||!state.assignments||!state.specialRoles||!state.narrative)return false;
+ const normalParticipants=participants.filter(p=>p.id!==MODULAR_PARTICIPANT_ID);
+ const normalCharacters=characters.filter(c=>c.id!==MODULAR_CHARACTER_ID);
+ if(Object.keys(state.assignments).length!==18)return false;
+ const used=[];
+ for(const p of normalParticipants){
+   const a=state.assignments[p.id];
+   if(!a||a.participantId!==p.id||a.participantCode!==p.code||a.participantGender!==p.gender||a.locked!==true)return false;
+   const c=normalCharacters.find(x=>x.id===a.characterId);
+   if(!c||c.gender!==p.gender)return false;
+   used.push(c.id);
+ }
+ if(new Set(used).size!==18)return false;
+ const ids=new Set(normalParticipants.map(p=>p.id));
+ if(!ids.has(state.specialRoles.assassin)||!ids.has(state.specialRoles.accomplice)||state.specialRoles.assassin===state.specialRoles.accomplice)return false;
+ return true;
+}
+
+function migrateStartedAStateToB(oldState){
+ const alessia=participants.find(p=>p.id===MODULAR_PARTICIPANT_ID);
+ const isabella=characters.find(c=>c.id===MODULAR_CHARACTER_ID);
+ const assignments={...oldState.assignments};
+ assignments[alessia.id]={participantId:alessia.id,participantCode:alessia.code,participantGender:alessia.gender,characterId:isabella.id,locked:true};
+ const migrated={
+   version:21,
+   edition:"B_19_GIOCATORI_MIGRATA_DA_A",
+   createdAt:oldState.createdAt||new Date().toISOString(),
+   accessStartedAt:oldState.accessStartedAt,
+   migratedAt:new Date().toISOString(),
+   migratedFrom:"A_18_GIOCATORI_MIGRABILE",
+   assignments,
+   specialRoles:{assassin:oldState.specialRoles.assassin,accomplice:oldState.specialRoles.accomplice}
+ };
+ migrated.narrative=buildNarrativePackage(migrated);
+ return migrated;
 }
 
 async function ensureAssignmentState(){
  const remote=await firebaseRequest(ASSIGNMENT_STATE_PATH);
  if(remote && await isValidFrozenAssignmentState(remote))return remote;
+
+ if(remote && isMigratableEditionAState(remote)){
+   const next=remote.accessStartedAt ? migrateStartedAStateToB(remote) : await createInitialAssignmentState();
+   await firebaseWrite(ASSIGNMENT_STATE_PATH,next);
+   const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
+   if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Passaggio A → B non valido");
+   return confirmed;
+ }
+
  const candidate=await createInitialAssignmentState();
  await firebaseWrite(ASSIGNMENT_STATE_PATH,candidate);
  const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
  if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Stato assegnazioni non valido");
  return confirmed;
+}
+
+async function markGameAccessStarted(state){
+ if(!state||state.accessStartedAt)return state;
+ const now=new Date().toISOString();
+ try{
+   await firebaseWrite(ASSIGNMENT_STATE_PATH+"/accessStartedAt",now);
+   state.accessStartedAt=now;
+ }catch(e){console.warn("Avvio partita non marcato:",e)}
+ return state;
 }
 
 function getRoleBase(state,participant){
@@ -671,6 +729,7 @@ async function getRoleBundle(state,participant){
 
 async function getOrCreatePlayer(participant){
  const state=await ensureAssignmentState();
+ await markGameAccessStarted(state);
  const allocation=state.assignments&&state.assignments[participant.id];
  if(!allocation||!allocation.characterId)throw new Error("Personaggio non assegnato");
 
