@@ -236,16 +236,6 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 </div>
 <div id="liveWriteStatus" class="live-write-status"></div>
 
-<div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Presenza Alessia</div>
-<div class="control-grid"><div class="control-card">
-<strong>Alessia Remelli · Isabella Roversi</strong>
-<div id="alessiaPresenceLive" class="vote-summary">PRESENZA ALESSIA: — · LIVE</div>
-<div id="stateAlessiaPresence" class="control-state">ASSENTE · PERSONAGGIO NON ATTIVO</div>
-<button id="alessiaPresenceBtn" onclick="toggleAlessiaPresence()">CONFERMA PRESENTE</button>
-<div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Se PRESENTE, Alessia/Isabella entra nel gioco come qualsiasi altro personaggio: storia, indizi, ruoli e voto. Se ASSENTE, il codice non apre il dossier e Isabella viene esclusa dalla storia e da tutto il gioco.</div>
-</div></div>
-</div>
-
 <div class="registry"><h2>Registro Villa</h2><div id="registryLiveStatus" class="live-status">● REGISTRO LIVE</div><div id="registryStatus">Caricamento registro…</div><div id="voteSummary" class="vote-summary">VOTI RICEVUTI: — / —</div><div id="registryRows" class="registry-grid"></div></div>
 </div>
 </section>
@@ -263,7 +253,7 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 (function(){
   const pageVersion=new URLSearchParams(window.location.search).get('v')||Date.now().toString(36);
   ['01','02','03','04'].forEach(function(n){
-    document.write('<script src="portraits_'+n+'.js?v='+encodeURIComponent(pageVersion)+'"><\/script>');
+    document.write('<script src="/CENA-CON-DELITTO/portraits_'+n+'.js?v='+encodeURIComponent(pageVersion)+'"><\/script>');
   });
 })();
 </script>
@@ -297,7 +287,7 @@ const participants=[
 {id:"angela_viviani",name:"Angela Viviani",code:"240383",gender:"F"},
 {id:"eleonora_pinto",name:"Eleonora Pinto",code:"141019",gender:"F"},
 {id:"rocco_monaco",name:"Rocco Monaco",code:"190797",gender:"M"},
-{id:"alessia_remelli",name:"Alessia Remelli",code:"949699",gender:"F",attendanceConditional:true,forcedCharacterId:"isabella_roversi"},
+{id:"alessia_remelli",name:"Alessia Remelli",code:"949699",gender:"F",forcedCharacterId:"isabella_roversi"},
 {id:"andrea_filippi",name:"Andrea Filippi",code:"140918",gender:"M"},
 {id:"pietro_scolari",name:"Pietro Scolari",code:"900750",gender:"M"},
 {id:"julian_remelli",name:"Julian Remelli",code:"170504",gender:"M"},
@@ -332,7 +322,7 @@ const characters=[
 {id:"bianca_albrizzi",name:"Bianca Albrizzi",gender:"F",role:"Segretaria personale di Angelina",description:"Gestivi appuntamenti, telefonate e parte della documentazione privata di Angelina.",advice:"Presta particolare attenzione agli orari, agli incontri e agli eventuali documenti mancanti."},
 {id:"emilia_riva",name:"Emilia Riva",gender:"F",role:"Collaboratrice della villa",description:"Collabori spesso all'organizzazione degli eventi di Villa Valenti.",advice:"Fai attenzione agli spostamenti degli invitati e a ciò che accade nelle zone di servizio."},
 {id:"ginevra_ferretti",name:"Ginevra Ferretti",gender:"F",role:"Conoscente dell'ambiente lavorativo di Angelina",description:"Conosci sia l'ambiente professionale sia alcune persone della cerchia privata di Angelina.",advice:"Cerca collegamenti tra gli affari e i rapporti personali presenti nella villa."},
-{id:"isabella_roversi",name:"Isabella Roversi",gender:"F",attendanceConditional:true,role:"Antiquaria e conoscente di Angelina",description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."}
+{id:"isabella_roversi",name:"Isabella Roversi",gender:"F",role:"Antiquaria e conoscente di Angelina",description:"Hai aiutato Angelina a catalogare oggetti e documenti appartenuti alla famiglia.",advice:"Presta attenzione agli oggetti della villa e alla loro provenienza."}
 ];
 
 
@@ -1228,8 +1218,8 @@ async function login(){
 
 /* ===== AUDIO ELEVENLABS ===== */
 function greetingAudioPath(character,firstAccess){
-  if(firstAccess)return "test-saluto/salve_"+character.id+".mp3";
-  return "test-saluto/"+(character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
+  if(firstAccess)return "/CENA-CON-DELITTO/test-saluto/salve_"+character.id+".mp3";
+  return "/CENA-CON-DELITTO/test-saluto/"+(character.gender==="F"?"bentornata_":"bentornato_")+character.id+".mp3";
 }
 function playGreetingAudio(character,firstAccess){
   try{
