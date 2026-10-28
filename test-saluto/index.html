@@ -276,9 +276,9 @@ const MODULAR_PRESENCE_PATH="testModulareAlessia2026/live/modularPresence/alessi
 const MODULAR_PARTICIPANT_ID="alessia_remelli";
 const MODULAR_CHARACTER_ID="isabella_roversi";
 /* Isabella Roversi NON compare nelle tavole generali.
-   È riservata esclusivamente ad Alessia Remelli. */
-const GENERAL_CHARACTER_IDS=characters.filter(c=>c.id!==MODULAR_CHARACTER_ID).map(c=>c.id);
-
+   È riservata esclusivamente ad Alessia Remelli.
+   NOTA: queste funzioni vengono valutate solo DOPO che `characters`
+   è stato inizializzato, evitando l'errore di accesso anticipato. */
 function getGeneralCharactersByGender(gender){
   return characters.filter(c=>c.gender===gender && c.id!==MODULAR_CHARACTER_ID);
 }
