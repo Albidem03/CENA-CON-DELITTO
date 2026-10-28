@@ -536,6 +536,8 @@ let secretPartnerLoading=false;
 let currentCharacter=null;
 let currentLoginAt=0;
 let plotTwistOverlayActive=false;
+let alessiaPresenceLiveTimer=null;
+let alessiaPresenceLiveLoading=false;
 const PLOT_TWIST_VIDEO="haviland-colpo-di-scena.mp4";
 const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella cantina, nella zona tecnica della villa. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate gli alibi, ricostruite gli spostamenti e chiedetevi perché questa persona dovesse essere messa a tacere. Non date per scontato che i due delitti abbiano motivazioni indipendenti. L'indagine continua.";
 
@@ -598,7 +600,7 @@ function validateStaticConfiguration(){
 }
 
 async function isValidFrozenAssignmentState(state){
- if(!state||state.version!==11||!state.assignments||!state.specialRoles||!state.narrative)return false;
+ if(!state||state.version!==12||!state.assignments||!state.specialRoles||!state.narrative)return false;
  const currentAlessiaPresence=await getAlessiaPresence();
  if(state.alessiaPresentAtBuild!==currentAlessiaPresence)return false;
  const participantIds=new Set(participants.map(p=>p.id));
@@ -637,7 +639,7 @@ async function createInitialAssignmentState(mode="RANDOM"){
  femaleParticipants.forEach((participant,index)=>assignments[participant.id]={participantId:participant.id,participantCode:participant.code,participantGender:participant.gender,characterId:femaleCharacters[index].id,locked:true});
  assignments[modularParticipant.id]={participantId:modularParticipant.id,participantCode:modularParticipant.code,participantGender:modularParticipant.gender,characterId:modularCharacter.id,locked:true,modular:true};
  const [assassin,accomplice]=chooseSpecialRolePair(mode,alessiaPresent);
- const state={version:11,createdAt:new Date().toISOString(),alessiaPresentAtBuild:alessiaPresent,assignments,specialRoles:{assassin:assassin.id,accomplice:accomplice.id}};
+ const state={version:12,createdAt:new Date().toISOString(),alessiaPresentAtBuild:alessiaPresent,assignments,specialRoles:{assassin:assassin.id,accomplice:accomplice.id}};
  state.narrative=buildNarrativePackage(state);
  return state;
 }
@@ -653,7 +655,7 @@ async function ensureAssignmentState(){
     In questo modo nessun altro partecipante cambia personaggio. */
  if(
    remote &&
-   remote.version===11 &&
+   remote.version===12 &&
    remote.assignments &&
    Object.keys(remote.assignments).length===participants.length
  ){
@@ -1306,14 +1308,65 @@ async function toggleAlessiaPresence(){
    ]);
 
    if(status){
-     status.textContent=next
-       ?"ALESSIA PRESENTE · AGGIORNAMENTO LIVE"
-       :"ALESSIA ASSENTE · AGGIORNAMENTO LIVE";
+     status.textContent=(next
+       ?"ALESSIA PRESENTE · AGGIORNAMENTO LIVE · "
+       :"ALESSIA ASSENTE · AGGIORNAMENTO LIVE · ")+new Date().toLocaleTimeString("it-IT");
    }
  }catch(e){
    console.error(e);
    if(status)status.textContent="IMPOSSIBILE AGGIORNARE LA PRESENZA DI ALESSIA";
  }
+}
+
+
+async function renderCurrentAttendanceBanner(){
+ const banner=document.getElementById("attendanceBanner");
+ if(!banner||!currentParticipant)return false;
+
+ if(currentParticipant.id!==MODULAR_PARTICIPANT_ID){
+   banner.classList.add("hidden");
+   banner.classList.remove("attendance-ok");
+   banner.textContent="";
+   return true;
+ }
+
+ const present=await getAlessiaPresence();
+ banner.classList.remove("hidden");
+ banner.classList.toggle("attendance-ok",present);
+ banner.textContent=present
+   ?"PRESENZA CONFERMATA · Sabato giocherai normalmente come Isabella Roversi. · LIVE"
+   :"PRESENZA NON ANCORA CONFERMATA · Puoi accedere e vedere il tuo personaggio, ma la tua partecipazione alla partita non è ancora confermata. · LIVE";
+ return present;
+}
+
+function startAlessiaPresenceLive(){
+ stopAlessiaPresenceLive();
+ if(!currentParticipant||currentParticipant.id!==MODULAR_PARTICIPANT_ID)return;
+
+ renderCurrentAttendanceBanner();
+ alessiaPresenceLiveTimer=setInterval(async ()=>{
+   if(!currentParticipant||currentParticipant.id!==MODULAR_PARTICIPANT_ID){
+     stopAlessiaPresenceLive();
+     return;
+   }
+   if(alessiaPresenceLiveLoading)return;
+   alessiaPresenceLiveLoading=true;
+   try{
+     await renderCurrentAttendanceBanner();
+   }catch(e){
+     console.warn("Aggiornamento live presenza Alessia non riuscito:",e);
+   }finally{
+     alessiaPresenceLiveLoading=false;
+   }
+ },1000);
+}
+
+function stopAlessiaPresenceLive(){
+ if(alessiaPresenceLiveTimer!==null){
+   clearInterval(alessiaPresenceLiveTimer);
+   alessiaPresenceLiveTimer=null;
+ }
+ alessiaPresenceLiveLoading=false;
 }
 
 
@@ -1324,27 +1377,17 @@ async function login(){
  if(!participant){error.textContent="ACCESSO NEGATO · CODICE NON RICONOSCIUTO";return}
  error.textContent="ACCESSO ALL'ARCHIVIO…";
  try{
-   const alessiaPresenceConfirmed=participant.id===MODULAR_PARTICIPANT_ID ? await getAlessiaPresence() : true;
    currentLoginAt=Date.now();
    plotTwistOverlayActive=false;
    currentParticipant=participant;
-   const attendanceBanner=document.getElementById("attendanceBanner");
-   if(attendanceBanner){
-     if(participant.id===MODULAR_PARTICIPANT_ID){
-       attendanceBanner.classList.remove("hidden");
-       attendanceBanner.classList.toggle("attendance-ok",alessiaPresenceConfirmed);
-       attendanceBanner.textContent=alessiaPresenceConfirmed
-         ?"PRESENZA CONFERMATA · Sabato giocherai normalmente come Isabella Roversi."
-         :"PRESENZA NON ANCORA CONFERMATA · Puoi accedere e vedere il tuo personaggio, ma la tua partecipazione alla partita non è ancora confermata.";
-     }else{
-       attendanceBanner.classList.add("hidden");
-     }
-   }
+   await renderCurrentAttendanceBanner();
    await openCharacter(participant);
+   startAlessiaPresenceLive();
    error.textContent="";
  }
  catch(e){
    console.error(e);
+   stopAlessiaPresenceLive();
    currentParticipant=null;
    currentLoginAt=0;
    plotTwistOverlayActive=false;
@@ -1435,6 +1478,7 @@ function logout(){
  stopRegistryLive();
  stopLiveUnlocks();
  stopSecretPartnerLive();
+ stopAlessiaPresenceLive();
  currentParticipant=null;
  currentNarrative=null;
  currentSpecialRole=null;
