@@ -583,12 +583,16 @@ function validateStaticConfiguration(){
  if(new Set(participantCodes).size!==participants.length)throw new Error("Configurazione non valida: codice partecipante duplicato");
  if(new Set(characterIds).size!==characters.length)throw new Error("Configurazione non valida: personaggio duplicato");
 
- const maleParticipants=participants.filter(p=>p.gender==="M").length;
- const femaleParticipants=participants.filter(p=>p.gender==="F").length;
+ /* La matrice generale deve confrontare SOLO i 18 partecipanti fissi
+    con i 18 personaggi generali. Alessia e Isabella formano una coppia
+    riservata separata e quindi non vanno conteggiate qui. */
+ const fixedParticipants=participants.filter(p=>p.id!==MODULAR_PARTICIPANT_ID);
+ const maleParticipants=fixedParticipants.filter(p=>p.gender==="M").length;
+ const femaleParticipants=fixedParticipants.filter(p=>p.gender==="F").length;
  const maleCharacters=getGeneralCharactersByGender("M").length;
  const femaleCharacters=getGeneralCharactersByGender("F").length;
  if(maleParticipants!==maleCharacters||femaleParticipants!==femaleCharacters){
-   throw new Error("Configurazione non valida: matrice M/F incompatibile");
+   throw new Error("Configurazione non valida: matrice M/F dei partecipanti fissi incompatibile");
  }
 }
 
