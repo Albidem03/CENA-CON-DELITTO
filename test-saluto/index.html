@@ -454,9 +454,9 @@ function buildNarrativePackage(state){
  const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" erano entrambi coinvolti in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" Per entrambi, impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
  const sharedStory="Il dossier scomparso non riguardava un solo segreto. Angelina aveva unito due vicende in un unico fascicolo e aveva scritto che, considerate separatamente, potevano sembrare coincidenze; insieme dimostravano invece un accordo preciso. La parte centrale del fascicolo riguardava "+bridge+".";
  const commonClues=[
-   "Tra le carte di Angelina manca un fascicolo centrale. Sul separatore rimasto nello studio si legge: «Non sono due questioni separate». Sotto, Angelina aveva annotato un riferimento a "+bridge+".",
-   "È stata recuperata una pagina incompleta del dossier. Contiene due tipi di traccia molto diversi: una riconducibile a "+a.capability+" e una a "+b.capability+". Angelina le aveva collegate con la stessa freccia rossa.",
-   "In una nota datata poco prima della cena Angelina scrive: «Per far funzionare tutto servivano due persone con accessi diversi. Una poteva creare l'occasione, l'altra poteva far sparire la traccia». Non sono indicati nomi."
+   "La prima ricognizione dello studio conferma che la scena è stata alterata: accanto al corpo è stata rinvenuta una chiave inglese, mentre finestra, bicchiere e alcuni oggetti risultano spostati in modo poco naturale. Dal fascicolo principale manca una parte centrale. Su un frammento strappato Angelina aveva scritto: «consegnerò tutto».",
+   "Tra il materiale recuperato compare una chiave contrassegnata «COPIA 2» e una nota di Angelina con la frase «non è l’unica persona coinvolta». Nella pagina incompleta del dossier sono presenti due tracce di natura diversa: una riconducibile a "+a.capability+" e una a "+b.capability+". Angelina le aveva collegate alla stessa vicenda: "+bridge+".",
+   "In una nota datata poco prima della cena Angelina scrive: «Per far funzionare tutto servivano due persone con accessi diversi. Una poteva creare l'occasione, l'altra poteva far sparire la traccia». Non sono indicati nomi. Le alterazioni rilevate nello studio sono compatibili con l'ipotesi che qualcuno abbia cercato di modificare la lettura iniziale della scena."
  ];
  const personalClues={};
  participants.forEach(p=>{
@@ -647,23 +647,32 @@ function migrateStartedAStateToB(oldState){
  return migrated;
 }
 
+function withCurrentNarrative(state){
+ // Aggiorna i testi derivati senza modificare assegnazioni, ruoli o voti salvati.
+ return {...state,narrative:buildNarrativePackage(state)};
+}
+
 async function ensureAssignmentState(){
- const remote=await firebaseRequest(ASSIGNMENT_STATE_PATH);
- if(remote && await isValidFrozenAssignmentState(remote))return remote;
+ for(let attempt=0;attempt<4;attempt++){
+   let remote=await firebaseRequest(ASSIGNMENT_STATE_PATH);
+   if(remote && await isValidFrozenAssignmentState(remote))return withCurrentNarrative(remote);
 
- if(remote && isMigratableEditionAState(remote)){
-   const next=remote.accessStartedAt ? migrateStartedAStateToB(remote) : await createInitialAssignmentState();
-   await firebaseWrite(ASSIGNMENT_STATE_PATH,next);
-   const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
-   if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Passaggio A → B non valido");
-   return confirmed;
+   // Rileggi con ETag solo quando occorre creare o migrare la partita.
+   // Gli accessi ordinari non dipendono dall'esposizione dell'header ETag.
+   const snapshot=await firebaseReadWithEtag(ASSIGNMENT_STATE_PATH);
+   remote=snapshot.data;
+   if(remote && await isValidFrozenAssignmentState(remote))return withCurrentNarrative(remote);
+   let candidate;
+   if(remote===null)candidate=await createInitialAssignmentState();
+   else if(isMigratableEditionAState(remote))candidate=migrateStartedAStateToB(remote);
+   else throw new Error("La partita esistente non è compatibile con questa edizione. Le assegnazioni sono state conservate: verifica il collegamento con la Regia.");
+   if(!snapshot.etag)throw new Error("Impossibile verificare la versione della partita. Nessuna assegnazione è stata modificata; riprova.");
+   const write=await firebasePutIfMatch(ASSIGNMENT_STATE_PATH,candidate,snapshot.etag);
+   if(write.conflict)continue;
+   if(!write.ok)throw new Error("Impossibile salvare le assegnazioni in modo sicuro. Riprova.");
+   return withCurrentNarrative(candidate);
  }
-
- const candidate=await createInitialAssignmentState();
- await firebaseWrite(ASSIGNMENT_STATE_PATH,candidate);
- const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
- if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Stato assegnazioni non valido");
- return confirmed;
+ throw new Error("La partita è stata aggiornata da un altro dispositivo. Riprova ad accedere.");
 }
 
 async function markGameAccessStarted(state){
@@ -1455,7 +1464,6 @@ document.addEventListener("visibilitychange",()=>{
  }
 });
 document.getElementById("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
-updateTestScenarioLabel();
 renderLiveUnlocks();
 </script>
 
