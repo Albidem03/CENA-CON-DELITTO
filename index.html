@@ -148,6 +148,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <section id="tab-indizi" class="tab-page hidden">
 <div class="evidence">
 <div id="indiziLiveStatus" class="indizi-live-status">● COLLEGAMENTO INDIZI LIVE</div>
+<article id="plotTwistSummary" class="sheet hidden"><div class="section-title">Comunicazione della villa</div><div id="plotTwistSummaryText" class="paper-text"></div></article>
 <article id="noCluesBox" class="sheet">
 <div class="section-title">Archivio indizi</div>
 <div class="paper-text">Nessun nuovo documento è stato reso disponibile. Gli indizi compariranno qui durante la serata.</div>
@@ -370,7 +371,7 @@ const CHARACTER_NARRATIVE={
  cesare_valli:{group:"staff",pressure:"accessi alle stanze della villa che non coincidevano con le versioni ufficiali degli invitati",capability:"conoscenza delle chiavi, dei passaggi e delle routine della villa",trace:"un registro di servizio con una riga riscritta e un orario fuori sequenza",cover:"attribuisci le incongruenze al normale caos di una serata affollata"},
  adriano_conti:{group:"intimate",pressure:"vecchie lettere e promesse che Angelina non voleva più lasciare nell'ombra",capability:"conoscenza di aspetti sentimentali che pochi altri conoscono",trace:"una busta senza mittente con una data precedente al matrimonio di Angelina",cover:"tratta il passato come definitivamente chiuso"},
  elia_neroni:{group:"intimate",pressure:"un fatto dell'infanzia di Angelina che aveva assunto un significato nuovo dopo il ritrovamento del dossier",capability:"conoscenza della vita di Angelina prima della ricchezza e della villa",trace:"un soprannome d'infanzia scritto sul retro di un vecchio appunto",cover:"presenta i ricordi d'infanzia come dettagli innocui"},
- lavinia_valenti:{group:"family",pressure:"una scelta familiare di Angelina che avrebbe modificato equilibri e precedenze tra le sorelle",capability:"conoscenza delle rivalità e degli accordi interni ai Valenti",trace:"una bozza di lettera familiare con il tuo nome sottolineato due volte",cover:"presenta la rivalità con Angelina come normale conflitto tra sorelle"},
+ lavinia_valenti:{group:"family",pressure:"una scelta familiare di Angelina che avrebbe modificato equilibri e precedenze tra le sorelle",capability:"conoscenza delle rivalità e degli accordi interni ai Valenti",trace:"una bozza di lettera familiare con il nome di Lavinia Valenti sottolineato due volte",cover:"presenta la rivalità con Angelina come normale conflitto tra sorelle"},
  celeste_valenti:{group:"family",pressure:"una decisione di Angelina che avrebbe posto fine a una protezione economica e personale mantenuta per anni",capability:"accesso alla sfera più protetta della famiglia",trace:"un promemoria su un trasferimento mensile che doveva essere sospeso",cover:"mostrati sorpresa da qualsiasi cambiamento nelle decisioni di Angelina"},
  ofelia_de_marchi:{group:"family",pressure:"documenti sull'eredità materna che confermavano che alcune quote non erano mai state chiarite",capability:"conoscenza delle rivendicazioni della famiglia De Marchi",trace:"una fotocopia di un atto con una percentuale corretta a mano",cover:"dichiara di aver sempre cercato soltanto trasparenza"},
  viola_neroni:{group:"intimate",pressure:"confidenze che Angelina aveva improvvisamente smesso di condividere perché temeva una fuga di informazioni",capability:"conoscenza delle paure e delle abitudini emotive di Angelina",trace:"un messaggio incompleto salvato come bozza e mai inviato",cover:"sostieni che Angelina si fosse semplicemente chiusa in se stessa"},
@@ -436,12 +437,13 @@ function buildNarrativePackage(state){
    "Angelina aveva comunicato a una persona esterna che durante la cena avrebbe chiuso definitivamente la questione.",
    "Angelina aveva raccolto abbastanza elementi da voler rendere ufficiale la vicenda subito dopo la serata."
  ][variant];
- const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" erano entrambi coinvolti in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" Per entrambi, impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
+ const bothLabel=assassinCharacter.gender==="F"&&accompliceCharacter.gender==="F"?"Per entrambe":"Per entrambi";
+ const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" erano entrambi coinvolti in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" "+bothLabel+", impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
  const sharedStory="Il dossier scomparso non riguardava un solo segreto. Angelina aveva unito due vicende in un unico fascicolo e aveva scritto che, considerate separatamente, potevano sembrare coincidenze; insieme dimostravano invece un accordo preciso. La parte centrale del fascicolo riguardava "+bridge+".";
  const commonClues=[
    "La prima ricognizione dello studio conferma che la scena è stata alterata: accanto al corpo è stata rinvenuta una chiave inglese, mentre finestra, bicchiere e alcuni oggetti risultano spostati in modo poco naturale. Dal fascicolo principale manca una parte centrale. Su un frammento strappato Angelina aveva scritto: «consegnerò tutto».",
    "Tra il materiale recuperato compare una chiave contrassegnata «COPIA 2» e una nota di Angelina con la frase «non è l’unica persona coinvolta». Nella pagina incompleta del dossier sono presenti due tracce di natura diversa: una riconducibile a "+a.capability+" e una a "+b.capability+". Angelina le aveva collegate alla stessa vicenda: "+bridge+".",
-   "In una nota datata poco prima della cena Angelina scrive: «Per far funzionare tutto servivano due persone con accessi diversi. Una poteva creare l'occasione, l'altra poteva far sparire la traccia». Non sono indicati nomi. Le alterazioni rilevate nello studio sono compatibili con l'ipotesi che qualcuno abbia cercato di modificare la lettura iniziale della scena."
+   "Dopo il secondo ritrovamento, nella cantina / zona tecnica viene rinvenuto un giratubi con tracce compatibili con la nuova aggressione. Una pagina recuperata del dossier collega le due competenze già emerse a due persone distinte: una ha agito nello studio, l'altra ne ha alterato la scena. Non compare alcuna terza persona coinvolta. Gli appunti attribuiscono alla seconda vittima il ruolo di copertura del primo episodio: la sua morte ha impedito che chiarisse quei dettagli."
  ];
  const personalClues={};
  participants.forEach(p=>{
@@ -475,8 +477,8 @@ function buildNarrativePackage(state){
    pairKey:ordered,
    commonMotive,
    sharedStory,
-   assassinPrivate:"Hai deciso di agire direttamente perché "+a.pressure+". Il tuo vantaggio operativo era "+a.capability+". La collaborazione dell'altra persona era indispensabile perché il dossier collegava entrambe le vostre posizioni.",
-   accomplicePrivate:"Hai accettato di collaborare perché "+b.pressure+". Il tuo contributo era possibile grazie a "+b.capability+". Senza il tuo aiuto l'altra persona non avrebbe potuto gestire tutte le tracce lasciate dal dossier.",
+   assassinPrivate:"Hai deciso di agire per impedire che Angelina rendesse pubblico ciò che ti riguarda: "+a.pressure+". Hai agito nello studio usando la chiave inglese; l'altra persona coinvolta ha alterato la scena per confondere la ricostruzione. In seguito hai temuto che potesse parlare del vostro accordo: hai attirato l’altra persona nella cantina / zona tecnica e hai usato un giratubi per impedirle di parlare. Il tuo vantaggio operativo era "+a.capability+". Non rivelare il collegamento tra i due episodi.",
+   accomplicePrivate:"Hai accettato di collaborare per impedire che Angelina rendesse pubblico ciò che ti riguarda: "+b.pressure+". Il tuo contributo era possibile grazie a "+b.capability+". Dopo l'aggressione nello studio hai alterato la posizione di finestra, bicchiere e altri oggetti per confondere la ricostruzione. L'azione diretta è stata dell'altra persona coinvolta. Mantieni segreta la collaborazione e sostieni la versione concordata.",
    secondVictimCharacterId:accompliceCharacter.id,
    secondVictimCharacterName:accompliceCharacter.name,
    secondVictimRoom:"Cantina / zona tecnica di Villa Valenti",
@@ -741,7 +743,7 @@ function renderSecretRole(roleBundle){
  if(!roleBundle||!roleBundle.specialRole||!currentCharacter)return;
 
  const isAssassin=roleBundle.specialRole==="assassin";
- const roleTitle=isAssassin?"ASSASSINO":"COMPLICE";
+ const roleTitle=isAssassin?(currentCharacter.gender==="F"?"ASSASSINA":"ASSASSINO"):"COMPLICE";
  const partnerTitle=isAssassin?"complice":"assassino";
  const profile=CHARACTER_PROFILES[currentCharacter.id]||{};
  const personalOrigin=isAssassin?profile.assassinStory:profile.accompliceStory;
@@ -861,6 +863,13 @@ async function loadLiveUnlocks(silent=false){
 }
 
 function renderLiveUnlocks(){
+ const twistSummary=document.getElementById("plotTwistSummary");
+ const twistSummaryText=document.getElementById("plotTwistSummaryText");
+ const hasTwistSummary=!!(liveUnlockState.twist&&currentNarrative&&currentNarrative.secondVictimCharacterName);
+ if(twistSummary)twistSummary.classList.toggle("hidden",!hasTwistSummary);
+ if(twistSummaryText)twistSummaryText.textContent=hasTwistSummary
+   ?"Seconda vittima identificata: "+currentNarrative.secondVictimCharacterName+". Ritrovamento: "+currentNarrative.secondVictimRoom+". Questa comunicazione resta disponibile anche dopo il rientro nel dossier."
+   :"";
  const isDeadAccomplice=!!(liveUnlockState.twist&&currentSpecialRole==="accomplice");
  if(currentNarrative){
    const common=currentNarrative.commonClues||[];
@@ -894,7 +903,7 @@ function renderLiveUnlocks(){
  ];
  let any=false;
  map.forEach(([key,clueId,stateId])=>{
-   const on=!!liveUnlockState[key];
+   const on=!!liveUnlockState[key]&&((key!=="common3"&&key!=="personal3")||!!liveUnlockState.twist);
    any=any||on;
    const clue=document.getElementById(clueId);
    if(clue)clue.classList.toggle("hidden",!on);
@@ -1122,7 +1131,7 @@ function renderConclusionSubmission(record){
  feedback.className="conclusion-feedback "+(record.correct?"correct":"wrong");
  feedback.textContent=record.correct
    ?"Ottimo, ben fatto. Hai individuato correttamente l'assassino."
-   :"Mi dispiace. L'assassino e il complice l'hanno fatta franca.";
+   :"La risposta non identifica l'autore del delitto. Il tentativo è stato registrato e non può essere modificato.";
 }
 async function loadConclusionSubmission(silent=false){
  if(!currentParticipant||!canCurrentPlayerUseConclusion())return;
