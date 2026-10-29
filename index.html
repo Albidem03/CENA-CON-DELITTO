@@ -205,7 +205,7 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <section id="tab-haviland" class="tab-page hidden">
 <div class="haviland">
 <h2>Haviland — Regia Villa</h2>
-<p>Pannello privato riservato all'organizzatore. Qui collegheremo i comandi vocali e gli annunci definitivi.</p>
+<p>Pannello riservato alla Regia. Gestisci la pubblicazione dei documenti, le comunicazioni della villa e l'apertura della conclusione.</p>
 
 <div class="live-control">
 <h2>Regia indizi — Live</h2>
@@ -437,8 +437,10 @@ function buildNarrativePackage(state){
    "Angelina aveva comunicato a una persona esterna che durante la cena avrebbe chiuso definitivamente la questione.",
    "Angelina aveva raccolto abbastanza elementi da voler rendere ufficiale la vicenda subito dopo la serata."
  ][variant];
- const bothLabel=assassinCharacter.gender==="F"&&accompliceCharacter.gender==="F"?"Per entrambe":"Per entrambi";
- const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" erano entrambi coinvolti in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" "+bothLabel+", impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
+ const bothFemale=assassinCharacter.gender==="F"&&accompliceCharacter.gender==="F";
+ const bothLabel=bothFemale?"Per entrambe":"Per entrambi";
+ const involvement=bothFemale?"erano entrambe coinvolte":"erano entrambi coinvolti";
+ const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" "+involvement+" in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" "+bothLabel+", impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
  const sharedStory="Il dossier scomparso non riguardava un solo segreto. Angelina aveva unito due vicende in un unico fascicolo e aveva scritto che, considerate separatamente, potevano sembrare coincidenze; insieme dimostravano invece un accordo preciso. La parte centrale del fascicolo riguardava "+bridge+".";
  const commonClues=[
    "La prima ricognizione dello studio conferma che la scena è stata alterata: accanto al corpo è stata rinvenuta una chiave inglese, mentre finestra, bicchiere e alcuni oggetti risultano spostati in modo poco naturale. Dal fascicolo principale manca una parte centrale. Su un frammento strappato Angelina aveva scritto: «consegnerò tutto».",
@@ -744,16 +746,19 @@ function renderSecretRole(roleBundle){
 
  const isAssassin=roleBundle.specialRole==="assassin";
  const roleTitle=isAssassin?(currentCharacter.gender==="F"?"ASSASSINA":"ASSASSINO"):"COMPLICE";
- const partnerTitle=isAssassin?"complice":"assassino";
+ const partnerCharacter=roleBundle.partner?characters.find(c=>c.id===roleBundle.partner.characterId):null;
+ const partnerFemale=!!(partnerCharacter&&partnerCharacter.gender==="F");
+ const partnerTitle=isAssassin?"COMPLICE":(partnerFemale?"ASSASSINA":"ASSASSINO");
+ const partnerHeading=(partnerFemale?"LA TUA ":"IL TUO ")+partnerTitle;
  const profile=CHARACTER_PROFILES[currentCharacter.id]||{};
  const personalOrigin=isAssassin?profile.assassinStory:profile.accompliceStory;
  const privateText=currentNarrative?(isAssassin?currentNarrative.assassinPrivate:currentNarrative.accomplicePrivate):"";
 
  let html="<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
-   "<strong>PERCHÉ SEI COINVOLTO</strong><br>"+escapeHtml(personalOrigin||privateText)+"<br><br>";
+   "<strong>PERCHÉ SEI "+(currentCharacter.gender==="F"?"COINVOLTA":"COINVOLTO")+"</strong><br>"+escapeHtml(personalOrigin||privateText)+"<br><br>";
 
  if(!roleBundle.partnerUnlocked||!roleBundle.partner){
-   html+="<strong>IDENTITÀ DEL "+partnerTitle.toUpperCase()+": SIGILLATA</strong><br>"+
+   html+="<strong>IDENTITÀ DELL’ALTRA PERSONA: SIGILLATA</strong><br>"+
      "Il tuo ruolo è già attivo, ma l'identità dell'altra persona verrà mostrata soltanto quando avrà effettuato il suo primo accesso. Fino ad allora non cercare di indovinare o contattare qualcuno come partner segreto.<br><br>"+
      "<strong>COME MUOVERTI</strong><br>"+escapeHtml(privateText)+"<br><br>"+
      "Non mostrare questo documento agli altri partecipanti.";
@@ -763,7 +768,7 @@ function renderSecretRole(roleBundle){
  }
 
  const motive=currentNarrative?currentNarrative.commonMotive:"";
- html+="<strong>IL TUO "+partnerTitle.toUpperCase()+"</strong><br>"+
+ html+="<strong>"+partnerHeading+"</strong><br>"+
    "<strong>Nome vero:</strong> "+escapeHtml(roleBundle.partner.participantName)+"<br>"+
    "<strong>Personaggio della storia:</strong> "+escapeHtml(roleBundle.partner.characterName)+"<br><br>"+
    "<strong>IL MOVENTE CONDIVISO</strong><br>"+escapeHtml(motive)+"<br><br>"+
@@ -926,43 +931,61 @@ function renderLiveUnlocks(){
  renderConclusionAccess();
 }
 
+let liveCommandQueue=Promise.resolve();
+function updateLiveUnlocksSafely(change){
+ const organizer=currentParticipant;
+ if(!organizer||organizer.code!==ORGANIZER_CODE)return Promise.reject(new Error("Comando riservato alla Regia"));
+ const command=liveCommandQueue.catch(()=>{}).then(async()=>{
+   for(let attempt=0;attempt<4;attempt++){
+     const snapshot=await firebaseReadWithEtag(LIVE_UNLOCK_PATH);
+     const current={...DEFAULT_LIVE_UNLOCKS,...(snapshot.data||{})};
+     const changes=change(current);
+     if(!changes){liveUnlockState=current;return current;}
+     if(!snapshot.etag)throw new Error("Impossibile verificare lo stato della Regia. Riprova.");
+     const next={...current,...changes,updatedAt:new Date().toISOString(),updatedBy:organizer.id};
+     const write=await firebasePutIfMatch(LIVE_UNLOCK_PATH,next,snapshot.etag);
+     if(write.conflict)continue;
+     if(!write.ok)throw new Error("Comando non salvato. Riprova.");
+     liveUnlockState=next;
+     return next;
+   }
+   throw new Error("Un altro dispositivo ha aggiornato la Regia. Riprova.");
+ });
+ liveCommandQueue=command;
+ return command;
+}
+
 async function toggleLiveUnlock(key){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
- if((key==="common3"||key==="personal3")&&!liveUnlockState.twist){
-   alert("Prima attiva il COLPO DI SCENA. Comune 3 e Personale 3 restano bloccati fino al ritrovamento della seconda vittima.");
-   return;
- }
+ if(!["common1","common2","common3","personal1","personal2","personal3","conclusion"].includes(key))return;
  const status=document.getElementById("liveWriteStatus");
- if(status)status.textContent="INVIO COMANDO…";
  try{
-   const next={...liveUnlockState,[key]:!liveUnlockState[key],updatedAt:new Date().toISOString(),updatedBy:currentParticipant.id};
-   await firebaseWrite(LIVE_UNLOCK_PATH,next);
-   liveUnlockState=next;
+   if(status)status.textContent="INVIO COMANDO…";
+   await updateLiveUnlocksSafely(current=>{
+     if((key==="common3"||key==="personal3")&&!current.twist)throw new Error("Attiva prima la comunicazione della villa per rendere disponibili questi documenti.");
+     return {[key]:!current[key]};
+   });
    renderLiveUnlocks();
    if(status)status.textContent="COMANDO INVIATO · "+new Date().toLocaleTimeString("it-IT");
  }catch(e){
    console.error("Errore comando Regia:",e);
-   if(status)status.textContent="ERRORE · COMANDO NON INVIATO";
+   if(status)status.textContent="ERRORE · "+(e&&e.message?e.message:"COMANDO NON INVIATO");
  }
 }
 
 async function activatePlotTwist(){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
  if(liveUnlockState.twist)return;
- if(!confirm("Attivare il COLPO DI SCENA?\n\nTutti i dispositivi riceveranno la comunicazione Haviland e verrà rivelata la seconda vittima. Nel test l'evento è irreversibile fino al reset."))return;
+ if(!confirm("Attivare il COLPO DI SCENA?\n\nTutti i dispositivi riceveranno la comunicazione Haviland. L'evento resta attivo per tutta la partita."))return;
  const status=document.getElementById("liveWriteStatus");
  try{
    if(status)status.textContent="ATTIVAZIONE COLPO DI SCENA…";
-   const now=new Date().toISOString();
-   const next={...liveUnlockState,twist:true,twistAt:now,common3:false,personal3:false,updatedAt:now,updatedBy:currentParticipant.id};
-   await firebaseWrite(LIVE_UNLOCK_PATH,next);
-   liveUnlockState=next;
-   try{sessionStorage.removeItem("villaValentiTwistSeen:"+now)}catch(e){}
+   await updateLiveUnlocksSafely(current=>current.twist?null:{twist:true,twistAt:new Date().toISOString(),common3:false,personal3:false});
    renderLiveUnlocks();
    if(status)status.textContent="COLPO DI SCENA ATTIVATO · "+new Date().toLocaleTimeString("it-IT");
  }catch(e){
    console.error("Errore colpo di scena:",e);
-   if(status)status.textContent="ERRORE · COLPO DI SCENA NON ATTIVATO";
+   if(status)status.textContent="ERRORE · "+(e&&e.message?e.message:"COLPO DI SCENA NON ATTIVATO");
  }
 }
 
