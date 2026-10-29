@@ -228,7 +228,7 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Colpo di scena</div>
 <div class="control-grid">
-<div class="control-card twist-control"><strong>Seconda vittima · Cantina / zona tecnica</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi sbloccare Comune 3 e Personale 3.</div></div>
+<div class="control-card twist-control"><strong>Seconda vittima · Cantina / zona tecnica</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi pubblicare Comune 2. Conserva Comune 3 per il dessert.</div></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Conclusione</div>
@@ -419,7 +419,6 @@ function characterForParticipant(state,participantId){
  return allocation?characters.find(c=>c.id===allocation.characterId):null;
 }
 function buildNarrativePackage(state){
- const activeAssignmentEntries=Object.entries(state.assignments);
  const assassinParticipant=participants.find(p=>p.id===state.specialRoles.assassin);
  const accompliceParticipant=participants.find(p=>p.id===state.specialRoles.accomplice);
  const assassinCharacter=characterForParticipant(state,state.specialRoles.assassin);
@@ -432,20 +431,28 @@ function buildNarrativePackage(state){
  const ordered=assassinCharacter.id+"__"+accompliceCharacter.id;
  const variant=narrativeHash(unordered)%4;
  const trigger=[
-   "Angelina aveva fissato per la mattina successiva un incontro fuori dalla villa per consegnare una copia del dossier.",
-   "Angelina aveva preparato una seconda copia del dossier e aveva lasciato intendere che non avrebbe più accettato pressioni.",
-   "Angelina aveva comunicato a una persona esterna che durante la cena avrebbe chiuso definitivamente la questione.",
-   "Angelina aveva raccolto abbastanza elementi da voler rendere ufficiale la vicenda subito dopo la serata."
+   "Angelina aveva annunciato che quella sera avrebbe detto tutto, senza continuare a proteggere nessuno.",
+   "Angelina aveva raccolto la documentazione nella cartellina e aveva deciso di parlarne davanti agli invitati.",
+   "Angelina aveva convocato le persone interessate per chiarire i fatti durante la cena.",
+   "Angelina aveva concluso la ricostruzione e quella sera avrebbe smesso di mantenere il silenzio."
  ][variant];
  const bothFemale=assassinCharacter.gender==="F"&&accompliceCharacter.gender==="F";
  const bothLabel=bothFemale?"Per entrambe":"Per entrambi";
  const involvement=bothFemale?"erano entrambe coinvolte":"erano entrambi coinvolti";
- const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" "+involvement+" in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" "+bothLabel+", impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
- const sharedStory="Il dossier scomparso non riguardava un solo segreto. Angelina aveva unito due vicende in un unico fascicolo e aveva scritto che, considerate separatamente, potevano sembrare coincidenze; insieme dimostravano invece un accordo preciso. La parte centrale del fascicolo riguardava "+bridge+".";
+ const thirdPerson=pressure=>pressure.replace(/\btua\b/g,"sua").replace(/\btuo\b/g,"suo");
+ const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" "+involvement+" in "+bridge+". Il dossier collegava due elementi: per "+assassinCharacter.name+", "+thirdPerson(a.pressure)+"; per "+accompliceCharacter.name+", "+thirdPerson(b.pressure)+". "+trigger+" "+bothLabel+", fermare la divulgazione era diventato lo stesso obiettivo. La collaborazione e l'eventuale sacrificio finale erano stati concordati prima della morte di Angelina: in cambio, i documenti compromettenti dovevano essere distrutti per proteggere le persone coinvolte e le loro famiglie.";
+ const sharedStory="Angelina aveva ricostruito un accordo riservato riguardante "+bridge+". Conservava le prove in una cartellina e aveva deciso di parlarne durante la cena. I due episodi e le alterazioni delle scene fanno parte dello stesso piano: prima sottrarre le prove e confondere la ricostruzione dello studio, poi usare una seconda messinscena per allontanare i sospetti dalla persona che aveva agito direttamente.";
+ const evidenceCharacters=[assassinCharacter,accompliceCharacter].sort((x,y)=>x.id.localeCompare(y.id));
+ const evidenceCapabilities=evidenceCharacters.map(c=>CHARACTER_NARRATIVE[c.id].capability);
+ // Escludere Isabella mantiene invariato questo depistaggio quando si passa da A a B.
+ const decoyCandidates=characters.filter(c=>c.id!==assassinCharacter.id&&c.id!==accompliceCharacter.id&&c.id!=="isabella_roversi").sort((x,y)=>x.id.localeCompare(y.id));
+ if(!decoyCandidates.length)throw new Error("Configurazione del depistaggio incompleta");
+ const decoyCharacter=decoyCandidates[narrativeHash("decoy__"+ordered)%decoyCandidates.length];
+ const decoyItem="un portadocumenti contrassegnato con il nome di "+decoyCharacter.name;
  const commonClues=[
-   "La prima ricognizione dello studio conferma che la scena è stata alterata: accanto al corpo è stata rinvenuta una chiave inglese, mentre finestra, bicchiere e alcuni oggetti risultano spostati in modo poco naturale. Dal fascicolo principale manca una parte centrale. Su un frammento strappato Angelina aveva scritto: «consegnerò tutto».",
-   "Tra il materiale recuperato compare una chiave contrassegnata «COPIA 2» e una nota di Angelina con la frase «non è l’unica persona coinvolta». Nella pagina incompleta del dossier sono presenti due tracce di natura diversa: una riconducibile a "+a.capability+" e una a "+b.capability+". Angelina le aveva collegate alla stessa vicenda: "+bridge+".",
-   "Dopo il secondo ritrovamento, nella cantina / zona tecnica viene rinvenuto un giratubi con tracce compatibili con la nuova aggressione. Una pagina recuperata del dossier collega le due competenze già emerse a due persone distinte: una ha agito nello studio, l'altra ne ha alterato la scena. Non compare alcuna terza persona coinvolta. Gli appunti attribuiscono alla seconda vittima il ruolo di copertura del primo episodio: la sua morte ha impedito che chiarisse quei dettagli."
+   "Nello studio il corpo di Angelina si trova accanto alla scrivania; nelle vicinanze è stata rinvenuta una chiave inglese. La finestra è aperta, un bicchiere è rotto, alcuni oggetti sono spostati e la cartellina preparata da Angelina è scomparsa. Questi elementi possono suggerire una colluttazione o una fuga, ma la dinamica non è ancora provata. Rimane un biglietto senza firma: «Non posso più proteggerti. Questa sera dirò tutto.» Non è ancora chiaro se fosse rivolto ad Angelina o scritto da lei. Un altro frammento riporta «consegnerò tutto».",
+   "Dopo il secondo ritrovamento, il materiale recuperato collega la stessa vicenda a due competenze distinte: "+evidenceCapabilities[0]+" e "+evidenceCapabilities[1]+". Non è specificato quale contributo abbia avuto ciascuna. Compare anche una chiave della cantina contrassegnata «COPIA 2», insieme alla nota «non è l’unica persona coinvolta». Nella cantina / zona tecnica è stato trovato "+decoyItem+": sembra indicare un ulteriore sospetto, ma la sua presenza non dimostra ancora chi lo abbia portato né quando. Confrontate i due tipi di documento con i rapporti e le occupazioni degli invitati.",
+   "Il confronto con una fotografia di servizio scattata prima della cena dimostra che il portadocumenti di "+decoyCharacter.name+" era già nella cantina, nella stessa posizione, prima della morte di Angelina. L'oggetto non prova quindi la presenza del suo proprietario durante il secondo episodio: la pista era stata preparata in anticipo. Accanto al secondo ritrovamento c'è un giratubi con tracce compatibili con l'aggressione. Anche questa scena è stata costruita per suggerire una versione ingannevole, come nello studio. La grafia del biglietto coincide con quella di Angelina: era lei a scrivere «Non posso più proteggerti», riferendosi a una protezione offerta in passato. La pagina ricomposta del dossier distingue due contributi, l'azione diretta nello studio e l'alterazione della scena; attribuisce alla seconda vittima la copertura del primo episodio, senza introdurre una terza persona coinvolta. Incrociate questo dato con le due competenze già emerse: il secondo ritrovamento non è una prova d'innocenza per tutte le persone collegate al dossier."
  ];
  const personalClues={};
  participants.forEach(p=>{
@@ -455,35 +462,37 @@ function buildNarrativePackage(state){
    if(p.id===state.specialRoles.assassin){
      personalClues[p.id]=[
        "La versione che devi sostenere è questa: "+a.cover+".",
-       "Sai che il punto più delicato del dossier è il collegamento tra "+a.pressure+" e la parte custodita dall'altra persona coinvolta.",
-       "Evita di spiegare spontaneamente come avresti potuto usare "+a.capability+". Rispondi solo a ciò che ti viene chiesto."
+       "Il dossier unisce "+a.pressure+" alla parte dell'altra persona coinvolta. Il vostro accordo era precedente al primo delitto: la seconda fase deve sembrare l'eliminazione di una persona che sa troppo, mentre è una scelta concordata per proteggerti.",
+       "Il portadocumenti di "+decoyCharacter.name+" era stato preparato prima del primo delitto per indicare una falsa pista. Evita di confermare la sua provenienza e non rivelare il collegamento tra la messinscena dello studio e quella della cantina."
      ];
    }else if(p.id===state.specialRoles.accomplice){
      personalClues[p.id]=[
        "La versione che devi sostenere è questa: "+b.cover+".",
-       "Sai che il punto più delicato del dossier è il collegamento tra "+b.pressure+" e la parte custodita dall'altra persona coinvolta.",
-       "Evita di spiegare spontaneamente come avresti potuto usare "+b.capability+". Rispondi solo a ciò che ti viene chiesto."
+       "Il dossier mette a rischio ciò che vuoi proteggere: "+b.pressure+". Prima della morte di Angelina hai accettato anche l'eventuale sacrificio finale, in cambio della distruzione delle prove e della protezione delle persone a te care. Mantieni segreto questo accordo.",
+       "La seconda scena era stata concordata. Quando Haviland annuncia il ritrovamento del tuo personaggio, segui le istruzioni riservate che compariranno nel dossier e smetti di offrire nuove informazioni. Non svelare il piano agli altri."
      ];
    }else{
      const observerLead=observer&&observer.capability?observer.capability:"la tua conoscenza di Angelina e della villa";
      personalClues[p.id]=[
-       "Grazie a "+observerLead+", un dettaglio ti torna in mente: "+a.trace+". Non sai ancora che importanza abbia, ma Angelina sembrava averlo considerato significativo.",
-       "Ricordi anche un secondo elemento: "+b.trace+". È di natura diversa dal primo, eppure nel dossier Angelina li aveva messi nella stessa sequenza.",
-       "La tua impressione personale è che i due elementi abbiano senso soltanto se collegati a "+bridge+". Non hai però una prova sufficiente per accusare qualcuno."
+       "Grazie a "+observerLead+", riconosci un dettaglio tra le carte rimaste: "+a.trace+". È una traccia concreta da confrontare con i rapporti, le attività e i racconti degli invitati; da sola non dimostra chi abbia agito nello studio.",
+       "Un secondo documento contiene "+b.trace+". È diverso dal primo, ma Angelina li aveva raccolti nella stessa sequenza. Chiedi chi conosce quelle vicende e distingui chi poteva agire direttamente da chi poteva intervenire sulla scena.",
+       "Le due tracce riguardano la stessa vicenda: "+bridge+". Confrontale con le due competenze riportate nel dossier, con la provenienza del portadocumenti in cantina e con il vero autore del biglietto. L'oggetto attribuito a un invitato non basta ad accusarlo: verifica quando è comparso. La seconda vittima e l'altra persona collegata al dossier non hanno avuto necessariamente lo stesso compito."
      ];
    }
  });
  return {
-   version:1,
+   version:2,
    scenarioId:"VV-"+narrativeHash(ordered).toString(36).toUpperCase(),
    pairKey:ordered,
    commonMotive,
    sharedStory,
-   assassinPrivate:"Hai deciso di agire per impedire che Angelina rendesse pubblico ciò che ti riguarda: "+a.pressure+". Hai agito nello studio usando la chiave inglese; l'altra persona coinvolta ha alterato la scena per confondere la ricostruzione. In seguito hai temuto che potesse parlare del vostro accordo: hai attirato l’altra persona nella cantina / zona tecnica e hai usato un giratubi per impedirle di parlare. Il tuo vantaggio operativo era "+a.capability+". Non rivelare il collegamento tra i due episodi.",
-   accomplicePrivate:"Hai accettato di collaborare per impedire che Angelina rendesse pubblico ciò che ti riguarda: "+b.pressure+". Il tuo contributo era possibile grazie a "+b.capability+". Dopo l'aggressione nello studio hai alterato la posizione di finestra, bicchiere e altri oggetti per confondere la ricostruzione. L'azione diretta è stata dell'altra persona coinvolta. Mantieni segreta la collaborazione e sostieni la versione concordata.",
+   assassinPrivate:"Hai deciso di agire per impedire che Angelina rendesse pubblico ciò che ti riguarda: "+a.pressure+". Prima dell'omicidio avete concordato il piano e l'eventuale sacrificio dell'altra persona; hai promesso di distruggere il dossier per proteggere ciò che quella persona ha di più caro. Hai raggiunto Angelina nello studio e hai usato la chiave inglese. L'altra persona ha poi aperto la finestra, rotto il bicchiere, spostato gli oggetti e sottratto la cartellina. La fase finale prevista dal vostro accordo si svolge nella cantina / zona tecnica: usi un giratubi e prepari la scena perché sembri l'eliminazione di una persona diventata pericolosa. In realtà è un sacrificio accettato in anticipo, destinato a sostenere la tua innocenza apparente. Il portadocumenti di "+decoyCharacter.name+" è la falsa pista preparata prima della cena. Il tuo vantaggio operativo era "+a.capability+". Mantieni segreto l'accordo e non confermare i dettagli del depistaggio.",
+   accomplicePrivate:"Hai accettato di collaborare per proteggere ciò che Angelina poteva distruggere rendendo pubbliche le sue prove: "+b.pressure+". La promessa dell'altra persona è far sparire il dossier e proteggere le persone a te care. Prima del primo delitto hai concordato anche l'eventuale sacrificio finale: la tua morte nel secondo episodio deve farti apparire estraneo all'accordo e sostenere l'innocenza apparente di chi ha agito direttamente. Il tuo contributo era possibile grazie a "+b.capability+". Dopo l'aggressione nello studio hai aperto la finestra, rotto il bicchiere, spostato alcuni oggetti e sottratto la cartellina. Durante l'indagine alimenti piste alternative senza accusare apertamente una sola persona. Il secondo episodio, nella cantina / zona tecnica con il giratubi, è una parte del piano che hai accettato. Quando viene annunciato il ritrovamento, segui le regole del dossier e smetti di fornire nuove informazioni. Mantieni segreta la collaborazione.",
    secondVictimCharacterId:accompliceCharacter.id,
    secondVictimCharacterName:accompliceCharacter.name,
    secondVictimRoom:"Cantina / zona tecnica di Villa Valenti",
+   decoyCharacterId:decoyCharacter.id,
+   decoyCharacterName:decoyCharacter.name,
    commonClues,
    personalClues
  };
@@ -510,7 +519,7 @@ let currentCharacter=null;
 let currentLoginAt=0;
 let plotTwistOverlayActive=false;
 const PLOT_TWIST_VIDEO="haviland-colpo-di-scena.mp4";
-const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella cantina, nella zona tecnica della villa. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate gli alibi, ricostruite gli spostamenti e chiedetevi perché questa persona dovesse essere messa a tacere. Non date per scontato che i due delitti abbiano motivazioni indipendenti. L'indagine continua.";
+const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella cantina, nella zona tecnica della villa. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate le testimonianze e gli spostamenti, controllate la provenienza degli oggetti e distinguete i fatti accertati dalle apparenze. Non date per scontato che i due episodi siano indipendenti. L'indagine continua.";
 
 async function firebaseRequest(path,options={}){
  const response=await fetch(FIREBASE_DB+"/"+path+".json",{cache:"no-store",...options});
@@ -908,7 +917,7 @@ function renderLiveUnlocks(){
  ];
  let any=false;
  map.forEach(([key,clueId,stateId])=>{
-   const on=!!liveUnlockState[key]&&((key!=="common3"&&key!=="personal3")||!!liveUnlockState.twist);
+   const on=!!liveUnlockState[key]&&(!["common2","common3","personal3"].includes(key)||!!liveUnlockState.twist);
    any=any||on;
    const clue=document.getElementById(clueId);
    if(clue)clue.classList.toggle("hidden",!on);
@@ -962,7 +971,7 @@ async function toggleLiveUnlock(key){
  try{
    if(status)status.textContent="INVIO COMANDO…";
    await updateLiveUnlocksSafely(current=>{
-     if((key==="common3"||key==="personal3")&&!current.twist)throw new Error("Attiva prima la comunicazione della villa per rendere disponibili questi documenti.");
+     if(["common2","common3","personal3"].includes(key)&&!current.twist)throw new Error("Attiva prima la comunicazione della villa per rendere disponibili questi documenti.");
      return {[key]:!current[key]};
    });
    renderLiveUnlocks();
@@ -980,7 +989,7 @@ async function activatePlotTwist(){
  const status=document.getElementById("liveWriteStatus");
  try{
    if(status)status.textContent="ATTIVAZIONE COLPO DI SCENA…";
-   await updateLiveUnlocksSafely(current=>current.twist?null:{twist:true,twistAt:new Date().toISOString(),common3:false,personal3:false});
+   await updateLiveUnlocksSafely(current=>current.twist?null:{twist:true,twistAt:new Date().toISOString(),common2:false,common3:false,personal3:false});
    renderLiveUnlocks();
    if(status)status.textContent="COLPO DI SCENA ATTIVATO · "+new Date().toLocaleTimeString("it-IT");
  }catch(e){
