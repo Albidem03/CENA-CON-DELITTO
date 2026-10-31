@@ -105,12 +105,14 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 }
 .attendance-warning{margin:0 0 14px;padding:12px 14px;border:1px solid #8a6b38;border-radius:8px;background:rgba(138,107,56,.12);color:#ead8b7;font:700 12px "Courier New",monospace;line-height:1.5}
 .attendance-ok{border-color:#52683d;background:rgba(82,104,61,.12)}
+
+[id^="commonClue"][id$="Text"],[id^="personalClue"][id$="Text"]{white-space:pre-line;overflow-wrap:break-word}
 </style>
 </head>
 <body>
 <section id="loginSection" class="login-shell">
 <div class="login-dossier">
-<div class="login-top"><div class="crest"><img src="../angelina_valenti.svg" alt="Angelina Valenti con il bicchiere" width="150" height="150" decoding="async" fetchpriority="high"></div><div class="eyebrow">Archivio Villa Valenti</div><h1>Accesso Riservato</h1><div class="subtitle">Cena con delitto · 31 ottobre 2026</div></div>
+<div class="login-top"><div class="crest"><img src="/CENA-CON-DELITTO/angelina_valenti.svg" alt="Angelina Valenti con il bicchiere" width="150" height="150" decoding="async" fetchpriority="high"></div><div class="eyebrow">Archivio Villa Valenti</div><h1>Accesso Riservato</h1><div class="subtitle">Cena con delitto · 31 ottobre 2026</div></div>
 <div class="paper-wrap"><div class="paper">
 <div class="paper-heading">Identificazione richiesta</div>
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
@@ -573,7 +575,7 @@ const PERSONAL_EVIDENCE={
    I due estratti pubblici sono ordinati per personaggio, mai per ruolo segreto.
    Le informazioni personali aggiungono riscontri distinti; la soluzione resta
    ricostruibile con i documenti comuni anche se un invitato non collabora. */
-function buildNarrativePackage(state){
+function buildNarrativeFoundation(state){
  const assassinParticipant=participants.find(p=>p.id===state.specialRoles.assassin);
  const accompliceParticipant=participants.find(p=>p.id===state.specialRoles.accomplice);
  const assassinCharacter=characterForParticipant(state,state.specialRoles.assassin);
@@ -639,6 +641,179 @@ function buildNarrativePackage(state){
   personalClues
  };
 }
+
+/* Revisione editoriale degli indizi. Nessuna estrazione o riassegnazione. */
+const DOCUMENT_SOURCES_V4={
+ ettore_valenti:{ref:"PV-17",record:"la nota sulla particella catastale inserita nel quaderno patrimoniale Valenti"},
+ ludovico_orsini:{ref:"AP-08",record:"la corrispondenza sull'accordo privato tra coniugi"},
+ corrado_de_marchi:{ref:"CM-24",record:"la mappa con il confine materno corretto a mano"},
+ leone_de_marchi:{ref:"SN-61",record:"l'appunto sul vecchio passaggio ereditario e sul notaio"},
+ dorian_ferretti:{ref:"FA-36",record:"la fattura con la cifra cerchiata e il rinvio all'allegato mancante"},
+ tancredi_moreau:{ref:"BL-42",record:"la bozza contrattuale non protocollata, con la sigla a margine"},
+ marcello_albrizzi:{ref:"RT-12",record:"l'appunto tecnico con l'orario corretto a penna"},
+ cesare_valli:{ref:"RS-05",record:"il registro di servizio con la riga riscritta fuori sequenza"},
+ adriano_conti:{ref:"LP-30",record:"la busta di corrispondenza precedente al matrimonio di Angelina"},
+ elia_neroni:{ref:"MI-09",record:"l'appunto con il soprannome d'infanzia sul retro"},
+ lavinia_valenti:{ref:"LF-14",record:"la bozza della lettera familiare con un nome sottolineato due volte"},
+ celeste_valenti:{ref:"SP-27",record:"il promemoria sul trasferimento mensile da sospendere"},
+ ofelia_de_marchi:{ref:"QE-33",record:"la fotocopia dell'atto ereditario con la percentuale corretta"},
+ viola_neroni:{ref:"MC-18",record:"il messaggio rimasto in bozza fra le confidenze di Angelina"},
+ eva_montorsi:{ref:"CD-06",record:"l'elenco delle camere con due orari aggiunti"},
+ bianca_albrizzi:{ref:"AG-11",record:"la pagina d'agenda strappata a metà di un appuntamento"},
+ emilia_riva:{ref:"DS-23",record:"la distinta delle consegne con un passaggio aggiunto fuori ordine"},
+ ginevra_ferretti:{ref:"CE-40",record:"il biglietto da visita con il recapito privato sul retro"},
+ isabella_roversi:{ref:"CP-32",record:"la scheda di catalogo con la provenienza modificata a matita"}
+};
+
+const PERSONAL_EVIDENCE_V4={
+ ettore_valenti:[
+  "Nel quaderno patrimoniale che hai portato a cena hai conservato anche il vecchio inventario dello studio. Il posto dell'attrezzo è indicato con precisione: una chiave combinata nel cassetto basso della scrivania. Quel cassetto non era chiuso a chiave. Il tuo inventario descrive invece la cartellina di Angelina come una raccolta di allegati, senza denaro al suo interno.",
+  "Durante il precedente riordino degli archivi avevi numerato i fogli con un timbro a tre cifre. Nelle copie recuperate riconosci la stessa impronta, compreso lo zero difettoso: i due estratti provengono davvero dal fascicolo di Angelina. La numerazione salta esattamente un foglio fra i due allegati. È quella pagina di raccordo a essere stata sottratta, non un'intera serie di atti patrimoniali.",
+  "Il portadocumenti indicato in cantina appartiene a {{decoy}}: lo sai perché ne avevi annotato il nome nell'inventario. Però il tuo quaderno lo registra già sul ripiano inferiore durante i preparativi. Un dettaglio prima trascurabile diventa decisivo: il registro non documenta un arrivo del proprietario nella cantina durante il secondo episodio."
+ ],
+ ludovico_orsini:[
+  "La sera precedente Angelina aveva lasciato nella vostra camera una bozza di accordo sulla separazione. Avevi promesso di non parlarne a tavola. Sul retro del foglio aveva annotato «domani, copie all'esterno»: riconosci la stessa espressione nel materiale dello studio. La sua decisione di consegnare documenti era già presa prima della cena; non nasce da una lite improvvisa durante la serata.",
+  "Dal salottino vicino alle camere hai visto {{actor}} rientrare dal corridoio dello studio. Non portava una cartellina e non hai visto che cosa avesse fatto dentro. Il rumore del bicchiere infranto è arrivato soltanto dopo quel rientro. Avevi taciuto il tuo punto di osservazione per non dover spiegare che ti eri appartato per rileggere l'accordo matrimoniale.",
+  "Fra le carte private di Angelina trovi il foglio da cui era stata staccata la bozza senza firma. La piega e il margine coincidono con il biglietto dello studio. La frase «non posso più proteggerti» era una comunicazione che Angelina stava preparando, non una minaccia che qualcuno le aveva recapitato. La questione del vostro matrimonio non spiega da sola il collegamento fra i due allegati del fascicolo."
+ ],
+ corrado_de_marchi:[
+  "Hai portato una planimetria della villa perché dovevi discutere di un confine e degli accessi alle proprietà. Vi è segnato che sotto la finestra dello studio c'è un'aiuola, separata dal percorso di servizio. Nel primo rilievo l'aiuola e il terreno sotto il davanzale risultano integri. La finestra aperta può aver fatto pensare a una fuga, ma quella strada non lascia i segni di un passaggio.",
+  "Nel corridoio avevi aperto la tua mappa sul tavolino. In quel momento {{helper}} ti ha chiesto di spostarti per passare verso lo studio. Il rumore del bicchiere è arrivato mentre eri già tornato nel salone. Il tuo foglio, rimasto sul tavolino, non presenta tracce di vetro: la rottura è avvenuta dentro la stanza, non durante una corsa fuori dallo studio.",
+  "Rivedendo le fotografie della cantina riconosci un particolare che compare anche sulla tua planimetria: il montante storto della scaffalatura. Il portadocumenti di {{decoy}} è nello stesso punto sia nella foto dei preparativi sia nel rilievo del secondo ritrovamento. Non si tratta di un oggetto soltanto somigliante fotografato in un'altra zona."
+ ],
+ leone_de_marchi:[
+  "Prima della cena Angelina ti aveva chiesto di leggere una vecchia lettera del notaio. Non cercava soltanto una data: aveva evidenziato la frase «la responsabilità resta di chi assume l'incarico». Ti aveva poi detto che due persone si stavano proteggendo a vicenda. Non ti aveva fatto nomi, ma la conversazione precedeva gli eventi della serata.",
+  "Nella tua cartella conservi un precedente elenco degli allegati di famiglia. Due documenti oggi separati vi compaiono sotto la stessa pratica e fra loro è registrata una «dichiarazione congiunta». L'elenco è anteriore all'invito alla cena. Il foglio mancante non era una nota occasionale della padrona di casa: era parte della raccolta che stava facendo verificare.",
+  "Riconosci sulla pagina ricomposta il timbro del professionista che aveva conservato una copia dell'accordo. La data è anteriore alla cena e il riferimento di pratica coincide con quello nel tuo elenco. L'impegno assunto da {{victim}} esisteva prima della sua morte; non è una giustificazione scritta da qualcuno dopo il ritrovamento in cantina."
+ ],
+ dorian_ferretti:[
+  "Nei tuoi rapporti con Angelina eri abituato a ricevere fascicoli chiusi con fermagli di ottone. Per questa cena aveva invece chiesto una cartellina da consegnare, con tutte le copie numerate. Nella tua posta conservi la sua richiesta di non distruggere gli allegati già trasmessi. Chi ha preso l'originale non poteva essere certo di aver fatto sparire anche le copie fuori dalla villa.",
+  "Nel prospetto di trasmissione ricevuto per lavoro leggi due codici: {{ref1}} e {{ref2}}. Hanno lo stesso numero di pratica, ma risultano acquisiti da fonti diverse. Il primo allegato non è il giustificativo del secondo: sono due responsabilità che Angelina aveva riunito. La casella «documento di raccordo» rinvia proprio al foglio che manca nello studio.",
+  "Hai conservato la ricevuta della copia inviata al professionista esterno. Vi è registrata anche la dichiarazione che distribuisce i due incarichi, e il numero di pagine è quello del fascicolo ricomposto. La ricevuta esclude che quella pagina sia stata creata dopo il secondo ritrovamento per far ricadere retroattivamente una responsabilità su una persona morta."
+ ],
+ tancredi_moreau:[
+  "Angelina ti aveva chiesto una verifica insolita: voleva distinguere chi aveva formulato una promessa da chi ne era il beneficiario. Nella nota di lavoro che hai conservato compaiono due verbi diversi, «intervenire» e «coprire». Avevi rifiutato di dare un parere senza leggere il documento completo. La domanda, però, ti era arrivata prima della cena.",
+  "Nella copia legale del fascicolo trovi il margine della dichiarazione mancante. La frase superstite è «i compiti non sono intercambiabili»; seguono due riquadri distinti per le sottoscrizioni. Gli estratti pubblicati permettono di riconoscere due posizioni, ma non autorizzano ad assegnare il primo incarico alla prima persona elencata. L'ordine degli allegati è archivistico.",
+  "La copia depositata presso lo studio esterno consente di leggere integralmente la clausola sottoscritta da {{victim}}: copertura dello studio, recupero della cartellina e accettazione del successivo sacrificio in cambio della protezione promessa. L'altra sottoscrizione assume l'intervento diretto. Il documento non lascia un incarico di esecuzione a un terzo firmatario."
+ ],
+ marcello_albrizzi:[
+  "Il rapporto di prima osservazione che ti viene affidato descrive l'aggressione ad Angelina come un trauma da oggetto contundente. Non vi sono elementi che indichino un avvelenamento né una ferita da taglio al collo. Il bicchiere rotto e l'attrezzo vicino al corpo sono reperti diversi: il primo non è la prova della causa della morte.",
+  "Nel rilievo ravvicinato dello studio è documentato un frammento del bicchiere appoggiato sopra un foglio già macchiato durante l'aggressione. Quel singolo rapporto di sovrapposizione fissa un ordine: prima l'aggressione e la caduta delle carte, poi la rottura del bicchiere. La stanza non racconta un'unica colluttazione simultanea come poteva sembrare all'inizio.",
+  "Il rapporto della cantina descrive un giratubi; quello dello studio una chiave combinata. Sono repertati separatamente e hanno forme diverse. La seconda scena non dimostra che la prima arma sia stata portata in cantina o che Angelina sia stata colpita altrove. Le due aggressioni restano distinte, pur rientrando nello stesso accordo documentato."
+ ],
+ cesare_valli:[
+  "La chiave marcata COPIA 2 appartiene alla serie di servizio che conosci bene. Il duplicato apre la cantina, non il cassetto della scrivania. Prima della cena la finestra dello studio era chiusa e funzionante; si può aprire comodamente dalla stanza senza possedere alcuna chiave. Il numero sul duplicato non indica quante persone partecipino a un piano.",
+  "Quando sei passato per riprendere il vassoio nel corridoio, {{helper}} era sulla soglia dello studio con la cartellina sotto il braccio. Non hai visto l'aggressione. Hai però riconosciuto la legatura scura e l'etichetta di Angelina: non era il tuo registro di servizio. In quel momento {{actor}} non era più sulla soglia e il bicchiere si era già rotto.",
+  "Sul registro dei movimenti in cantina trovi la consegna del duplicato di servizio per un incontro riservato. Il foglio di raccordo precisa che {{victim}} doveva presentarsi nella zona tecnica; non si trattava di un incarico ordinario del personale. L'oggetto intestato a {{decoy}}, invece, risultava già inventariato prima del secondo episodio."
+ ],
+ adriano_conti:[
+  "Conservi una lettera che Angelina ti scrisse anni fa e che non avevi intenzione di mostrare agli altri. Nella frase «dirò tutto» del biglietto riconosci il modo in cui univa le due t. Puoi offrire una scrittura autentica per il confronto; il contenuto della vecchia lettera non parla della cena né dimostra che il biglietto fosse rivolto a te.",
+  "Per sottrarti a una conversazione imbarazzante eri rimasto vicino alla porta del salottino. Hai visto {{actor}} tornare dal corridoio dello studio, poi {{helper}} avviarsi nella direzione opposta. Il bicchiere si è rotto dopo quel secondo passaggio. Avevi considerato i due movimenti indipendenti; ora puoi descriverne l'ordine, pur non avendo visto dentro la stanza.",
+  "Il confronto con la lettera che hai fornito conferma che la bozza nello studio è di Angelina. Nella tua lettera lei usa «proteggere» per mantenere riservata una verità scomoda, non per difendere qualcuno da un aggressore esterno. Questo spiega il senso del biglietto, mentre il nome del suo destinatario va ricavato dal fascicolo e dalle responsabilità che lei stava per rendere pubbliche."
+ ],
+ elia_neroni:[
+  "Da ragazzi Angelina nascondeva gli appunti che non voleva perdere dentro la copertina di un libro. Quando sei arrivato ti aveva chiesto se ricordassi ancora quel trucco, senza spiegarti perché. Dopo il ritrovamento segnali il volume sul ripiano dello studio: fra copertina e risguardo c'è una copia di un indice, con un posto vuoto fra due allegati.",
+  "Sull'indice nascosto nel libro riconosci il vecchio segno che Angelina usava per indicare «da conservare anche separatamente». È accanto al raccordo fra i documenti {{ref1}} e {{ref2}}. Aveva dunque previsto una copia di sicurezza della pagina centrale. Non è un'ipotesi sulla sua memoria: il richiamo è scritto nell'indice che hai ritrovato.",
+  "Nel libro è rimasta anche una breve nota di Angelina: «Non confondere la persona che affronterà il problema con quella che ne ripulirà le conseguenze». La pagina ricomposta dà un contenuto preciso a quella distinzione: azione nello studio e successiva copertura. La seconda vittima apparteneva al secondo incarico, non a un gruppo nuovo comparso dopo il primo delitto."
+ ],
+ lavinia_valenti:[
+  "Angelina ti aveva chiesto di non trasformare la cena in una discussione sulle precedenze tra sorelle. Nel messaggio che hai conservato aggiungeva: «Questa volta parlerò di documenti, non di preferenze». Nella stessa conversazione rifiutava un rinvio. La sua scelta di rendere pubblica la questione non dipende da un'offesa ricevuta quella sera a tavola.",
+  "Dalla porta del salone hai visto {{helper}} uscire dal corridoio dello studio con qualcosa di piatto tenuto contro il fianco. Poco prima {{actor}} era già rientrato nel salottino senza portare quel tipo di oggetto. Non avevi potuto leggere l'etichetta, ma la forma era quella di una cartellina, non di un vassoio o di un indumento piegato.",
+  "Nella copia familiare del patto riconosci la clausola sulle persone care, che Angelina ti aveva mostrato come esempio di una protezione divenuta ricatto reciproco. La promessa di distruggere le carte è fatta a {{victim}} dall'altra parte dell'accordo. Non era Angelina a promettere che avrebbe continuato a tacere: il suo biglietto annunciava il contrario."
+ ],
+ celeste_valenti:[
+  "Avevi chiesto ad Angelina un sostegno per il tuo lavoro di illustratrice. Ti aveva risposto che avrebbe distinto gli aiuti personali dalla copertura di fatti scorretti. Sul retro del foglio su cui stavi disegnando hai annotato le sue parole. La frase del biglietto può riguardare quella seconda protezione: non è automaticamente la comunicazione della fine di un prestito familiare.",
+  "Nel pomeriggio, mentre aspettavi Angelina, avevi abbozzato la disposizione del vassoio e dei fogli sulla scrivania. Sul tuo schizzo la cartellina occupa un'area che nel rilievo risulta vuota e il bicchiere è ancora intero. Nel rilievo successivo i frammenti sono sopra le carte cadute. Il disegno conserva quindi uno stato precedente della scrivania, utile a distinguere la sottrazione dalla rottura del vetro.",
+  "Osservando la scansione del foglio ricomposto distingui le due caselle di firma dalle annotazioni di Angelina: i margini e le linee di stampa continuano sotto entrambe. La casella relativa alla copertura è quella sottoscritta da {{victim}}. Il resto della pagina non è un'aggiunta disegnata in seguito per cambiare il significato della prima parte."
+ ],
+ ofelia_de_marchi:[
+  "Nella copia ereditaria che avevi portato per chiedere chiarimenti manca da tempo un allegato, ma ne conservi il numero nel tuo prospetto. Lo stesso numero compare nell'indice trovato nello studio. Angelina stava mettendo in relazione materiali che voi avevate esaminato separatamente; la cartellina scomparsa non conteneva soltanto un nuovo testamento o una singola percentuale da correggere.",
+  "Nel tuo prospetto contabile i rinvii degli estratti {{ref1}} e {{ref2}} portano alla stessa pratica. Hai controllato anche il numero del foglio intermedio: appartiene a una dichiarazione firmata da entrambe le parti. Nessuna cifra del prospetto assegna però il compito di agire alla prima parte e quello di coprire alla seconda; per questo serve il testo della dichiarazione.",
+  "La pagina recuperata completa senza salti i rinvii del tuo prospetto. La sottoscrizione di {{victim}} è collegata alla sottrazione della cartellina e alla costruzione della falsa scena. L'altro allegato conserva una responsabilità distinta: tolta la copertura, resta da attribuire l'intervento diretto alla persona corrispondente all'altro documento, non a chi possedeva il portadocumenti in cantina."
+ ],
+ viola_neroni:[
+  "Nel tuo telefono è rimasta una confidenza di Angelina, precedente alla cena: «Non voglio più essere io a tenere insieme le loro versioni». Non ti aveva fatto nomi e tu le avevi consigliato di lasciare una copia fuori dalla villa. Avevi preferito non parlarne per rispettare quella confidenza. Ora puoi riferire che temeva un accordo fra più persone, non un episodio isolato.",
+  "Angelina ti aveva descritto una pressione molto precisa: le veniva chiesto di distruggere il raccordo fra due documenti, lasciando circolare soltanto i singoli allegati. Per questo insisteva che il fascicolo fosse letto intero. L'indice e le copie ora recuperati danno un riscontro materiale a quella confidenza; la minaccia riguardava il collegamento fra le due posizioni.",
+  "Nella copia della promessa riconosci l'espressione che Angelina aveva citato nella vostra conversazione: «proteggere ciò che hai di più caro». Il beneficiario indicato è {{victim}}, non Angelina. Il consenso documentato alla fase in cantina spiega un comportamento che, senza quel patto, sembrerebbe soltanto il tentativo di eliminare una persona divenuta scomoda."
+ ],
+ eva_montorsi:[
+  "Nel controllo della casa prima degli ospiti avevi chiuso personalmente la finestra dello studio, lasciando il gancio nella posizione abituale. Quando Angelina viene trovata, il gancio è sollevato e il davanzale esterno è pulito. Avevi anche rimesso il bicchiere sul vassoio intero: nessuno lo aveva già rotto durante i preparativi che avevi seguito.",
+  "Dopo il rumore del vetro hai notato {{helper}} presso il lavello di servizio, con un fazzoletto umido e una piccola scheggia incastrata nella piega del tessuto. Ti è stato detto che si trattava di un incidente con il bicchiere dello studio. Questa ammissione riguarda il maneggio del vetro; non è una confessione di aver colpito Angelina con l'attrezzo.",
+  "Il portadocumenti indicato nel secondo rilievo compare sullo sfondo della fotografia che avevi scattato per controllare l'allestimento. La foto è anteriore all'arrivo degli ospiti e mostra anche gli oggetti vicini nella stessa disposizione. Non puoi trasformare quel contenitore in una prova che {{decoy}} fosse appena sceso in cantina durante la seconda aggressione."
+ ],
+ bianca_albrizzi:[
+  "Nella tua agenda di lavoro è rimasta la richiesta di Angelina di preparare una consegna per la mattina successiva. Alla voce materiale aveva scritto «fascicolo completo, compreso raccordo». L'appuntamento è precedente alla cena e non è stato annullato. Avevi promesso discrezione sulla verifica esterna, ma la consegna programmata spiega perché la cartellina fosse diventata urgente per qualcuno.",
+  "Hai conservato il messaggio con cui {{helper}} ti chiedeva se la cartellina sarebbe rimasta nello studio fino alla fine della cena. Avevi risposto che era pronta per la consegna del giorno dopo. Il messaggio dimostra la conoscenza del posto e del contenuto del fascicolo; insieme al successivo passaggio con la cartellina fornisce un riscontro alla sottrazione, non al colpo inferto ad Angelina.",
+  "Nella tua copia dell'agenda c'è il riferimento che ha permesso di richiedere il raccordo al professionista esterno. La copia ricevuta mantiene il numero originario e le due sottoscrizioni. La voce «copertura e ritiro dei documenti» corrisponde a {{victim}}; l'altra parte assume l'azione diretta. L'appuntamento che avevi registrato prova che Angelina voleva consegnare proprio questa pagina insieme agli allegati."
+ ],
+ emilia_riva:[
+  "Durante i preparativi avevi lasciato il corridoio di servizio libero per il passaggio dei piatti. Dalla tua postazione si poteva arrivare allo studio attraverso una porta interna; non occorreva uscire in giardino né attraversare la finestra. Sulla tua distinta non compare alcun incarico al personale di ritirare la cartellina di Angelina per liberarle la scrivania.",
+  "Dalla zona di servizio hai udito prima un colpo sordo, poi passi nel corridoio e solo in seguito il bicchiere rompersi. Non hai visto chi fosse dentro e non puoi attribuire il primo rumore a un nome. La sequenza che ricordi, però, separa due momenti: chi è passato nel corridoio prima del vetro non coincide necessariamente con chi ha maneggiato il bicchiere.",
+  "La tua distinta del secondo servizio non prevedeva consegne nella zona tecnica. La discesa di {{victim}} in cantina non può essere spiegata con un incarico che le avevi affidato tu. Nella foto di allestimento riconosci inoltre il numero del locale e la scaffalatura: l'immagine che mostra già il portadocumenti è proprio quella cantina, non un magazzino differente."
+ ],
+ ginevra_ferretti:[
+  "Attraverso un contatto professionale avevi procurato ad Angelina il recapito di uno studio esterno. Nel tuo scambio di messaggi lei chiede una verifica su due allegati e sulla pagina che li collega. Non ti aveva autorizzata a divulgarlo fra gli ospiti. Ora puoi confermare che una parte delle copie era stata trasmessa fuori dalla villa prima della cena.",
+  "Il contatto esterno ti conferma la ricezione dei documenti {{ref1}} e {{ref2}} sotto la stessa pratica. Nella ricevuta si distinguono chi ha prodotto i materiali e chi ha chiesto la verifica: la richiedente è Angelina. Un professionista che conserva una copia non diventa per questo una terza persona operativa nel piano avvenuto dentro la villa.",
+  "Hai recuperato la conferma con cui lo studio esterno ha restituito la copia di raccordo. L'impronta di protocollo coincide con quella della ricevuta anteriore alla cena. La pagina con i due incarichi non proviene da uno degli invitati dopo il secondo ritrovamento: la sua esistenza precedente è documentata da una trasmissione esterna."
+ ],
+ isabella_roversi:[
+  "Nella tua scheda degli oggetti dello studio è fotografata una chiave combinata: forchetta aperta da un lato, anello dall'altro. Non è un giratubi né una chiave a rullino. La foto di catalogo la mostra già nel cassetto basso della scrivania. Si poteva quindi usarla senza portare un'arma personale alla villa; il catalogo non attribuisce però il suo uso a un invitato.",
+  "Hai esaminato i bordi delle copie del fascicolo: i fori di rilegatura e una piccola lacuna nell'angolo superiore continuano fra i due estratti. Il foglio di raccordo era rilegato in mezzo a loro. Non sono due documenti indipendenti accostati a caso dopo il delitto: esiste una continuità materiale della raccolta originale di Angelina.",
+  "Nel catalogo fotografico il portadocumenti intestato a {{decoy}} ha una cucitura laterale riparata e una borchia mancante. Le stesse caratteristiche compaiono nella fotografia dei preparativi e nel rilievo della cantina. Il catalogo identifica con sicurezza l'oggetto, ma la foto anteriore alla cena impedisce di dedurre che il proprietario lo abbia portato lì durante il secondo episodio."
+ ]
+};
+
+function buildNarrativePackage(state){
+ const result=buildNarrativeFoundation(state);
+ const actor=characterForParticipant(state,state.specialRoles.assassin);
+ const helper=characterForParticipant(state,state.specialRoles.accomplice);
+ const party=[actor,helper].sort((x,y)=>x.id.localeCompare(y.id));
+ const source=party.map(c=>DOCUMENT_SOURCES_V4[c.id]);
+ if(source.some(s=>!s))throw new Error("Riferimento documentale incompleto");
+ const meta=party.map(c=>CHARACTER_NARRATIVE[c.id]);
+ const thirdPerson=s=>s.replace(/\btua\b/g,"sua").replace(/\btuo\b/g,"suo");
+ const values={actor:actor.name,helper:helper.name,victim:helper.name,decoy:result.decoyCharacterName,
+  ref1:source[0].ref,ref2:source[1].ref,bridge:pairBridge(meta[0],meta[1])};
+ const fill=s=>s.replace(/\{\{([a-zA-Z0-9_]+)\}\}/g,(_,key)=>{
+  if(!Object.prototype.hasOwnProperty.call(values,key))throw new Error("Riferimento personale incompleto");
+  return values[key];
+ });
+ result.version=4;
+ result.clueRevision="VV-INDIZI-PERSONALI-4";
+ result.commonClues=[
+  "PRIMO RILIEVO - LO STUDIO\n\nAngelina è stata trovata senza vita accanto alla scrivania. Nelle vicinanze è repertata una chiave combinata, con forchetta a un'estremità e anello all'altra, già presente fra gli attrezzi della villa. La cartellina che aveva preparato è scomparsa; nell'elenco delle carte rimaste non è documentato un ammanco di denaro.\n\nLa finestra è aperta, ma il telaio non presenta segni di forzatura e il terreno sotto il davanzale non mostra un passaggio. Il cassetto degli attrezzi era accessibile dall'interno. Il bicchiere è rotto; alcuni fogli sono a terra. Sono elementi da collocare in una sequenza, non la prova di una fuga dalla finestra.\n\nRestano due messaggi distinti: il biglietto senza firma «Non posso più proteggerti. Questa sera dirò tutto» e una bozza «consegnerò tutto», riferita ai documenti. L'agenda registra già prima della cena una consegna del fascicolo completo per la mattina successiva. Nell'indice la numerazione salta un foglio fra due allegati: manca il raccordo che Angelina voleva consegnare insieme al resto.",
+  "CONFRONTO DEGLI ALLEGATI - DUE POSIZIONI, DUE AZIONI\n\nESTRATTO "+source[0].ref+": "+source[0].record+". Il contenuto rimanda a "+meta[0].capability+" e a "+thirdPerson(meta[0].pressure)+".\n\nESTRATTO "+source[1].ref+": "+source[1].record+". Il contenuto rimanda a "+meta[1].capability+" e a "+thirdPerson(meta[1].pressure)+".\n\nEntrambi gli estratti appartengono alla pratica con cui Angelina aveva ricostruito "+values.bridge+". Ricevute esterne e numerazione confermano che il collegamento esisteva prima della cena. L'ordine degli estratti è archivistico e non assegna il compito di agire o quello di coprire. La pagina mancante era una dichiarazione congiunta.\n\nIl rilievo ravvicinato mostra un frammento del bicchiere sopra un foglio già macchiato durante l'aggressione: il vetro è stato rotto dopo. Le testimonianze raccolte distinguono una persona rientrata dal corridoio senza cartellina e un successivo passaggio con il fascicolo. La ricostruzione deve quindi spiegare separatamente il colpo nello studio e la sottrazione delle prove. I soli interessi nel dossier non attribuiscono ancora i due compiti.",
+  "RISCONTRI FINALI - LA PAGINA CHE MANCAVA\n\nIl secondo corpo è quello di "+helper.name+", trovato nella cantina / zona tecnica. Il giratubi repertato qui è diverso dalla chiave combinata dello studio. Sul posto compare anche un portadocumenti intestato a "+result.decoyCharacterName+": fotografia dei preparativi e inventario lo documentano già nella stessa posizione prima della cena. Il nome identifica il proprietario dell'oggetto, ma non ne prova la presenza durante il secondo episodio.\n\nLo studio esterno ha restituito la copia del raccordo, registrata prima della cena. Numerazione, margini e sottoscrizioni la collegano ai due estratti. La verifica delle fonti attribuisce "+source[0].ref+" alla posizione di "+party[0].name+" e "+source[1].ref+" alla posizione di "+party[1].name+". Non compare un terzo incarico operativo.\n\nNella dichiarazione i compiti sono distinti: una parte assume l'intervento diretto nello studio; l'altra la successiva apertura della finestra, rottura del bicchiere e sottrazione della cartellina. Quest'ultimo impegno è sottoscritto da "+helper.name+". La medesima persona aveva accettato prima della cena anche il sacrificio in cantina in cambio della distruzione delle prove e della protezione delle persone care. La promessa proviene dall'altra parte del patto, non da Angelina.\n\nIl confronto con scritture autentiche conferma infatti che il biglietto dello studio era di Angelina: lei stava ritirando una protezione precedente. Per l'accusa finale servono i due allegati, l'attribuzione della copertura e la sequenza osservata nello studio. La morte della persona che aveva coperto il primo episodio non cancella quel contributo e non trasferisce automaticamente la colpa al proprietario dell'oggetto in cantina."
+ ];
+ const personal={};
+ for(const participant of participants){
+  const ch=characterForParticipant(state,participant.id);
+  const own=CHARACTER_NARRATIVE[ch.id];
+  const ref=DOCUMENT_SOURCES_V4[ch.id].ref;
+  if(participant.id===state.specialRoles.assassin){
+   personal[participant.id]=[
+    "RISERVATO AL TUO PERSONAGGIO. Il documento "+ref+" riguarda "+own.pressure+". Hai usato la chiave combinata presa nel cassetto della scrivania e hai lasciato il corridoio senza cartellina; la rottura del vetro e il ritiro dei documenti sono successivi al tuo passaggio. La versione che cerchi di sostenere è: "+own.cover+". Non inventare un ingresso dalla finestra o un'altra arma per cambiare questi fatti.",
+    "RISERVATO AL TUO PERSONAGGIO. Gli estratti stanno rendendo riconoscibile la tua posizione, ma il foglio che distribuisce i compiti non era rimasto nello studio. Avevi promesso all'altra parte la distruzione delle prove e la protezione delle persone care. La tua esposizione nasce dall'azione diretta e dal ritorno senza fascicolo, non dal fatto che tutti avessero una questione irrisolta con Angelina. Puoi difendere la tua versione, senza mostrare questo testo o inventare prove nuove.",
+    "RISERVATO AL TUO PERSONAGGIO. Il raccordo conservato fuori dalla villa rende verificabile la differenza fra il tuo intervento e la copertura. In cantina hai usato un giratubi diverso dalla prima arma; il portadocumenti era già stato predisposto prima della cena. Il patto prevedeva anche quella seconda fase. Le testimonianze sui due passaggi nel corridoio possono smentire la tua ricostruzione: continua a interpretare il personaggio, mantenendo segreto il piano."
+   ];
+  }else if(participant.id===state.specialRoles.accomplice){
+   personal[participant.id]=[
+    "RISERVATO AL TUO PERSONAGGIO. Il documento "+ref+" riguarda "+own.pressure+". Dopo il colpo ad Angelina hai aperto la finestra dall'interno, rotto il bicchiere, spostato gli oggetti e portato via la cartellina. Il tuo passaggio con il fascicolo è successivo al rientro dell'altra persona senza documenti. La versione che cerchi di sostenere è: "+own.cover+". Non sei la persona che ha inferto il primo colpo e devi mantenere segreta la collaborazione.",
+    "RISERVATO AL TUO PERSONAGGIO. Il ritiro della cartellina e il maneggio del vetro possono ricondurre a te la copertura. Nell'accordo precedente alla cena avevi accettato anche il sacrificio finale, in cambio della distruzione delle prove e della protezione delle persone care. Fino alla comunicazione della villa puoi sostenere una versione difensiva; non inventare altri documenti, alibi o fatti che cancellino l'accordo.",
+    "RISERVATO AL TUO PERSONAGGIO. Dopo la comunicazione del secondo ritrovamento la tua parte attiva termina. Non fornire nuove informazioni, non rispondere agli interrogatori, non correggere testimonianze e non suggerire la soluzione. I documenti comuni rendono comunque ricostruibili i fatti senza bisogno di una tua confessione. Puoi seguire la serata e assistere alla conclusione, mantenendo segreto questo documento."
+   ];
+  }else{
+   const entry=PERSONAL_EVIDENCE_V4[ch.id];
+   if(!entry||entry.length!==3)throw new Error("Dossier personale privo di tre riscontri");
+   personal[participant.id]=entry.map(fill);
+  }
+ }
+ result.personalClues=personal;
+ result.assassinPrivate=result.assassinPrivate.replace(/chiave inglese/g,"chiave combinata");
+ result.accomplicePrivate=result.accomplicePrivate.replace(/chiave inglese/g,"chiave combinata");
+ return result;
+}
+
 
 function narrativeForCurrentPlayer(narrative,participant){
  if(!narrative||!participant)return ["Informazione personale non disponibile.","Informazione personale non disponibile.","Informazione personale non disponibile."];
