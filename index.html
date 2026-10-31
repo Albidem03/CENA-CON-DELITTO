@@ -110,7 +110,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <body>
 <section id="loginSection" class="login-shell">
 <div class="login-dossier">
-<div class="login-top"><div class="crest"><img src="/CENA-CON-DELITTO/angelina_valenti.svg" alt="Angelina Valenti con il bicchiere" width="150" height="150" decoding="async" fetchpriority="high"></div><div class="eyebrow">Archivio Villa Valenti</div><h1>Accesso Riservato</h1><div class="subtitle">Cena con delitto · 31 ottobre 2026</div></div>
+<div class="login-top"><div class="crest"><img src="../angelina_valenti.svg" alt="Angelina Valenti con il bicchiere" width="150" height="150" decoding="async" fetchpriority="high"></div><div class="eyebrow">Archivio Villa Valenti</div><h1>Accesso Riservato</h1><div class="subtitle">Cena con delitto · 31 ottobre 2026</div></div>
 <div class="paper-wrap"><div class="paper">
 <div class="paper-heading">Identificazione richiesta</div>
 <div class="paper-copy">Inserisci il codice personale ricevuto con il tuo invito.<br>Il dossier assegnato resterà associato al tuo codice per l'intera serata, anche cambiando dispositivo.</div>
@@ -149,6 +149,7 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <section id="tab-indizi" class="tab-page hidden">
 <div class="evidence">
 <div id="indiziLiveStatus" class="indizi-live-status">● COLLEGAMENTO INDIZI LIVE</div>
+<article id="plotTwistSummary" class="sheet hidden"><div class="section-title">Comunicazione della villa</div><div id="plotTwistSummaryText" class="paper-text"></div></article>
 <article id="noCluesBox" class="sheet">
 <div class="section-title">Archivio indizi</div>
 <div class="paper-text">Nessun nuovo documento è stato reso disponibile. Gli indizi compariranno qui durante la serata.</div>
@@ -205,30 +206,30 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <section id="tab-haviland" class="tab-page hidden">
 <div class="haviland">
 <h2>Haviland — Regia Villa</h2>
-<p>Pannello privato riservato all'organizzatore. Qui collegheremo i comandi vocali e gli annunci definitivi.</p>
+<p>Pannello riservato alla Regia. Gestisci la pubblicazione dei documenti, le comunicazioni della villa e l'apertura della conclusione.</p>
 
 <div class="live-control">
 <h2>Regia indizi — Live</h2>
-<div class="live-control-copy">I documenti vengono pubblicati in diretta nella sezione Indizi dei dispositivi collegati. Da qui puoi anche aprire o richiudere la fase Conclusione. I contenuti potranno essere aggiornati prima della serata senza cambiare il link.</div>
+<div class="live-control-copy">Pubblica ogni blocco al momento previsto: dopo gli antipasti e il ritrovamento di Angelina, blocco 1; dopo il risotto, blocco 2; durante il secondo, comunicazione della villa e poi blocco 3; al dessert, conclusione. Gli avanzamenti sono manuali. Gli indizi personali compaiono senza annunci audio e restano consultabili nel dossier.</div>
 <div id="liveControlConnection" class="live-status">● CONTROLLO LIVE</div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line)">Indizi comuni</div>
 <div class="control-grid">
-<div class="control-card"><strong>Indizio comune 1</strong><div id="stateCommon1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common1')">SBLOCCA / BLOCCA</button></div>
-<div class="control-card"><strong>Indizio comune 2</strong><div id="stateCommon2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common2')">SBLOCCA / BLOCCA</button></div>
-<div class="control-card"><strong>Indizio comune 3</strong><div id="stateCommon3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common3')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 1 · dopo gli antipasti</strong><div id="stateCommon1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common1')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 2 · dopo il risotto</strong><div id="stateCommon2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common2')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 3 · dopo il secondo ritrovamento</strong><div id="stateCommon3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common3')">SBLOCCA / BLOCCA</button></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Indizi personali</div>
 <div class="control-grid">
-<div class="control-card"><strong>Blocco personale 1</strong><div id="statePersonal1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal1')">SBLOCCA / BLOCCA</button></div>
-<div class="control-card"><strong>Blocco personale 2</strong><div id="statePersonal2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal2')">SBLOCCA / BLOCCA</button></div>
-<div class="control-card"><strong>Blocco personale 3</strong><div id="statePersonal3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal3')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 1 · dopo gli antipasti</strong><div id="statePersonal1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal1')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 2 · dopo il risotto</strong><div id="statePersonal2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal2')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 3 · dopo il secondo ritrovamento</strong><div id="statePersonal3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal3')">SBLOCCA / BLOCCA</button></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Colpo di scena</div>
 <div class="control-grid">
-<div class="control-card twist-control"><strong>Seconda vittima · Cantina / zona tecnica</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi sbloccare Comune 3 e Personale 3.</div></div>
+<div class="control-card twist-control"><strong>Seconda vittima · Cantina / zona tecnica</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi pubblicare Comune 2. Conserva Comune 3 per il dessert.</div></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Conclusione</div>
@@ -369,11 +370,9 @@ function chooseSpecialRolePair(mode="RANDOM"){
  return [shuffled[0],shuffled[1]];
 }
 
-/* ===== MOTORE NARRATIVO 342 =====
-   Ogni coppia di personaggi (171 coppie non ordinate) riceve un legame condiviso
-   con Angelina. L'orientamento assassino/complice produce 342 configurazioni
-   ordinate con compiti, pressioni e indizi coerenti. Non viene generata alcuna
-   soluzione automatica. La fase Conclusione non rivela mai il nome corretto. */
+/* MOTORE NARRATIVO — DOCUMENTI COMUNI E RISCONTRI PERSONALI
+   La configurazione resta legata alle assegnazioni salvate.
+   La fase Conclusione non rivela automaticamente il nome corretto. */
 const CHARACTER_NARRATIVE={
  ettore_valenti:{group:"family",pressure:"una clausola patrimoniale che avrebbe ridimensionato la tua influenza sul patrimonio Valenti",capability:"conoscenza delle vecchie proprietà e dei vincoli familiari",trace:"una nota su una vecchia particella catastale annotata con una grafia molto tradizionale",cover:"sostieni che le questioni patrimoniali fossero già state chiarite mesi fa"},
  ludovico_orsini:{group:"intimate",pressure:"una serie di accordi privati legati alla crisi del matrimonio e alla gestione di beni condivisi",capability:"accesso alla vita privata e agli spazi personali di Angelina",trace:"un frammento di corrispondenza con riferimenti a un incontro coniugale mai registrato",cover:"presenta il rapporto con Angelina come teso ma ancora sotto controllo"},
@@ -385,7 +384,7 @@ const CHARACTER_NARRATIVE={
  cesare_valli:{group:"staff",pressure:"accessi alle stanze della villa che non coincidevano con le versioni ufficiali degli invitati",capability:"conoscenza delle chiavi, dei passaggi e delle routine della villa",trace:"un registro di servizio con una riga riscritta e un orario fuori sequenza",cover:"attribuisci le incongruenze al normale caos di una serata affollata"},
  adriano_conti:{group:"intimate",pressure:"vecchie lettere e promesse che Angelina non voleva più lasciare nell'ombra",capability:"conoscenza di aspetti sentimentali che pochi altri conoscono",trace:"una busta senza mittente con una data precedente al matrimonio di Angelina",cover:"tratta il passato come definitivamente chiuso"},
  elia_neroni:{group:"intimate",pressure:"un fatto dell'infanzia di Angelina che aveva assunto un significato nuovo dopo il ritrovamento del dossier",capability:"conoscenza della vita di Angelina prima della ricchezza e della villa",trace:"un soprannome d'infanzia scritto sul retro di un vecchio appunto",cover:"presenta i ricordi d'infanzia come dettagli innocui"},
- lavinia_valenti:{group:"family",pressure:"una scelta familiare di Angelina che avrebbe modificato equilibri e precedenze tra le sorelle",capability:"conoscenza delle rivalità e degli accordi interni ai Valenti",trace:"una bozza di lettera familiare con il tuo nome sottolineato due volte",cover:"presenta la rivalità con Angelina come normale conflitto tra sorelle"},
+ lavinia_valenti:{group:"family",pressure:"una scelta familiare di Angelina che avrebbe modificato equilibri e precedenze tra le sorelle",capability:"conoscenza delle rivalità e degli accordi interni ai Valenti",trace:"una bozza di lettera familiare con il nome di Lavinia Valenti sottolineato due volte",cover:"presenta la rivalità con Angelina come normale conflitto tra sorelle"},
  celeste_valenti:{group:"family",pressure:"una decisione di Angelina che avrebbe posto fine a una protezione economica e personale mantenuta per anni",capability:"accesso alla sfera più protetta della famiglia",trace:"un promemoria su un trasferimento mensile che doveva essere sospeso",cover:"mostrati sorpresa da qualsiasi cambiamento nelle decisioni di Angelina"},
  ofelia_de_marchi:{group:"family",pressure:"documenti sull'eredità materna che confermavano che alcune quote non erano mai state chiarite",capability:"conoscenza delle rivendicazioni della famiglia De Marchi",trace:"una fotocopia di un atto con una percentuale corretta a mano",cover:"dichiara di aver sempre cercato soltanto trasparenza"},
  viola_neroni:{group:"intimate",pressure:"confidenze che Angelina aveva improvvisamente smesso di condividere perché temeva una fuga di informazioni",capability:"conoscenza delle paure e delle abitudini emotive di Angelina",trace:"un messaggio incompleto salvato come bozza e mai inviato",cover:"sostieni che Angelina si fosse semplicemente chiusa in se stessa"},
@@ -433,8 +432,148 @@ function characterForParticipant(state,participantId){
  const allocation=state.assignments&&state.assignments[participantId];
  return allocation?characters.find(c=>c.id===allocation.characterId):null;
 }
+const PERSONAL_EVIDENCE={
+ "ettore_valenti": {
+  "clues": [
+   "Prima della cena avevi consultato l'inventario dello studio: la chiave inglese era già tra gli attrezzi conservati nella villa. Il suo ritrovamento non dimostra che qualcuno abbia portato un'arma dall'esterno. Nell'inventario la cartellina di Angelina è descritta come un fascicolo di documenti, non come un contenitore di denaro.",
+   "Nella copia patrimoniale che ti viene consegnata, i due estratti descritti nel documento comune appartengono allo stesso fascicolo. Non sono due contenziosi indipendenti: Angelina li aveva collegati a {{bridge}}. Chiedi agli altri di distinguere il proprio interesse nella vicenda dalla possibilità concreta di intervenire nello studio.",
+   "La copia d'archivio dell'inventario è anteriore alla cena e registra il portadocumenti di {{decoy}} nella cantina. Il nome identifica il proprietario dell'oggetto, non la persona che lo ha collocato lì. Il documento utile per ricostruire i compiti è l'accordo precedente ai delitti, non il valore economico del portadocumenti."
+  ]
+ },
+ "ludovico_orsini": {
+  "clues": [
+   "Conosci l'abitudine di Angelina di lasciare sullo scrittoio bozze di messaggi non ancora consegnati. La mancanza di una busta o di una firma non basta a stabilire che il biglietto sia una minaccia ricevuta da lei. Ti serve un confronto con una sua scrittura certa; non presentare la tua impressione come una prova già verificata.",
+   "Tra le carte private rimaste c'è un rinvio allo stesso numero di fascicolo riportato sui due estratti del documento comune. Angelina aveva riunito quella documentazione prima della cena. Il fascicolo scomparso non è quindi una raccolta improvvisata dopo il delitto, e il motivo della convocazione precede l'aggressione.",
+   "Nel foglio ricomposto, la promessa di distruggere le prove è rivolta a {{victim}}; non è una promessa fatta da Angelina. Il testo distingue chi doveva affrontarla nello studio da chi doveva recuperare la cartellina. Confronta questa distinzione con le due competenze del secondo blocco: non scambiare un legame personale con la vittima per una prova materiale."
+  ]
+ },
+ "corrado_de_marchi": {
+  "clues": [
+   "La planimetria delle proprietà che hai portato distingue la finestra dello studio dall'accesso di servizio. Sono passaggi diversi: chi conosce un ingresso della villa non è automaticamente passato da quella finestra. La cartellina scomparsa era stata collocata nello studio, non nell'archivio delle proprietà materne.",
+   "Il confronto delle copie mostra che il richiamo al primo estratto, {{trace1}}, e quello al secondo, {{trace2}}, erano già presenti prima della cena. Le successive alterazioni della scena non possono aver creato retroattivamente quel collegamento. Chiedi chi riconosce il contenuto dei documenti, senza trasformare ogni disputa familiare in un movente identico.",
+   "Nella fotografia di servizio il portadocumenti è accanto allo stesso montante della scaffalatura visibile nel rilievo successivo. Il confronto riguarda la posizione, non soltanto un oggetto somigliante. Questa corrispondenza conferma il depistaggio materiale, ma per individuare chi ha agito occorre anche ricostruire i due incarichi dell'accordo."
+  ]
+ },
+ "leone_de_marchi": {
+  "clues": [
+   "Ricordi che Angelina aveva già annunciato di voler smettere di coprire certe vicende familiari e professionali. La frase sul biglietto è compatibile con quel proposito, ma il ricordo non identifica da solo né chi lo abbia scritto né il destinatario. Tieni separato ciò che ricordi da ciò che i documenti potranno dimostrare.",
+   "Una vecchia copia di famiglia conserva la numerazione originale dei fogli: le due parti oggi separate appartenevano alla stessa raccolta. Manca una sezione di raccordo, non un fascicolo interamente diverso. La vicenda comune riguarda {{bridge}}; nessun documento autorizza a sostituirla con un generico rancore tra parenti.",
+   "La data dell'accordo ricomposto precede la convocazione a cena. Il consenso attribuito a {{victim}} non può quindi essere una spiegazione inventata dopo il secondo ritrovamento. La successione corretta è accordo, aggressione nello studio, alterazione della scena e infine episodio in cantina."
+  ]
+ },
+ "dorian_ferretti": {
+  "clues": [
+   "Nell'elenco delle carte rimaste sulla scrivania non è registrato un ammanco di contanti. È scomparsa la cartellina con le prove. Il denaro può far parte di un movente, ma chiamare l'accaduto un semplice furto richiederebbe elementi che al momento non ci sono.",
+   "La copia contabile allegata distingue l'origine di un documento dalla persona che lo ha materialmente trasportato. Le due competenze citate nel blocco comune servono a ricostruire contributi diversi nella stessa vicenda. Un importo o una firma commerciale, isolati dal resto del dossier, non dimostrano chi sia entrato nello studio.",
+   "Il registro della cantina non riporta alcuna consegna nuova del portadocumenti durante la seconda parte della cena; l'inventario e la fotografia ne attestano già la presenza precedente. Non serve supporre uno scambio avvenuto durante il secondo episodio. La pista decisiva è il vantaggio promesso nell'accordo, non la proprietà dell'oggetto esposto."
+  ]
+ },
+ "tancredi_moreau": {
+  "clues": [
+   "Il biglietto senza firma non costituisce da solo una minaccia attribuibile a una persona precisa. Anche la finestra aperta descrive uno stato della stanza, non una via di fuga dimostrata. Per formulare un'accusa devi collegare autore, momento e azione; il solo sospetto non sostituisce nessuno di questi passaggi.",
+   "I due estratti del fascicolo rinviano a un unico accordo riservato. La documentazione distingue l'intervento diretto e la successiva copertura della scena, ma in questo blocco non attribuisce ancora i compiti. Chi ha un motivo per temere il dossier non è per questo automaticamente responsabile dell'aggressione.",
+   "La verifica dell'accordo conferma due sottoscrizioni e una data anteriore alla cena; la parte relativa alla copertura è sottoscritta da {{victim}}. Il consenso al piano e la successiva morte sono fatti compatibili: essere una vittima del secondo episodio non cancella un contributo al primo. L'altro incarico va attribuito incrociando le competenze, non aggiungendo un terzo soggetto privo di riscontri."
+  ]
+ },
+ "marcello_albrizzi": {
+  "clues": [
+   "Il rilievo iniziale descrive un'aggressione fisica nello studio. Il bicchiere rotto non dimostra un avvelenamento e la presenza della chiave inglese non stabilisce chi l'abbia impugnata. Nessun elemento del primo blocco autorizza a inventare un'ora esatta della morte o una diagnosi diversa.",
+   "Nel rapporto di confronto sono documentati vetri sopra fogli già caduti e oggetti spostati dopo l'aggressione. È una sequenza relativa, non un orario al minuto: dimostra una modifica successiva della scena. Per stabilire chi l'abbia compiuta servono i documenti sui due contributi, non una supposizione medica.",
+   "I due rilievi distinguono la chiave inglese dello studio dal giratubi della cantina: sono oggetti diversi e non c'è ragione di immaginare che la stessa arma sia stata trasferita tra le stanze. La ricostruzione del secondo episodio non modifica la causa fisica del primo e non annulla le prove della sua preparazione."
+  ]
+ },
+ "cesare_valli": {
+  "clues": [
+   "Conosci il funzionamento della finestra dello studio: può essere aperta dall'interno. Nel rilievo non risultano serratura forzata o vetri infranti della finestra. Perciò una finestra aperta non prova che un estraneo sia entrato; riferisci il funzionamento dell'infisso, senza sostenere di aver visto un passaggio che non hai osservato.",
+   "Il registro di servizio elenca separatamente l'accesso allo studio e il successivo riordino. Le annotazioni recuperate mostrano che l'alterazione della stanza segue l'aggressione. Sapere dove sono le chiavi può facilitare un movimento, ma non identifica da solo chi abbia affrontato Angelina.",
+   "La chiave marcata COPIA 2 appartiene a una serie di servizio: il numero indica un duplicato, non il numero delle persone coinvolte. Nell'accordo, invece, sono documentati due incarichi precisi. Usa il registro per verificare l'accesso alla cantina e il foglio ricomposto per attribuire i compiti."
+  ]
+ },
+ "adriano_conti": {
+  "clues": [
+   "Conservi una vecchia lettera autentica di Angelina. Alcuni tratti del biglietto ti sembrano familiari, ma il foglio è troppo breve per attribuirlo con certezza sulla sola impressione. Puoi proporre il confronto con la lettera senza raccontare che il destinatario del biglietto fosse necessariamente una persona legata sentimentalmente a lei.",
+   "L'estratto di corrispondenza che ricevi richiama la raccolta di prove preparata da Angelina, non un appuntamento romantico della sera. La frase «consegnerò tutto» riguarda quella raccolta. Le vecchie relazioni possono spiegare reazioni personali, ma non sostituiscono il collegamento documentato tra {{trace1}} e {{trace2}}.",
+   "Il confronto grafico usa anche una lettera autenticata di Angelina e conferma che il biglietto dello studio era scritto da lei. Non è una dichiarazione d'amore né una minaccia spedita da un ex corteggiatore. Per identificarne il destinatario devi cercare chi aveva bisogno che quella protezione continuasse, seguendo il dossier ricomposto."
+  ]
+ },
+ "elia_neroni": {
+  "clues": [
+   "Conosci un'abitudine di Angelina fin dall'infanzia: quando prepara una comunicazione importante ne lascia spesso una bozza tra le proprie carte. Questo rende plausibile che un foglio senza firma sia suo, ma non è una certezza grafologica. Un ricordo personale può suggerire una verifica, non decidere da solo chi abbia commesso il delitto.",
+   "Un appunto preparatorio riporta lo stesso richiamo di fascicolo dei due estratti pubblicati. Angelina stava ricostruendo fatti precedenti alla cena; non aveva cominciato a indagare soltanto quella sera. Distingui chi conosceva la vicenda da chi aveva un compito concreto nel piano.",
+   "Nel testo ricomposto la formula «proteggerti» si riferisce a una copertura mantenuta da Angelina in passato. Non significa che il destinatario fosse innocente o che cercasse di salvarla da un pericolo esterno. La conferma dell'autrice cambia la direzione del messaggio: confrontala con gli interessi collegati al dossier."
+  ]
+ },
+ "lavinia_valenti": {
+  "clues": [
+   "Angelina ti aveva detto di voler chiarire questioni che andavano oltre i normali dissidi tra sorelle. Nell'elenco dei documenti preparati compaiono anche relazioni e incarichi esterni alla famiglia. La rivalità familiare è un contesto plausibile, ma non basta a spiegare da sola tutte le carte scomparse.",
+   "Una copia della corrispondenza familiare conferma che la raccolta dei documenti era cominciata prima della convocazione. Le due piste del blocco comune non sono nate da una discussione improvvisa a tavola. Chiedi agli altri quale rapporto reale abbiano con i contenuti del fascicolo, invece di confondere parentela e responsabilità.",
+   "La clausola di protezione nell'accordo riguarda anche persone care ai firmatari. È questo il motivo dichiarato del patto; non è una garanzia che Angelina avesse accettato di continuare a tacere. L'accordo e il biglietto esprimono volontà opposte, e la loro datazione permette di ricostruire perché il piano fosse già preparato."
+  ]
+ },
+ "celeste_valenti": {
+  "clues": [
+   "Ricordi che Angelina aveva recentemente distinto l'aiuto personale dalla decisione di coprire fatti che riteneva sbagliati. Il biglietto può riferirsi a una protezione di quel tipo, non necessariamente a un prestito. Il ricordo non rivela a chi fosse rivolto: per quello servono i documenti raccolti nello studio.",
+   "Nell'estratto delle disposizioni private la parola «protezione» non è usata come sinonimo di eredità. Il fascicolo riguarda {{bridge}} e raccoglie contributi provenienti da due ambiti. Un vantaggio familiare può essere una parte della pressione, ma non autorizza a ignorare il secondo collegamento documentato.",
+   "Il foglio finale distingue ciò che Angelina non intendeva più coprire dalla protezione promessa tra i due firmatari. Sono due promesse diverse, fatte da persone diverse. Se le confondi, il biglietto sembra spiegare il contrario di ciò che dice: ricostruisci prima chi promette cosa, poi attribuisci i compiti."
+  ]
+ },
+ "ofelia_de_marchi": {
+  "clues": [
+   "La tua copia di un atto familiare permette di verificare che Angelina aveva numerato i propri allegati. Sulla scrivania restano fogli con una numerazione interrotta. È compatibile con la sottrazione di una parte del fascicolo, ma non dimostra che siano spariti tutti i documenti sull'eredità o che il colpevole sia un parente.",
+   "Confrontando numeri di pagina e richiami, riconosci che il primo e il secondo estratto pubblicati provengono dalla stessa sequenza documentale. Manca proprio il raccordo che distribuiva i compiti. Nessuna delle due competenze, presa da sola, consente ancora di attribuire l'azione diretta nello studio.",
+   "La pagina recuperata completa la numerazione interrotta osservata nel primo blocco. Il testo sui due incarichi appartiene quindi al fascicolo originario, non a una raccolta estranea comparsa dopo. La firma di {{victim}} sulla copertura va letta insieme all'altra competenza già individuata."
+  ]
+ },
+ "viola_neroni": {
+  "clues": [
+   "Angelina ti aveva confidato di aver deciso di parlare, senza però indicarti chi intendesse smettere di proteggere. Il suo silenzio sui nomi non è la prova che diffidasse di tutti nello stesso modo. Puoi riferire la decisione di rendere pubbliche le carte, ma non inventare un destinatario della confidenza.",
+   "Una bozza conservata tra gli allegati ripete il proposito di consegnare il materiale raccolto. Non contiene la richiesta di un riscatto e non descrive uno scambio concordato con Angelina durante la cena. Il punto da chiarire è chi avrebbe perso la sua copertura se il dossier fosse stato divulgato.",
+   "Nell'accordo finale la promessa di far sparire le prove è fatta a {{victim}} dall'altra persona coinvolta. Questo chiarisce perché la seconda morte possa far parte di un patto anziché interromperlo. Confronta il contenuto della promessa con la copertura che Angelina aveva deciso di ritirare."
+  ]
+ },
+ "eva_montorsi": {
+  "clues": [
+   "Prima dell'arrivo degli invitati la finestra dello studio risultava chiusa nel controllo della casa. Quando viene ritrovata Angelina è aperta. Il controllo non dice chi l'abbia aperta e non dimostra un passaggio dall'esterno: indica soltanto che qualcuno ha modificato lo stato della stanza dopo i preparativi.",
+   "L'estratto del riordino mostra che alcuni fogli sono finiti a terra prima che il bicchiere si rompesse: i vetri li ricoprono. La scena non va letta come un unico gesto simultaneo. Metti questo ordine in relazione con i due contributi documentati, senza accusare automaticamente chi svolge un lavoro domestico.",
+   "Nel confronto fotografico della cantina, polvere e oggetti vicini conservano la stessa disposizione intorno al portadocumenti. Non compare un nuovo punto di appoggio nel secondo rilievo. La falsa pista dipende dall'interpretazione del nome sul contenitore, non da una consegna dimostrata durante il secondo episodio."
+  ]
+ },
+ "bianca_albrizzi": {
+  "clues": [
+   "L'agenda di Angelina registra che la cartellina era stata preparata prima della cena e che alcuni allegati dovevano essere presentati insieme. Non annota il nome del destinatario del biglietto. Puoi confermare la preparazione del fascicolo, ma non attribuire alla vittima una convocazione personale non registrata.",
+   "I richiami nell'agenda corrispondono ai due estratti: {{trace1}} e {{trace2}}. Sono allegati della stessa vicenda, {{bridge}}, non due segreti senza rapporto. La pagina che avrebbe indicato i compiti manca ancora: separa l'identificazione delle persone interessate dall'attribuzione delle loro azioni.",
+   "La pagina finale si ricongiunge agli allegati tramite numeri e margini corrispondenti. Il richiamo all'incarico di copertura è accanto alla sottoscrizione di {{victim}}. L'altra parte riguarda l'intervento nello studio: l'agenda conferma la sequenza, mentre le competenze del secondo blocco permettono di individuare l'altro contributo."
+  ]
+ },
+ "emilia_riva": {
+  "clues": [
+   "Durante i preparativi avevi verificato che il percorso di servizio restasse praticabile. Non hai registrato ingressi dalla finestra dello studio. Questo non ti permette di offrire un alibi generale agli invitati: puoi descrivere i preparativi, ma non sostenere di aver sorvegliato ogni movimento durante la cena.",
+   "La lista dei materiali di servizio distingue la cartellina di Angelina dagli oggetti spostati sul tavolo. I documenti non erano stati ritirati dal personale per liberare lo spazio. La loro assenza va quindi spiegata nel piano di copertura, invece di attribuirla senza riscontri a un normale riordino.",
+   "La distinta del sopralluogo abbina la fotografia anteriore alla cena alla zona tecnica della cantina. Non è una foto di un'altra stanza: scaffalatura e numero del locale coincidono. L'oggetto di {{decoy}} era già lì; per accusare il proprietario del secondo episodio servirebbe una prova ulteriore che quel nome, da solo, non fornisce."
+  ]
+ },
+ "ginevra_ferretti": {
+  "clues": [
+   "Nella corrispondenza professionale Angelina aveva chiesto di conservare copie e riferimenti degli allegati. La scomparsa dell'originale non implica quindi che ogni prova sia perduta. Cerca chi riconosce le carte rimaste, senza confondere un semplice contatto di lavoro con una partecipazione al delitto.",
+   "L'elenco dei contatti esterni associa i due estratti allo stesso richiamo di pratica. Uno riguarda {{skill1}}; l'altro {{skill2}}. Il collegamento è documentale, non la prova che ogni professionista presente alla cena facesse parte dello stesso accordo.",
+   "La verifica esterna conferma che le copie di raccordo erano state richieste da Angelina prima della cena. Non sono documenti prodotti in seguito per giustificare il secondo ritrovamento. Usa la data per distinguere il patto originario dalle dichiarazioni che gli invitati hanno fatto durante l'indagine."
+  ]
+ },
+ "isabella_roversi": {
+  "clues": [
+   "Nella scheda degli oggetti dello studio la chiave inglese è catalogata come attrezzo presente nella villa, non come oggetto personale di un invitato. La scheda non ne certifica l'uso nell'aggressione. Per la provenienza puoi parlare del catalogo; per la responsabilità devi aspettare il collegamento con le altre prove.",
+   "Le riproduzioni dei due estratti mostrano continuità di carta, numerazione e fori di rilegatura. Anche documenti provenienti da ambiti diversi erano stati raccolti da Angelina nello stesso fascicolo. Non è necessario che il proprietario di un oggetto sia anche l'autore del documento che lo descrive.",
+   "Il catalogo fotografico distingue il portadocumenti di {{decoy}} da contenitori simili: coincidono contrassegno, cucitura laterale e posizione nella foto anteriore alla cena. L'identificazione dell'oggetto è attendibile; l'accusa contro il suo proprietario resta invece priva del necessario collegamento temporale."
+  ],
+  "optional": true
+ }
+};
+
+/* Indizi riproducibili: stessi ruoli e personaggi producono gli stessi testi.
+   I due estratti pubblici sono ordinati per personaggio, mai per ruolo segreto.
+   Le informazioni personali aggiungono riscontri distinti; la soluzione resta
+   ricostruibile con i documenti comuni anche se un invitato non collabora. */
 function buildNarrativePackage(state){
- const activeAssignmentEntries=Object.entries(state.assignments);
  const assassinParticipant=participants.find(p=>p.id===state.specialRoles.assassin);
  const accompliceParticipant=participants.find(p=>p.id===state.specialRoles.accomplice);
  const assassinCharacter=characterForParticipant(state,state.specialRoles.assassin);
@@ -443,63 +582,64 @@ function buildNarrativePackage(state){
  const a=CHARACTER_NARRATIVE[assassinCharacter.id],b=CHARACTER_NARRATIVE[accompliceCharacter.id];
  if(!a||!b)throw new Error("Metadati narrativi mancanti");
  const bridge=pairBridge(a,b);
- const unordered=[assassinCharacter.id,accompliceCharacter.id].sort().join("__");
  const ordered=assassinCharacter.id+"__"+accompliceCharacter.id;
- const variant=narrativeHash(unordered)%4;
- const trigger=[
-   "Angelina aveva fissato per la mattina successiva un incontro fuori dalla villa per consegnare una copia del dossier.",
-   "Angelina aveva preparato una seconda copia del dossier e aveva lasciato intendere che non avrebbe più accettato pressioni.",
-   "Angelina aveva comunicato a una persona esterna che durante la cena avrebbe chiuso definitivamente la questione.",
-   "Angelina aveva raccolto abbastanza elementi da voler rendere ufficiale la vicenda subito dopo la serata."
- ][variant];
- const commonMotive="Angelina aveva scoperto che "+assassinCharacter.name+" e "+accompliceCharacter.name+" erano entrambi coinvolti in "+bridge+". Nel dossier aveva collegato due elementi che fino a quel momento sembravano separati: "+a.pressure+" e "+b.pressure+". "+trigger+" Per entrambi, impedire che quel materiale uscisse dalla villa era diventato lo stesso problema.";
- const sharedStory="Il dossier scomparso non riguardava un solo segreto. Angelina aveva unito due vicende in un unico fascicolo e aveva scritto che, considerate separatamente, potevano sembrare coincidenze; insieme dimostravano invece un accordo preciso. La parte centrale del fascicolo riguardava "+bridge+".";
+ const evidenceCharacters=[assassinCharacter,accompliceCharacter].sort((x,y)=>x.id.localeCompare(y.id));
+ const evidence=evidenceCharacters.map(c=>CHARACTER_NARRATIVE[c.id]);
+ const decoyCandidates=characters.filter(c=>c.id!==assassinCharacter.id&&c.id!==accompliceCharacter.id&&!PERSONAL_EVIDENCE[c.id].optional).sort((x,y)=>x.id.localeCompare(y.id));
+ if(!decoyCandidates.length)throw new Error("Configurazione del depistaggio incompleta");
+ const decoyCharacter=decoyCandidates[narrativeHash("decoy__"+ordered)%decoyCandidates.length];
+ const thirdPerson=pressure=>pressure.replace(/\btua\b/g,"sua").replace(/\btuo\b/g,"suo");
+ const commonMotive="Angelina aveva ricostruito "+bridge+", collegando due responsabilità: per "+assassinCharacter.name+", "+thirdPerson(a.pressure)+"; per "+accompliceCharacter.name+", "+thirdPerson(b.pressure)+". I documenti avrebbero reso pubblici l'accordo e le coperture usate per mantenerlo. Per entrambi il rischio riguardava anche la sicurezza e la reputazione delle persone care, non soltanto una discussione con Angelina. Prima della cena avete concordato di fermare la divulgazione, sottrarre il dossier e costruire una falsa dinamica. La promessa fatta alla persona che collabora è distruggere le prove e proteggere ciò che ha di più caro; in cambio quella persona ha accettato anche l'eventuale sacrificio finale. Questo accordo precede entrambi i delitti.";
  const commonClues=[
-   "La prima ricognizione dello studio conferma che la scena è stata alterata: accanto al corpo è stata rinvenuta una chiave inglese, mentre finestra, bicchiere e alcuni oggetti risultano spostati in modo poco naturale. Dal fascicolo principale manca una parte centrale. Su un frammento strappato Angelina aveva scritto: «consegnerò tutto».",
-   "Tra il materiale recuperato compare una chiave contrassegnata «COPIA 2» e una nota di Angelina con la frase «non è l’unica persona coinvolta». Nella pagina incompleta del dossier sono presenti due tracce di natura diversa: una riconducibile a "+a.capability+" e una a "+b.capability+". Angelina le aveva collegate alla stessa vicenda: "+bridge+".",
-   "In una nota datata poco prima della cena Angelina scrive: «Per far funzionare tutto servivano due persone con accessi diversi. Una poteva creare l'occasione, l'altra poteva far sparire la traccia». Non sono indicati nomi. Le alterazioni rilevate nello studio sono compatibili con l'ipotesi che qualcuno abbia cercato di modificare la lettura iniziale della scena."
+  "DOPO GLI ANTIPASTI — PRIMO RILIEVO. Angelina è stata trovata senza vita nello studio, accanto alla scrivania. Nelle vicinanze c'è una chiave inglese, già presente tra gli attrezzi della villa. La finestra è aperta, un bicchiere è rotto e alcuni oggetti sono spostati; non risultano segni di effrazione alla finestra. È scomparsa la cartellina preparata da Angelina, mentre rimangono allegati numerati e copie parziali. Un biglietto senza firma dice: «Non posso più proteggerti. Questa sera dirò tutto.» Su una bozza separata compare «consegnerò tutto», riferito ai documenti. Per ora non sono accertati l'autore del biglietto, il suo destinatario o il momento in cui la finestra è stata aperta. Una finestra aperta non dimostra da sola un ingresso o una fuga.",
+  "DOPO IL RISOTTO — CONFRONTO DEI DOCUMENTI. Due estratti dello stesso fascicolo collegano la vicenda a due contributi distinti. Il primo contiene "+evidence[0].trace+" e rimanda a "+evidence[0].capability+". Il secondo contiene "+evidence[1].trace+" e rimanda a "+evidence[1].capability+". I due estratti riguardano "+bridge+"; l'ordine di presentazione non indica chi abbia svolto quale compito. La numerazione, i richiami e le copie d'archivio confermano che appartenevano già alla raccolta prima della cena. Il confronto del rilievo documenta inoltre vetri sopra fogli già caduti: parte della scena è stata modificata dopo l'aggressione. Il fascicolo distingue un intervento diretto nello studio e una successiva copertura, ma la pagina che attribuisce i due incarichi manca ancora. Confrontate rapporti, occupazioni e contenuti dei documenti: un movente non è ancora l'attribuzione di un'azione.",
+  "DOPO IL SECONDO RITROVAMENTO — RISCONTRI FINALI. Nella cantina / zona tecnica, accanto al secondo ritrovamento, è presente un giratubi con tracce compatibili con l'aggressione: è diverso dalla chiave inglese dello studio. È stato rilevato anche un portadocumenti con il nome di "+decoyCharacter.name+". Una fotografia di servizio e l'inventario, entrambi anteriori alla cena, lo mostrano già nella stessa posizione: il nome sul contenitore non prova la presenza del proprietario durante il secondo episodio. La chiave di servizio COPIA 2 è un duplicato, non il conteggio dei responsabili. Il confronto con scritture autentiche conferma che il biglietto dello studio è di Angelina: era lei a ritirare una protezione precedente. La pagina ricomposta del fascicolo, verificata tramite numerazione e margini, distingue l'intervento diretto nello studio dalla successiva apertura della finestra, rottura del bicchiere e sottrazione della cartellina. La copertura è sottoscritta da "+accompliceCharacter.name+", la persona ritrovata in cantina. Un accordo autenticato e precedente alla cena documenta che quella persona aveva accettato anche di diventare la seconda vittima, in cambio della distruzione delle prove e della protezione delle persone care. I due incarichi riguardano le due competenze già emerse nel secondo blocco: non compare un terzo incarico. Incrociate l'identità della seconda vittima con il compito documentato e con l'altro contributo del fascicolo per ricostruire chi abbia agito nello studio."
  ];
+ const replacements={bridge,trace1:evidence[0].trace,trace2:evidence[1].trace,skill1:evidence[0].capability,skill2:evidence[1].capability,decoy:decoyCharacter.name,victim:accompliceCharacter.name};
+ const fill=text=>text.replace(/\{\{([a-zA-Z0-9_]+)\}\}/g,(_,key)=>{
+  if(!Object.prototype.hasOwnProperty.call(replacements,key))throw new Error("Riferimento narrativo non disponibile");
+  return replacements[key];
+ });
  const personalClues={};
  participants.forEach(p=>{
-   const ch=characterForParticipant(state,p.id);
-   if(!ch)return;
-   const observer=CHARACTER_NARRATIVE[ch.id];
-   if(p.id===state.specialRoles.assassin){
-     personalClues[p.id]=[
-       "La versione che devi sostenere è questa: "+a.cover+".",
-       "Sai che il punto più delicato del dossier è il collegamento tra "+a.pressure+" e la parte custodita dall'altra persona coinvolta.",
-       "Evita di spiegare spontaneamente come avresti potuto usare "+a.capability+". Rispondi solo a ciò che ti viene chiesto."
-     ];
-   }else if(p.id===state.specialRoles.accomplice){
-     personalClues[p.id]=[
-       "La versione che devi sostenere è questa: "+b.cover+".",
-       "Sai che il punto più delicato del dossier è il collegamento tra "+b.pressure+" e la parte custodita dall'altra persona coinvolta.",
-       "Evita di spiegare spontaneamente come avresti potuto usare "+b.capability+". Rispondi solo a ciò che ti viene chiesto."
-     ];
-   }else{
-     const observerLead=observer&&observer.capability?observer.capability:"la tua conoscenza di Angelina e della villa";
-     personalClues[p.id]=[
-       "Grazie a "+observerLead+", un dettaglio ti torna in mente: "+a.trace+". Non sai ancora che importanza abbia, ma Angelina sembrava averlo considerato significativo.",
-       "Ricordi anche un secondo elemento: "+b.trace+". È di natura diversa dal primo, eppure nel dossier Angelina li aveva messi nella stessa sequenza.",
-       "La tua impressione personale è che i due elementi abbiano senso soltanto se collegati a "+bridge+". Non hai però una prova sufficiente per accusare qualcuno."
-     ];
-   }
+  const ch=characterForParticipant(state,p.id);
+  if(!ch)throw new Error("Dossier senza personaggio");
+  if(p.id===state.specialRoles.assassin){
+   personalClues[p.id]=[
+    "INDICAZIONE RISERVATA — PRIMA FASE. Il rischio che ti riguarda è "+a.pressure+". La copertura che cerchi di sostenere è questa: "+a.cover+". Hai agito nello studio con la chiave inglese; l'altra persona ha alterato la scena e preso la cartellina. Non presentare la finestra aperta come un passaggio che hai realmente osservato e non mostrare questo documento.",
+    "INDICAZIONE RISERVATA — SECONDA FASE. I due estratti pubblicati provengono dal dossier che volevate sottrarre. Non rivelano ancora l'attribuzione dei compiti. Il vostro accordo precede la cena: hai promesso di distruggere le prove per proteggere ciò che l'altra persona ha di più caro. La fase in cantina è ancora una parte del piano concordato; non descriverla agli altri prima della comunicazione della villa.",
+    "INDICAZIONE RISERVATA — TERZA FASE. Il portadocumenti di "+decoyCharacter.name+" era stato collocato in cantina prima della cena per creare una falsa pista. Il secondo episodio usa il giratubi, non la chiave inglese dello studio. Le nuove prove distinguono l'intervento diretto dalla copertura e possono smentire la tua versione. Continua a interpretare il personaggio senza modificare i fatti dell'accordo né rivelare questo testo."
+   ];
+  }else if(p.id===state.specialRoles.accomplice){
+   personalClues[p.id]=[
+    "INDICAZIONE RISERVATA — PRIMA FASE. Ciò che vuoi proteggere è minacciato da "+b.pressure+". La versione che cerchi di sostenere è questa: "+b.cover+". Dopo l'aggressione hai aperto la finestra, rotto il bicchiere, spostato gli oggetti e sottratto la cartellina. Non sei la persona che ha colpito Angelina. Mantieni segreta la collaborazione.",
+    "INDICAZIONE RISERVATA — SECONDA FASE. Hai concordato il piano prima della cena, compreso l'eventuale sacrificio finale, in cambio della distruzione delle prove e della protezione delle persone care. I due estratti riguardano la stessa vicenda, non due accordi diversi. Fino alla comunicazione del secondo ritrovamento puoi continuare a interpretare il personaggio, senza inventare nuovi documenti, alterare i fatti o rivelare il patto.",
+    "INDICAZIONE RISERVATA — TERZA FASE. Dopo la comunicazione del ritrovamento il tuo personaggio non può più fornire nuove informazioni, rispondere agli interrogatori, correggere testimonianze precedenti o suggerire la soluzione. Puoi seguire la serata e assistere alla conclusione. La tua morte faceva parte dell'accordo; non rivelare questo documento agli altri."
+   ];
+  }else{
+   const entry=PERSONAL_EVIDENCE[ch.id];
+   if(!entry||entry.clues.length!==3)throw new Error("Informazioni personali incomplete");
+   personalClues[p.id]=entry.clues.map(fill);
+  }
  });
  return {
-   version:1,
-   scenarioId:"VV-"+narrativeHash(ordered).toString(36).toUpperCase(),
-   pairKey:ordered,
-   commonMotive,
-   sharedStory,
-   assassinPrivate:"Hai deciso di agire direttamente perché "+a.pressure+". Il tuo vantaggio operativo era "+a.capability+". La collaborazione dell'altra persona era indispensabile perché il dossier collegava entrambe le vostre posizioni.",
-   accomplicePrivate:"Hai accettato di collaborare perché "+b.pressure+". Il tuo contributo era possibile grazie a "+b.capability+". Senza il tuo aiuto l'altra persona non avrebbe potuto gestire tutte le tracce lasciate dal dossier.",
-   secondVictimCharacterId:accompliceCharacter.id,
-   secondVictimCharacterName:accompliceCharacter.name,
-   secondVictimRoom:"Cantina / zona tecnica di Villa Valenti",
-   commonClues,
-   personalClues
+  version:3,
+  scenarioId:"VV-"+narrativeHash(ordered).toString(36).toUpperCase(),
+  pairKey:ordered,
+  commonMotive,
+  sharedStory:"Angelina aveva raccolto le prove su "+bridge+". L'intervento nello studio, la sottrazione della cartellina e il secondo episodio in cantina appartengono allo stesso accordo, precedente alla cena. La prima scena e il portadocumenti predisposto in cantina servono a sostenere una ricostruzione ingannevole. I documenti comuni permettono di distinguere chi ha agito direttamente da chi ha coperto il primo episodio.",
+  assassinPrivate:"Hai deciso di impedire la divulgazione di ciò che ti riguarda: "+a.pressure+". Il tuo collegamento al dossier è "+a.capability+". Prima della cena hai concordato il piano con l'altra persona, promettendo di distruggere le prove e proteggere le persone a lei care; quella persona ha accettato anche l'eventuale sacrificio finale. Avete predisposto in cantina il portadocumenti di "+decoyCharacter.name+" prima dei preparativi fotografati. Hai raggiunto Angelina nello studio e l'hai colpita con la chiave inglese già presente nella villa. L'altra persona ha poi aperto la finestra, rotto il bicchiere, spostato gli oggetti e preso la cartellina. Nel secondo episodio, dopo la fase del risotto e durante quella del secondo, raggiungi la cantina / zona tecnica e usi un giratubi diverso dalla prima arma. Il sacrificio concordato deve sembrare l'eliminazione di una persona divenuta pericolosa. Non modificare questi fatti durante l'interpretazione e mantieni segreto il piano.",
+  accomplicePrivate:"Hai accettato di collaborare per impedire la divulgazione di "+b.pressure+". Il tuo collegamento al dossier è "+b.capability+". Prima della cena avete concordato la sottrazione delle prove, le false piste e anche l'eventuale sacrificio finale, in cambio della distruzione del dossier e della protezione delle persone a te care. Il portadocumenti di "+decoyCharacter.name+" è stato predisposto in cantina prima dei preparativi fotografati. Non hai aggredito Angelina: dopo il colpo nello studio hai aperto la finestra, rotto il bicchiere, spostato gli oggetti e preso la cartellina. Fino al secondo ritrovamento puoi interpretare il personaggio e sostenere piste alternative, senza inventare prove o modificare il piano. La fase in cantina / zona tecnica, dopo il risotto e durante il secondo, prevede il giratubi e il sacrificio che hai accettato. Dopo la comunicazione della villa termina la tua parte attiva: non fornire nuove informazioni, non correggere gli altri e non rivelare l'accordo.",
+  secondVictimCharacterId:accompliceCharacter.id,
+  secondVictimCharacterName:accompliceCharacter.name,
+  secondVictimRoom:"Cantina / zona tecnica di Villa Valenti",
+  decoyCharacterId:decoyCharacter.id,
+  decoyCharacterName:decoyCharacter.name,
+  commonClues,
+  personalClues
  };
 }
+
 function narrativeForCurrentPlayer(narrative,participant){
  if(!narrative||!participant)return ["Informazione personale non disponibile.","Informazione personale non disponibile.","Informazione personale non disponibile."];
  return (narrative.personalClues&&narrative.personalClues[participant.id])||["Informazione personale non disponibile.","Informazione personale non disponibile.","Informazione personale non disponibile."];
@@ -524,7 +664,7 @@ let plotTwistOverlayActive=false;
 let alessiaPresenceLiveTimer=null;
 let alessiaPresenceLiveLoading=false;
 const PLOT_TWIST_VIDEO="haviland-colpo-di-scena.mp4";
-const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella cantina, nella zona tecnica della villa. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate gli alibi, ricostruite gli spostamenti e chiedetevi perché questa persona dovesse essere messa a tacere. Non date per scontato che i due delitti abbiano motivazioni indipendenti. L'indagine continua.";
+const PLOT_TWIST_FALLBACK="Mi dispiace interrompere nuovamente la serata. I sistemi di sicurezza di Villa Valenti hanno appena rilevato un'altra vittima nella cantina, nella zona tecnica della villa. Alcune delle vostre teorie potrebbero essere appena crollate, altre potrebbero aver trovato conferma. Riconsiderate le testimonianze e gli spostamenti, controllate la provenienza degli oggetti e distinguete i fatti accertati dalle apparenze. Non date per scontato che i due episodi siano indipendenti. L'indagine continua.";
 
 async function firebaseRequest(path,options={}){
  const response=await fetch(FIREBASE_DB+"/"+path+".json",{cache:"no-store",...options});
@@ -648,23 +788,32 @@ function migrateStartedAStateToB(oldState){
  return migrated;
 }
 
+function withCurrentNarrative(state){
+ // Aggiorna i testi derivati senza modificare assegnazioni, ruoli o voti salvati.
+ return {...state,narrative:buildNarrativePackage(state)};
+}
+
 async function ensureAssignmentState(){
- const remote=await firebaseRequest(ASSIGNMENT_STATE_PATH);
- if(remote && await isValidFrozenAssignmentState(remote))return remote;
+ for(let attempt=0;attempt<4;attempt++){
+   let remote=await firebaseRequest(ASSIGNMENT_STATE_PATH);
+   if(remote && await isValidFrozenAssignmentState(remote))return withCurrentNarrative(remote);
 
- if(remote && isMigratableEditionAState(remote)){
-   const next=remote.accessStartedAt ? migrateStartedAStateToB(remote) : await createInitialAssignmentState();
-   await firebaseWrite(ASSIGNMENT_STATE_PATH,next);
-   const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
-   if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Passaggio A → B non valido");
-   return confirmed;
+   // Rileggi con ETag solo quando occorre creare o migrare la partita.
+   // Gli accessi ordinari non dipendono dall'esposizione dell'header ETag.
+   const snapshot=await firebaseReadWithEtag(ASSIGNMENT_STATE_PATH);
+   remote=snapshot.data;
+   if(remote && await isValidFrozenAssignmentState(remote))return withCurrentNarrative(remote);
+   let candidate;
+   if(remote===null)candidate=await createInitialAssignmentState();
+   else if(isMigratableEditionAState(remote))candidate=migrateStartedAStateToB(remote);
+   else throw new Error("La partita esistente non è compatibile con questa edizione. Le assegnazioni sono state conservate: verifica il collegamento con la Regia.");
+   if(!snapshot.etag)throw new Error("Impossibile verificare la versione della partita. Nessuna assegnazione è stata modificata; riprova.");
+   const write=await firebasePutIfMatch(ASSIGNMENT_STATE_PATH,candidate,snapshot.etag);
+   if(write.conflict)continue;
+   if(!write.ok)throw new Error("Impossibile salvare le assegnazioni in modo sicuro. Riprova.");
+   return withCurrentNarrative(candidate);
  }
-
- const candidate=await createInitialAssignmentState();
- await firebaseWrite(ASSIGNMENT_STATE_PATH,candidate);
- const confirmed=await firebaseRequest(ASSIGNMENT_STATE_PATH);
- if(!(await isValidFrozenAssignmentState(confirmed)))throw new Error("Stato assegnazioni non valido");
- return confirmed;
+ throw new Error("La partita è stata aggiornata da un altro dispositivo. Riprova ad accedere.");
 }
 
 async function markGameAccessStarted(state){
@@ -797,17 +946,20 @@ function renderSecretRole(roleBundle){
  if(!roleBundle||!roleBundle.specialRole||!currentCharacter)return;
 
  const isAssassin=roleBundle.specialRole==="assassin";
- const roleTitle=isAssassin?"ASSASSINO":"COMPLICE";
- const partnerTitle=isAssassin?"complice":"assassino";
+ const roleTitle=isAssassin?(currentCharacter.gender==="F"?"ASSASSINA":"ASSASSINO"):"COMPLICE";
+ const partnerCharacter=roleBundle.partner?characters.find(c=>c.id===roleBundle.partner.characterId):null;
+ const partnerFemale=!!(partnerCharacter&&partnerCharacter.gender==="F");
+ const partnerTitle=isAssassin?"COMPLICE":(partnerFemale?"ASSASSINA":"ASSASSINO");
+ const partnerHeading=(partnerFemale?"LA TUA ":"IL TUO ")+partnerTitle;
  const profile=CHARACTER_PROFILES[currentCharacter.id]||{};
  const personalOrigin=isAssassin?profile.assassinStory:profile.accompliceStory;
  const privateText=currentNarrative?(isAssassin?currentNarrative.assassinPrivate:currentNarrative.accomplicePrivate):"";
 
  let html="<strong>RUOLO SEGRETO: "+roleTitle+"</strong><br><br>"+
-   "<strong>PERCHÉ SEI COINVOLTO</strong><br>"+escapeHtml(personalOrigin||privateText)+"<br><br>";
+   "<strong>PERCHÉ SEI "+(currentCharacter.gender==="F"?"COINVOLTA":"COINVOLTO")+"</strong><br>"+escapeHtml(personalOrigin||privateText)+"<br><br>";
 
  if(!roleBundle.partnerUnlocked||!roleBundle.partner){
-   html+="<strong>IDENTITÀ DEL "+partnerTitle.toUpperCase()+": SIGILLATA</strong><br>"+
+   html+="<strong>IDENTITÀ DELL’ALTRA PERSONA: SIGILLATA</strong><br>"+
      "Il tuo ruolo è già attivo, ma l'identità dell'altra persona verrà mostrata soltanto quando avrà effettuato il suo primo accesso. Fino ad allora non cercare di indovinare o contattare qualcuno come partner segreto.<br><br>"+
      "<strong>COME MUOVERTI</strong><br>"+escapeHtml(privateText)+"<br><br>"+
      "Non mostrare questo documento agli altri partecipanti.";
@@ -817,7 +969,7 @@ function renderSecretRole(roleBundle){
  }
 
  const motive=currentNarrative?currentNarrative.commonMotive:"";
- html+="<strong>IL TUO "+partnerTitle.toUpperCase()+"</strong><br>"+
+ html+="<strong>"+partnerHeading+"</strong><br>"+
    "<strong>Nome vero:</strong> "+escapeHtml(roleBundle.partner.participantName)+"<br>"+
    "<strong>Personaggio della storia:</strong> "+escapeHtml(roleBundle.partner.characterName)+"<br><br>"+
    "<strong>IL MOVENTE CONDIVISO</strong><br>"+escapeHtml(motive)+"<br><br>"+
@@ -918,6 +1070,13 @@ async function loadLiveUnlocks(silent=false){
 }
 
 function renderLiveUnlocks(){
+ const twistSummary=document.getElementById("plotTwistSummary");
+ const twistSummaryText=document.getElementById("plotTwistSummaryText");
+ const hasTwistSummary=!!(liveUnlockState.twist&&currentNarrative&&currentNarrative.secondVictimCharacterName);
+ if(twistSummary)twistSummary.classList.toggle("hidden",!hasTwistSummary);
+ if(twistSummaryText)twistSummaryText.textContent=hasTwistSummary
+   ?"Seconda vittima identificata: "+currentNarrative.secondVictimCharacterName+". Ritrovamento: "+currentNarrative.secondVictimRoom+". Questa comunicazione resta disponibile anche dopo il rientro nel dossier."
+   :"";
  const isDeadAccomplice=!!(liveUnlockState.twist&&currentSpecialRole==="accomplice");
  if(currentNarrative){
    const common=currentNarrative.commonClues||[];
@@ -951,7 +1110,7 @@ function renderLiveUnlocks(){
  ];
  let any=false;
  map.forEach(([key,clueId,stateId])=>{
-   const on=!!liveUnlockState[key];
+   const on=!!liveUnlockState[key]&&(!["common3","personal3"].includes(key)||!!liveUnlockState.twist);
    any=any||on;
    const clue=document.getElementById(clueId);
    if(clue)clue.classList.toggle("hidden",!on);
@@ -974,43 +1133,61 @@ function renderLiveUnlocks(){
  renderConclusionAccess();
 }
 
+let liveCommandQueue=Promise.resolve();
+function updateLiveUnlocksSafely(change){
+ const organizer=currentParticipant;
+ if(!organizer||organizer.code!==ORGANIZER_CODE)return Promise.reject(new Error("Comando riservato alla Regia"));
+ const command=liveCommandQueue.catch(()=>{}).then(async()=>{
+   for(let attempt=0;attempt<4;attempt++){
+     const snapshot=await firebaseReadWithEtag(LIVE_UNLOCK_PATH);
+     const current={...DEFAULT_LIVE_UNLOCKS,...(snapshot.data||{})};
+     const changes=change(current);
+     if(!changes){liveUnlockState=current;return current;}
+     if(!snapshot.etag)throw new Error("Impossibile verificare lo stato della Regia. Riprova.");
+     const next={...current,...changes,updatedAt:new Date().toISOString(),updatedBy:organizer.id};
+     const write=await firebasePutIfMatch(LIVE_UNLOCK_PATH,next,snapshot.etag);
+     if(write.conflict)continue;
+     if(!write.ok)throw new Error("Comando non salvato. Riprova.");
+     liveUnlockState=next;
+     return next;
+   }
+   throw new Error("Un altro dispositivo ha aggiornato la Regia. Riprova.");
+ });
+ liveCommandQueue=command;
+ return command;
+}
+
 async function toggleLiveUnlock(key){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
- if((key==="common3"||key==="personal3")&&!liveUnlockState.twist){
-   alert("Prima attiva il COLPO DI SCENA. Comune 3 e Personale 3 restano bloccati fino al ritrovamento della seconda vittima.");
-   return;
- }
+ if(!["common1","common2","common3","personal1","personal2","personal3","conclusion"].includes(key))return;
  const status=document.getElementById("liveWriteStatus");
- if(status)status.textContent="INVIO COMANDO…";
  try{
-   const next={...liveUnlockState,[key]:!liveUnlockState[key],updatedAt:new Date().toISOString(),updatedBy:currentParticipant.id};
-   await firebaseWrite(LIVE_UNLOCK_PATH,next);
-   liveUnlockState=next;
+   if(status)status.textContent="INVIO COMANDO…";
+   await updateLiveUnlocksSafely(current=>{
+     if(["common3","personal3"].includes(key)&&!current.twist)throw new Error("Attiva prima la comunicazione della villa per rendere disponibili questi documenti.");
+     return {[key]:!current[key]};
+   });
    renderLiveUnlocks();
    if(status)status.textContent="COMANDO INVIATO · "+new Date().toLocaleTimeString("it-IT");
  }catch(e){
    console.error("Errore comando Regia:",e);
-   if(status)status.textContent="ERRORE · COMANDO NON INVIATO";
+   if(status)status.textContent="ERRORE · "+(e&&e.message?e.message:"COMANDO NON INVIATO");
  }
 }
 
 async function activatePlotTwist(){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
  if(liveUnlockState.twist)return;
- if(!confirm("Attivare il COLPO DI SCENA?\n\nTutti i dispositivi riceveranno la comunicazione Haviland e verrà rivelata la seconda vittima. Nel test l'evento è irreversibile fino al reset."))return;
+ if(!confirm("Attivare il COLPO DI SCENA?\n\nTutti i dispositivi riceveranno la comunicazione Haviland. L'evento resta attivo per tutta la partita."))return;
  const status=document.getElementById("liveWriteStatus");
  try{
    if(status)status.textContent="ATTIVAZIONE COLPO DI SCENA…";
-   const now=new Date().toISOString();
-   const next={...liveUnlockState,twist:true,twistAt:now,common3:false,personal3:false,updatedAt:now,updatedBy:currentParticipant.id};
-   await firebaseWrite(LIVE_UNLOCK_PATH,next);
-   liveUnlockState=next;
-   try{sessionStorage.removeItem("villaValentiTwistSeen:"+now)}catch(e){}
+   await updateLiveUnlocksSafely(current=>current.twist?null:{twist:true,twistAt:new Date().toISOString(),common3:false,personal3:false});
    renderLiveUnlocks();
    if(status)status.textContent="COLPO DI SCENA ATTIVATO · "+new Date().toLocaleTimeString("it-IT");
  }catch(e){
    console.error("Errore colpo di scena:",e);
-   if(status)status.textContent="ERRORE · COLPO DI SCENA NON ATTIVATO";
+   if(status)status.textContent="ERRORE · "+(e&&e.message?e.message:"COLPO DI SCENA NON ATTIVATO");
  }
 }
 
@@ -1179,7 +1356,7 @@ function renderConclusionSubmission(record){
  feedback.className="conclusion-feedback "+(record.correct?"correct":"wrong");
  feedback.textContent=record.correct
    ?"Ottimo, ben fatto. Hai individuato correttamente l'assassino."
-   :"Mi dispiace. L'assassino e il complice l'hanno fatta franca.";
+   :"La risposta non identifica l'autore del delitto. Il tentativo è stato registrato e non può essere modificato.";
 }
 async function loadConclusionSubmission(silent=false){
  if(!currentParticipant||!canCurrentPlayerUseConclusion())return;
@@ -1456,7 +1633,6 @@ document.addEventListener("visibilitychange",()=>{
  }
 });
 document.getElementById("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
-updateTestScenarioLabel();
 renderLiveUnlocks();
 </script>
 
