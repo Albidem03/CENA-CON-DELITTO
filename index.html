@@ -169,6 +169,18 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <div class="section-title">Indizio comune 3</div>
 <div id="commonClue3Text" class="paper-text">Documento riservato. Il contenuto verrà reso disponibile durante la serata.</div>
 </article>
+<article id="commonClue4" class="sheet hidden">
+<div class="section-title">Indizio comune 4</div>
+<div id="commonClue4Text" class="paper-text">Il documento verrà reso disponibile dalla Regia.</div>
+</article>
+<article id="commonClue5" class="sheet hidden">
+<div class="section-title">Indizio comune 5</div>
+<div id="commonClue5Text" class="paper-text">Il documento verrà reso disponibile dalla Regia.</div>
+</article>
+<article id="commonClue6" class="sheet hidden">
+<div class="section-title">Indizio comune 6</div>
+<div id="commonClue6Text" class="paper-text">Il documento verrà reso disponibile dalla Regia.</div>
+</article>
 
 <article id="personalClue1" class="sheet hidden">
 <div class="section-title">Informazione personale 1</div>
@@ -181,6 +193,18 @@ h1{margin:8px 0;color:#ead7b6;font-weight:500;font-size:clamp(30px,6vw,46px)}
 <article id="personalClue3" class="sheet hidden">
 <div class="section-title">Informazione personale 3</div>
 <div id="personalClue3Text" class="paper-text">Informazione personale riservata. Il contenuto verrà reso disponibile durante la serata.</div>
+</article>
+<article id="personalClue4" class="sheet hidden">
+<div class="section-title">Informazione personale 4</div>
+<div id="personalClue4Text" class="paper-text">Il documento verrà reso disponibile dalla Regia.</div>
+</article>
+<article id="personalClue5" class="sheet hidden">
+<div class="section-title">Informazione personale 5</div>
+<div id="personalClue5Text" class="paper-text">Il documento verrà reso disponibile dalla Regia.</div>
+</article>
+<article id="personalClue6" class="sheet hidden">
+<div class="section-title">Informazione personale 6</div>
+<div id="personalClue6Text" class="paper-text">Il documento verrà reso disponibile dalla Regia.</div>
 </article>
 </div>
 </section>
@@ -212,7 +236,7 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 
 <div class="live-control">
 <h2>Regia indizi — Live</h2>
-<div class="live-control-copy">Pubblica ogni blocco al momento previsto: dopo gli antipasti e il ritrovamento di Angelina, blocco 1; dopo il risotto, blocco 2; durante il secondo, comunicazione della villa e poi blocco 3; al dessert, conclusione. Gli avanzamenti sono manuali. Gli indizi personali compaiono senza annunci audio e restano consultabili nel dossier.</div>
+<div class="live-control-copy">Pubblica ogni blocco al momento previsto: dopo il primo ritrovamento, blocco 1; dopo il risotto, blocco 2; dopo la comunicazione del secondo ritrovamento, blocco 3. Per proseguire l’indagine pubblica in ordine i blocchi comuni e personali 4, 5 e 6, poi apri la conclusione quando il confronto è terminato. Ogni comando è manuale; i blocchi aggiuntivi restano inizialmente bloccati. Gli indizi personali compaiono senza annunci audio e restano nel dossier.</div>
 <div id="liveControlConnection" class="live-status">● CONTROLLO LIVE</div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line)">Indizi comuni</div>
@@ -220,6 +244,9 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <div class="control-card"><strong>Indizio comune 1 · dopo gli antipasti</strong><div id="stateCommon1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common1')">SBLOCCA / BLOCCA</button></div>
 <div class="control-card"><strong>Indizio comune 2 · dopo il risotto</strong><div id="stateCommon2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common2')">SBLOCCA / BLOCCA</button></div>
 <div class="control-card"><strong>Indizio comune 3 · dopo il secondo ritrovamento</strong><div id="stateCommon3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common3')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 4 · approfondimento 1</strong><div id="stateCommon4" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common4')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 5 · approfondimento 2</strong><div id="stateCommon5" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common5')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Indizio comune 6 · approfondimento 3</strong><div id="stateCommon6" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('common6')">SBLOCCA / BLOCCA</button></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Indizi personali</div>
@@ -227,11 +254,14 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <div class="control-card"><strong>Blocco personale 1 · dopo gli antipasti</strong><div id="statePersonal1" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal1')">SBLOCCA / BLOCCA</button></div>
 <div class="control-card"><strong>Blocco personale 2 · dopo il risotto</strong><div id="statePersonal2" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal2')">SBLOCCA / BLOCCA</button></div>
 <div class="control-card"><strong>Blocco personale 3 · dopo il secondo ritrovamento</strong><div id="statePersonal3" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal3')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 4 · approfondimento 1</strong><div id="statePersonal4" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal4')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 5 · approfondimento 2</strong><div id="statePersonal5" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal5')">SBLOCCA / BLOCCA</button></div>
+<div class="control-card"><strong>Blocco personale 6 · approfondimento 3</strong><div id="statePersonal6" class="control-state">BLOCCATO</div><button onclick="toggleLiveUnlock('personal6')">SBLOCCA / BLOCCA</button></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Colpo di scena</div>
 <div class="control-grid">
-<div class="control-card twist-control"><strong>Seconda vittima · Cantina / zona tecnica</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi pubblicare Comune 2. Conserva Comune 3 per il dessert.</div></div>
+<div class="control-card twist-control"><strong>Seconda vittima · Cantina / zona tecnica</strong><div id="statePlotTwist" class="control-state">IN ATTESA</div><button id="plotTwistBtn" class="twist-btn" onclick="activatePlotTwist()">▶ ATTIVA COLPO DI SCENA</button><div style="margin-top:8px;font-size:11px;line-height:1.4;color:#aa9276">Evento irreversibile durante la sessione. Dopo l'attivazione puoi pubblicare il blocco 3 e successivamente gli approfondimenti 4, 5 e 6.</div></div>
 </div>
 
 <div class="section-title" style="color:#cdb58d;border-color:var(--line);margin-top:20px">Conclusione</div>
@@ -241,6 +271,7 @@ Hai una sola risposta: una volta confermata non potrà essere modificata.
 <div id="liveWriteStatus" class="live-write-status"></div>
 
 <div class="registry"><h2>Registro Villa</h2><div id="registryLiveStatus" class="live-status">● REGISTRO LIVE</div><div id="registryStatus">Caricamento registro…</div><div id="voteSummary" class="vote-summary">VOTI RICEVUTI: — / —</div><div id="registryRows" class="registry-grid"></div></div>
+</div>
 </div>
 </section>
 
@@ -763,7 +794,7 @@ const PERSONAL_EVIDENCE_V4={
  ]
 };
 
-function buildNarrativePackage(state){
+function buildNarrativeV4Package(state){
  const result=buildNarrativeFoundation(state);
  const actor=characterForParticipant(state,state.specialRoles.assassin);
  const helper=characterForParticipant(state,state.specialRoles.accomplice);
@@ -815,6 +846,145 @@ function buildNarrativePackage(state){
 }
 
 
+/* Sei blocchi aggiuntivi; gli indizi 1-3 di ogni categoria restano invariati. */
+const ADDITIONAL_PERSONAL_EVIDENCE={
+ ettore_valenti:[
+  "Il tuo inventario distingue gli oggetti del cassetto dai mazzi di chiavi della casa. La scheda dello studio è stata consultata prima della cena, non dopo il ritrovamento. La consultazione riguardava quindi un attrezzo già accessibile, non la ricerca di una serratura da forzare.",
+  "Sulla copia che conservi riconosci il timbro di restituzione della scheda degli attrezzi. Il foglio era stato rimesso al suo posto prima dell'arrivo degli ospiti. Chi l'aveva consultato aveva avuto il tempo di conoscerne il contenuto senza lasciare la scheda fuori dall'archivio.",
+  "Nel fascicolo patrimoniale hai sempre distinto le copie interne da quelle depositate fuori dalla villa. Una promessa di far sparire la cartellina non avrebbe eliminato automaticamente il deposito esterno. La ricevuta recuperata dimostra che questo limite era già stato comunicato prima della cena."
+ ],
+ ludovico_orsini:[
+  "Ripensando al passaggio nel corridoio, ricordi che il rientro senza cartellina precedeva anche il suono del vetro. Non stavi guardando una persona che riportava documenti dopo un riordino: l'oggetto sottratto è comparso soltanto nel passaggio successivo.",
+  "Angelina teneva la scheda degli attrezzi insieme alle istruzioni dello studio, non fra i vostri accordi matrimoniali. La richiesta di consultarla non poteva riguardare una clausola della separazione. Anche un motivo personale per temere il dossier non spiega da solo quella preparazione materiale.",
+  "Nel patto la promessa di protezione era offerta alla persona incaricata della copertura. La risposta sul deposito esterno era stata ricevuta dall'altra posizione. Le due persone non disponevano quindi della stessa informazione quando hanno accettato lo scambio."
+ ],
+ corrado_de_marchi:[
+  "Hai ricontrollato sulla planimetria il tratto fra il tavolino e lo studio. Il successivo accesso che avevi osservato è compatibile con il percorso interno di servizio. L'aiuola sotto la finestra non serve a spiegare né il rientro iniziale né l'uscita con i documenti.",
+  "La scheda consultata indica il cassetto basso della scrivania; la tua mappa riguarda invece porte e confini. Sono informazioni di natura diversa. Aver conosciuto gli accessi non equivale ad aver cercato in anticipo la collocazione di quell'attrezzo specifico.",
+  "La fotografia precedente alla cena documenta soltanto la collocazione del portadocumenti in cantina. Nella tua mappa non compare un passaggio del proprietario durante il secondo episodio. L'oggetto non può colmare il vuoto lasciato dall'assenza di una prova di quel movimento."
+ ],
+ leone_de_marchi:[
+  "Nell'elenco più vecchio che conservi, la dichiarazione congiunta è separata dai singoli allegati. La sua funzione era distribuire gli impegni fra le parti, non soltanto elencare due interessi. Per questo la pagina intermedia vale più di una coincidenza fra due vecchie questioni familiari.",
+  "Il timbro sulla scheda dello studio appartiene alla stessa serie usata prima della cena per i documenti consegnati in consultazione. Non è il timbro del sopralluogo successivo. La preparazione materiale dell'accesso all'attrezzo precede dunque il ritrovamento del corpo.",
+  "Nel patto la protezione promessa riguarda il futuro; nell'avviso esterno è già attestato un deposito avvenuto. Le due date non sono intercambiabili. La promessa veniva formulata quando una copia era già fuori dalla portata della villa e questo era noto a chi la offriva."
+ ],
+ dorian_ferretti:[
+  "La ricevuta che avevi conservato elenca separatamente allegati, raccordo e avviso al referente. Il ritiro dell'originale dallo studio non avrebbe annullato nessuna delle tre registrazioni già effettuate. La sottrazione poteva togliere prove dalla stanza, ma non far ripartire da zero la pratica esterna.",
+  "Nel prospetto di trasmissione il codice della scheda consultata è {{preparedRef}}. Non è un importo, un numero di conto o il nome del deposito: è il rinvio a una delle due posizioni già presenti nel fascicolo. Il suo significato si verifica negli estratti, senza inventare un terzo incarico.",
+  "La ricevuta dell'avviso esterno registra una consegna precedente alla cena. Il recapito è quello della posizione collegata alla consultazione della scheda. La promessa successiva di eliminare ogni prova non poteva quindi basarsi sull'idea che esistesse soltanto la cartellina nello studio."
+ ],
+ tancredi_moreau:[
+  "La dichiarazione non attribuisce l'aggressione a entrambe le parti indistintamente. L'impegno a intervenire precede quello di coprire le conseguenze. La successiva morte di chi aveva assunto la copertura non trasferisce retroattivamente quel primo incarico a un'altra persona.",
+  "Nella copia della richiesta di consultazione non leggi una procura generale per accedere alla casa: viene chiesta proprio la scheda dello studio con il richiamo al cassetto. È una preparazione circoscritta, che deve essere valutata insieme al compito assunto nel raccordo e alla sequenza dei passaggi.",
+  "La clausola di protezione non contiene un'autorizzazione del depositario a distruggere le copie. L'avviso recuperato precisa anzi che serviva il consenso di Angelina. Il patto fra le due parti non poteva cancellare unilateralmente quella condizione esterna."
+ ],
+ marcello_albrizzi:[
+  "Nel confronto dei reperti il frammento di vetro sopra la carta macchiata resta il punto che fissa l'ordine. Un passaggio successivo di persone non rende simultanei il primo colpo e la rottura del bicchiere. Il rapporto non richiede un orario di morte al minuto per distinguere quei momenti.",
+  "La scheggia nel fazzoletto è compatibile con il maneggio del bicchiere. Il rapporto non la descrive come una parte della chiave combinata né del giratubi. La prova sul vetro riguarda quindi una delle azioni della copertura e non sostituisce l'attribuzione dell'aggressione nello studio.",
+  "I due rapporti mantengono distinti luogo, reperti e vittime. Il ritrovamento in cantina non modifica il significato del vetro nello studio. La successione delle aggressioni va ricostruita con l'accordo e i movimenti, senza trasformare la seconda scena in una nuova causa della prima."
+ ],
+ cesare_valli:[
+  "Il vassoio che eri andato a riprendere era rimasto nel corridoio. Non avevi affidato a nessuno il compito di ritirare la cartellina di Angelina. Il passaggio con quel fascicolo non può essere confuso con un servizio che avevi organizzato tu.",
+  "La scheda degli attrezzi non accompagna il duplicato COPIA 2: sono conservati e registrati separatamente. Nel riepilogo delle consultazioni riconosci il timbro dello studio. Il duplicato spiega l'accesso alla cantina; il foglio consultato spiega invece come si poteva conoscere la posizione dell'attrezzo vicino ad Angelina.",
+  "Il registro dell'incontro in zona tecnica non coincide con il tuo giro ordinario di servizio. La discesa prevista dal patto ha un motivo diverso dalla consegna di cibo o materiali. Il vecchio portadocumenti sullo scaffale non documenta la persona che accompagnò quel passaggio."
+ ],
+ adriano_conti:[
+  "Nel ricostruire ciò che avevi visto dalla porta del salottino, riesci a separare tre fatti: il primo rientro, il secondo accesso verso lo studio e infine il vetro. Non avevi visto due persone uscire insieme dalla stanza dopo la stessa azione.",
+  "La tua vecchia lettera di Angelina non contiene riferimenti al cassetto o agli attrezzi. Il foglio di consultazione è un documento diverso dalla corrispondenza sentimentale. La somiglianza della scrittura sul biglietto non collega automaticamente quella preparazione materiale a un ex corteggiatore.",
+  "Il biglietto di Angelina e la promessa nel patto hanno direzioni opposte. Nel primo lei annuncia la fine di una protezione; nel secondo una parte promette protezione all'altra. Scambiare le due voci farebbe apparire la promessa dell'accordo come se provenisse dalla vittima dello studio."
+ ],
+ elia_neroni:[
+  "Nel margine dell'indice nascosto nel libro c'è il richiamo «scheda stanza». Non riguarda un nuovo allegato sentimentale o familiare: rinvia alle istruzioni dello studio. Angelina aveva conservato anche una traccia della consultazione di un documento pratico, oltre ai materiali sui due interessi coinvolti.",
+  "La nota trovata nel libro usa parole diverse per chi affronta il problema e chi ne ripulisce le conseguenze. Il primo rientro dal corridoio avviene prima del vetro; la cartellina compare dopo. Le due espressioni ora corrispondono a due azioni osservabili, non a un generico modo di parlare di Angelina.",
+  "Sul retro dell'indice Angelina aveva segnato anche il numero della ricevuta esterna. Il raccordo era stato copiato insieme agli allegati, non promesso soltanto per il giorno successivo. La sicurezza di chi contava sulla sola sparizione dell'originale era quindi ingannevole."
+ ],
+ lavinia_valenti:[
+  "Dalla porta del salone avevi notato l'oggetto piatto soltanto nel secondo rientro. Ripensandoci, il primo passaggio che avevi visto non aveva lo stesso ingombro al fianco. Questo distingue il trasporto della cartellina dall'uscita precedente dal corridoio.",
+  "La consultazione della scheda dello studio risulta separata dalla lettera sui rapporti fra sorelle. Il richiamo al cassetto non è una frase figurata sulla gestione del patrimonio: indica un punto fisico della scrivania. La rivalità familiare non basta da sola a spiegare quella preparazione.",
+  "Nella copia familiare del patto la parte che promette la protezione non è quella che accetta il sacrificio. È la stessa distinzione che riappare fra l'avviso sulle copie esterne e il beneficio promesso. Le persone coinvolte non stavano scambiando due prestazioni equivalenti sulla base delle stesse informazioni."
+ ],
+ celeste_valenti:[
+  "Nel tuo schizzo del pomeriggio il bicchiere e la cartellina sono entrambi sullo scrittoio. Nel rilievo il bicchiere è in pezzi e la cartellina è assente. Il disegno conserva lo stato iniziale: non rappresenta una ricostruzione fatta dopo aver ascoltato le versioni degli altri.",
+  "Il richiamo al cassetto nella scheda dello studio corrisponde al vano basso che avevi disegnato. Non indica un cofanetto, un armadio o un contenitore di gioielli. La consultazione riguardava l'accesso a un attrezzo preciso, non una generica ricerca di valori da rubare.",
+  "Nella scansione dell'avviso esterno il testo sulla conservazione delle copie è stampato prima della conferma di ricezione. Non compare come una nota aggiunta a matita dopo il delitto. Chi aveva ricevuto quel documento poteva leggere già allora il limite alla promessa di far sparire tutte le prove."
+ ],
+ ofelia_de_marchi:[
+  "Hai controllato la continuità dei numeri: gli estratti non assorbono il foglio con la dichiarazione congiunta. Il raccordo è una pagina autonoma. Leggere soltanto i due interessi economici o familiari lascerebbe fuori proprio la distribuzione delle azioni che serve all'accusa.",
+  "Il codice {{preparedRef}} compare nel registro della scheda consultata ed esiste già fra i rinvii del fascicolo. La corrispondenza non dipende dall'ordine in cui gli allegati sono stati mostrati durante la cena. Si può ricostruire una posizione usando il codice, senza assegnarle un ruolo soltanto perché è elencata per prima.",
+  "Nel tuo prospetto la ricevuta del deposito e l'impegno alla distruzione delle prove sono due registrazioni distinte. La prima è già perfezionata quando viene formulato il secondo. Il patto non fornisce un documento che dimostri l'annullamento del deposito o il consenso di Angelina a distruggerlo."
+ ],
+ viola_neroni:[
+  "Riascoltando nella memoria la confidenza di Angelina, ricordi che temeva soprattutto che le due versioni venissero tenute separate. L'ordine dei passaggi nello studio mostra perché: una versione spiega il rientro senza fascicolo, l'altra il vetro e la cartellina. Considerarle isolate nasconderebbe la collaborazione.",
+  "Nel patto la protezione delle persone care è offerta come beneficio per ottenere l'adesione alla copertura e al sacrificio. Non è descritta come un'iniziativa di Angelina. La frase che ti aveva confidato sulla fine delle sue coperture non può quindi essere usata come se garantisse quel beneficio.",
+  "L'avviso sulle copie era noto alla parte che prometteva di eliminare le prove, mentre il fascicolo non documenta la stessa comunicazione alla parte che accettava il sacrificio. Questa differenza rende la promessa sospetta: una persona stava ottenendo consenso su una garanzia che sapeva di non poter offrire da sola."
+ ],
+ eva_montorsi:[
+  "Nel controllo della casa avevi verificato anche la chiusura della finestra dall'interno. Dopo il delitto il gancio era stato mosso senza rompere il telaio. Il cambiamento poteva essere ottenuto da chi si trovava nella stanza; non occorre immaginare un nuovo passaggio attraverso il giardino.",
+  "La scheggia che avevi notato non era sul vassoio del corridoio, ma nella piega del fazzoletto umido presso il lavello. Per questo il tuo ricordo riguarda una persona che aveva maneggiato il vetro dopo la rottura. Non riguarda il momento in cui l'attrezzo ha colpito Angelina.",
+  "La fotografia dell'allestimento conserva lo stesso punto di appoggio del portadocumenti e gli oggetti vicini. Non hai trovato nella foto un'immagine della seconda aggressione. Il contenitore era un elemento già presente, la cui intestazione poteva essere sfruttata per indirizzare i sospetti."
+ ],
+ bianca_albrizzi:[
+  "La voce «scheda dello studio» nella tua agenda è precedente alla cena ed è distinta dall'appuntamento per consegnare il dossier. Nel registro di consultazione la richiesta usa il riferimento {{preparedRef}}. L'interesse per la stanza e l'interesse per la pratica possono così essere collegati con un dato scritto.",
+  "Nella corrispondenza rimasta trovi la conferma che la scheda consultata conteneva il richiamo al cassetto basso. Non era stata inviata soltanto la pianta degli ingressi. Il destinatario poteva quindi conoscere prima della cena dove cercare l'attrezzo senza doverlo chiedere ad alta voce durante il ricevimento.",
+  "Il tuo registro della posta riporta la consegna dell'avviso sulle copie esterne al recapito associato alla consultazione. La conferma di ricezione precede la cena. Questo aggiunge un fatto alla semplice esistenza del deposito: la persona che avrebbe poi promesso la distruzione delle prove ne era già informata."
+ ],
+ emilia_riva:[
+  "Dalla tua postazione il primo colpo e il rumore del vetro non erano sovrapposti. Fra i due avevi udito il passaggio nel corridoio. Anche senza riconoscere il volto, puoi mantenere questa successione distinta dai racconti di chi ha visto trasportare la cartellina.",
+  "La tua distinta dei materiali non prevede che il personale porti una chiave combinata nello studio durante la cena. L'attrezzo era già nel mobile indicato dalla scheda consultata. La preparazione documentata riguarda quindi la conoscenza del posto, non una consegna di utensili effettuata da te.",
+  "Non avevi organizzato il ritiro di documenti né un servizio nella zona tecnica durante la seconda parte della cena. Nessuna tua consegna collega il proprietario del portadocumenti all'episodio in cantina. La presenza del contenitore non sostituisce il movimento di una persona che non avevi registrato."
+ ],
+ ginevra_ferretti:[
+  "Il contatto esterno ti conferma che la pratica comprendeva anche un avviso sulle condizioni di custodia. Non era una semplice richiesta di prendere appuntamento. Una copia del raccordo risultava già acquisita e non sarebbe stata restituita o distrutta su richiesta di un singolo invitato.",
+  "Nella distinta inviata dallo studio il recapito del referente coincide con quello registrato per la consultazione della scheda dello studio. Non occorre ipotizzare un nuovo complice esterno: i documenti collegano un interlocutore già presente fra le due posizioni del fascicolo.",
+  "La conferma esterna distingue data di deposito, invio dell'avviso e ricezione. Tutti e tre precedono la cena. Chi ricevette l'avviso non poteva fondare la promessa di distruzione sul fatto di ignorare l'esistenza di copie fuori dalla villa."
+ ],
+ isabella_roversi:[
+  "La fotografia della scheda degli attrezzi mostra la stessa chiave combinata già identificata nello studio. La richiesta di consultazione non riguarda un utensile simile conservato in un'altra stanza. Il dettaglio del cassetto corrisponde all'oggetto effettivamente catalogato.",
+  "Il timbro e i fori della scheda consultata coincidono con quelli della copia d'archivio. Il richiamo al cassetto non è un'aggiunta fatta dopo il ritrovamento. L'informazione sulla collocazione dell'attrezzo apparteneva al documento che era stato consultato prima della cena.",
+  "Sulla fotografia precedente alla cena restano riconoscibili la cucitura riparata e la borchia mancante del portadocumenti. Questi dettagli identificano il contenitore, non l'autore del secondo delitto. Il confronto impedisce di trasformare la proprietà dell'oggetto in una prova di presenza al momento sbagliato."
+ ]
+};
+
+function buildNarrativePackage(state){
+ const result=buildNarrativeV4Package(state);
+ const actor=characterForParticipant(state,state.specialRoles.assassin);
+ const preparedRef=DOCUMENT_SOURCES_V4[actor.id].ref;
+ const fill=s=>s.replace(/\{\{preparedRef\}\}/g,preparedRef);
+ result.version=5;
+ result.clueRevision="VV-INDIZI-AGGIUNTIVI-5";
+ result.commonClues.push(
+  "VERBALE COMPARATIVO DEI PASSAGGI\n\nI riscontri vengono ora ordinati senza attribuire il primo ruolo alla prima persona elencata nel fascicolo. La successione compatibile con le osservazioni raccolte separatamente è: aggressione e caduta dei fogli; primo rientro dal corridoio senza cartellina; successivo accesso allo studio e rottura del bicchiere; uscita con il fascicolo. Il frammento sopra la carta già macchiata conferma l'ordine materiale.\n\nIl fazzoletto umido con la scheggia riguarda il maneggio del vetro. La finestra si poteva aprire dall'interno e il terreno sotto il davanzale non documenta un passaggio. La cartellina non era stata affidata al personale per un normale ritiro.\n\nQuesti riscontri separano la prima azione dalla copertura: trovarsi vicino al vetro o trasportare i documenti non equivale ad aver inferto il primo colpo. La ricostruzione deve però spiegare anche la persona rientrata prima della rottura, non soltanto chi ha alterato la stanza.",
+  "REGISTRO DI CONSULTAZIONE DELLO STUDIO\n\nÈ stata recuperata la registrazione di una consultazione precedente alla cena. Il materiale richiesto era la scheda dello studio con il richiamo «attrezzo nel cassetto basso della scrivania». La scheda mostra la chiave combinata già catalogata nella villa, non il giratubi della cantina.\n\nRiferimento della consultazione: "+preparedRef+". Il codice appartiene a una delle due posizioni già documentate nel fascicolo e si verifica tramite gli estratti precedenti; non è una nuova persona o un nuovo incarico. Il registro attesta anche la restituzione della scheda prima dell'arrivo degli ospiti.\n\nIl cassetto non richiedeva il duplicato COPIA 2, che serviva invece per la cantina. L'accesso all'attrezzo poteva quindi essere preparato conoscendone la posizione, senza un'arma portata da fuori e senza forzare un ingresso. La consultazione, da sola, non è una confessione: va incrociata con i compiti del patto e con l'ordine dei passaggi nello studio.",
+  "RISPOSTA DEL DEPOSITARIO E LIMITE DELLA PROMESSA\n\nIl depositario esterno conferma che copie degli allegati e del raccordo erano già state acquisite prima della cena. Non potevano essere restituite o distrutte su richiesta unilaterale di un invitato: occorreva il consenso di Angelina.\n\nUn avviso con queste condizioni era stato consegnato, prima della serata, al recapito collegato alla consultazione della scheda dello studio. La conferma di ricezione coincide con il riferimento del registro appena recuperato. Il fascicolo non documenta lo stesso avviso alla parte che avrebbe accettato la copertura e il sacrificio.\n\nLa promessa di far sparire ogni prova era dunque formulata da una posizione che conosceva già l'esistenza di copie fuori dalla propria portata. Il beneficio promesso non dimostra che fosse realizzabile. Questo riscontro va letto insieme alla preparazione dell'accesso all'attrezzo, al rientro prima del vetro e alla distinta attribuzione della copertura.\n\nIl portadocumenti fotografato in cantina prima della cena non contraddice questa catena: identifica un oggetto già presente, non una nuova persona responsabile. Per formulare l'accusa occorre individuare la posizione che soddisfa insieme i riscontri, distinguendola da quella che ha coperto la scena."
+ );
+ for(const p of participants){
+  const ch=characterForParticipant(state,p.id);
+  let extra;
+  if(p.id===state.specialRoles.assassin){
+   extra=[
+    "RISERVATO AL TUO PERSONAGGIO. Il nuovo confronto separa il tuo rientro senza fascicolo dalla successiva rottura del vetro. La tua versione deve fare i conti con quell'ordine. Il solo fatto che un'altra persona abbia maneggiato il bicchiere non cancella la prima azione nello studio.",
+    "RISERVATO AL TUO PERSONAGGIO. Prima della cena avevi consultato la scheda che indicava l'attrezzo nel cassetto basso. Il riferimento registrato è "+preparedRef+". La scheda era stata restituita, ma ne è rimasta una registrazione indipendente: non puoi sostenere di averne appreso la collocazione soltanto dopo il ritrovamento.",
+    "RISERVATO AL TUO PERSONAGGIO. Avevi ricevuto anche l'avviso sulle copie conservate fuori dalla villa. La promessa di eliminare ogni prova non poteva essere garantita da te senza il consenso di Angelina. L'altra parte non risulta destinataria dello stesso avviso. Mantieni segreto questo testo e interpreta la difesa del personaggio senza inventare un annullamento del deposito."
+   ];
+  }else if(p.id===state.specialRoles.accomplice){
+   extra=[
+    "RISERVATO AL TUO PERSONAGGIO. La ricostruzione distingue la copertura dal primo colpo, ma non cancella la tua collaborazione. Dopo il secondo ritrovamento la tua parte attiva resta terminata: questi ulteriori riscontri non autorizzano a rilasciare nuove testimonianze o correggere gli altri.",
+    "RISERVATO AL TUO PERSONAGGIO. La registrazione della scheda riguarda la preparazione della prima azione, distinta dal tuo recupero della cartellina. Non avevi ricevuto l'avviso sulle condizioni di custodia delle copie esterne. Le prove comuni consentono di ricostruire la vicenda senza una tua nuova spiegazione.",
+    "RISERVATO AL TUO PERSONAGGIO. Avevi accettato il patto confidando nel beneficio promesso. Il nuovo avviso dimostra il limite di quella garanzia e una differenza fra le informazioni possedute dalle parti. Resta valido il divieto di intervenire dopo il ritrovamento: puoi seguire la conclusione, non suggerire la risposta."
+   ];
+  }else{
+   const template=ADDITIONAL_PERSONAL_EVIDENCE[ch.id];
+   if(!template||template.length!==3)throw new Error("Approfondimenti personali incompleti");
+   extra=template.map(fill);
+  }
+  result.personalClues[p.id].push(...extra);
+ }
+ result.assassinPrivate+=" Prima della cena avevi consultato la scheda dello studio e ricevuto l'avviso sulle copie già depositate fuori dalla villa. La promessa di eliminarle tutte non poteva essere garantita unilateralmente da te.";
+ result.accomplicePrivate+=" Avevi accettato il beneficio promesso senza aver ricevuto lo stesso avviso sulle condizioni di custodia delle copie esterne.";
+ return result;
+}
+
+
 function narrativeForCurrentPlayer(narrative,participant){
  if(!narrative||!participant)return ["Informazione personale non disponibile.","Informazione personale non disponibile.","Informazione personale non disponibile."];
  return (narrative.personalClues&&narrative.personalClues[participant.id])||["Informazione personale non disponibile.","Informazione personale non disponibile.","Informazione personale non disponibile."];
@@ -822,7 +992,7 @@ function narrativeForCurrentPlayer(narrative,participant){
 /* ===== FINE MOTORE NARRATIVO 342 ===== */
 
 const LIVE_UNLOCK_PATH="villaValentiDefinitivo2026/liveUnlocks";
-const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,personal1:false,personal2:false,personal3:false,twist:false,twistAt:null,conclusion:false,updatedAt:null};
+const DEFAULT_LIVE_UNLOCKS={common1:false,common2:false,common3:false,common4:false,common5:false,common6:false,personal1:false,personal2:false,personal3:false,personal4:false,personal5:false,personal6:false,twist:false,twistAt:null,conclusion:false,updatedAt:null};
 let liveUnlockState={...DEFAULT_LIVE_UNLOCKS};
 let liveUnlockTimer=null;
 let liveUnlockLoading=false;
@@ -1255,37 +1425,36 @@ function renderLiveUnlocks(){
  const isDeadAccomplice=!!(liveUnlockState.twist&&currentSpecialRole==="accomplice");
  if(currentNarrative){
    const common=currentNarrative.commonClues||[];
-   for(let i=1;i<=3;i++){
+   for(let i=1;i<=6;i++){
      const el=document.getElementById("commonClue"+i+"Text");
      if(!el)continue;
-     if(i===3&&isDeadAccomplice){
+     if(i>=3&&isDeadAccomplice){
        el.innerHTML="<div class=\"death-warning\">IL TUO PERSONAGGIO È STATO TROVATO SENZA VITA NELLA CANTINA / ZONA TECNICA DI VILLA VALENTI.</div><div class=\"death-rules\">La tua parte attiva nell'indagine termina qui. Qualunque cosa tu abbia detto prima del ritrovamento rimane parte della storia.</div>";
      }else el.textContent=common[i-1]||"Documento non disponibile.";
    }
    const personal=narrativeForCurrentPlayer(currentNarrative,currentParticipant);
-   for(let i=1;i<=3;i++){
+   for(let i=1;i<=6;i++){
      const el=document.getElementById("personalClue"+i+"Text");
      if(!el)continue;
-     if(i===3&&isDeadAccomplice){
+     if(i>=3&&isDeadAccomplice){
        el.innerHTML="<div class=\"death-warning\">SEI LA SECONDA VITTIMA.</div><div class=\"death-rules\">Da questo momento non puoi fornire nuove informazioni sul tuo personaggio, correggere dichiarazioni precedenti, rispondere agli interrogatori o suggerire come interpretare gli indizi. Puoi restare con gli altri, seguire l'indagine e assistere alla conclusione. Mantieni segreto il tuo vero ruolo.</div>";
      }else el.textContent=personal[i-1]||"Informazione personale non disponibile.";
    }
-   const common3=document.getElementById("commonClue3");
-   const personal3=document.getElementById("personalClue3");
-   if(common3)common3.classList.toggle("death-clue",isDeadAccomplice);
-   if(personal3)personal3.classList.toggle("death-clue",isDeadAccomplice);
+   for(let i=3;i<=6;i++){
+     for(const kind of ["common","personal"]){
+       const clue=document.getElementById(kind+"Clue"+i);
+       if(clue)clue.classList.toggle("death-clue",isDeadAccomplice);
+     }
+   }
  }
- const map=[
-   ["common1","commonClue1","stateCommon1"],
-   ["common2","commonClue2","stateCommon2"],
-   ["common3","commonClue3","stateCommon3"],
-   ["personal1","personalClue1","statePersonal1"],
-   ["personal2","personalClue2","statePersonal2"],
-   ["personal3","personalClue3","statePersonal3"]
- ];
+ const map=Array.from({length:6},(_,n)=>n+1).flatMap(i=>[
+   ["common"+i,"commonClue"+i,"stateCommon"+i],
+   ["personal"+i,"personalClue"+i,"statePersonal"+i]
+ ]);
  let any=false;
  map.forEach(([key,clueId,stateId])=>{
-   const on=!!liveUnlockState[key]&&(!["common3","personal3"].includes(key)||!!liveUnlockState.twist);
+   const phase=Number(key.match(/\d+$/)[0]);
+   const on=!!liveUnlockState[key]&&(phase<3||!!liveUnlockState.twist);
    any=any||on;
    const clue=document.getElementById(clueId);
    if(clue)clue.classList.toggle("hidden",!on);
@@ -1334,13 +1503,14 @@ function updateLiveUnlocksSafely(change){
 
 async function toggleLiveUnlock(key){
  if(!currentParticipant||currentParticipant.code!==ORGANIZER_CODE)return;
- if(!["common1","common2","common3","personal1","personal2","personal3","conclusion"].includes(key))return;
+ if(typeof key!=="string"||!/^(?:(?:common|personal)[1-6]|conclusion)$/.test(key))return;
  const status=document.getElementById("liveWriteStatus");
  try{
    if(status)status.textContent="INVIO COMANDO…";
    await updateLiveUnlocksSafely(current=>{
-     if(["common3","personal3"].includes(key)&&!current.twist)throw new Error("Attiva prima la comunicazione della villa per rendere disponibili questi documenti.");
-     return {[key]:!current[key]};
+     const enable=!current[key];
+     if(enable&&/^(?:common|personal)[3-6]$/.test(key)&&!current.twist)throw new Error("Attiva prima la comunicazione della villa per rendere disponibili questi documenti.");
+     return {[key]:enable};
    });
    renderLiveUnlocks();
    if(status)status.textContent="COMANDO INVIATO · "+new Date().toLocaleTimeString("it-IT");
